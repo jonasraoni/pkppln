@@ -21,7 +21,7 @@ namespace AppBundle\Utility;
 
 use Exception;
 use GuzzleHttp\Exception\XmlParseException;
-use GuzzleHttp\Message\Response;
+use GuzzleHttp\Psr7\Response;
 use SimpleXMLElement;
 
 /**
@@ -67,9 +67,9 @@ class PingResult
         $this->status = $response->getStatusCode();
         $this->error = null;
         $this->xml = null;
-        $this->body = $response->getBody();
+        $this->body = $response->getBody()->getContents();
         try {
-            $this->xml = $response->xml();
+            $this->xml = new SimpleXMLElement($this->body);
         } catch (Exception $ex) {
             $this->error = $ex->getMessage();
         } catch (XmlParseException $ex) {
@@ -80,7 +80,7 @@ class PingResult
     /**
      * Get the body of a ping response, optionally stripping out tags.
      *
-     * @param type $stripTags
+     * @param bool $stripTags
      *
      * @return type
      */
