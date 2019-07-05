@@ -36,8 +36,14 @@ Contents:
    install
    commands
    
-   
+Developer fun:
 
+.. toctree::
+   :maxdepth: 1
+   :titlesonly:
+
+   dev
+   parameters
 
 Indices and tables
 ==================

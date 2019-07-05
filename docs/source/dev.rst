@@ -208,7 +208,7 @@ is different you may need to adjust some of the steps below.
    YMMV. The plugin works by archiving issues, so don't forget to create one!
 
 10. At this point you should run the scheduled tasks. My OJS instance didn't pick up the plugin's
-    deposit
+    depositor task so I'm stuck.
 
 .. _Symfony documentation on file permissions: https://symfony.com/doc/2.7/setup/file_permissions.html
 .. _8e0cdcd27: https://github.com/defstat/pln
