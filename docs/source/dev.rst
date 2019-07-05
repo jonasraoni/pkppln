@@ -4,7 +4,7 @@ Developer Documentation
 Versions
 --------
 
-- https://github.com/ubermichael/pkppln @ 1e47b54e
+- https://github.com/ubermichael/pkppln @ 7257326e
 - PHP 7.2.19 (cli) (built: Jun 17 2019 09:03:55) ( NTS )
 - mysql Ver 8.0.15 for osx10.14 on x86_64 (Homebrew)
 - http Server version: Apache/2.4.38 (Unix)
@@ -120,63 +120,96 @@ is different you may need to adjust some of the steps below.
 2. Create a journal. ISSN 0000-0000 should be valid for testing.
 
 3. Override the default PLN staging URL in config.inc.php. Note that this is the URL to the
-front page of the PKP PLN staging server.
+   front page of the PKP PLN staging server.
 
-.. code-block:: ini
+   .. code-block:: ini
 
-    [lockss]
-    pln_url = http://localhost/pkppln/web/app_dev.php
+        [lockss]
+        pln_url = http://localhost/pkppln/web/app_dev.php
 
 4. Put a copy of the PKP PLN Plugin in the right place. I'm using `8e0cdcd27`_.
 
 5. Enable the plugin.
 
-.. note::
+   .. note::
 
-  If you put the plugin in place and then change config.inc.php you may need to clear the
-  OJS cache and remove the plugin settings from the database.
+      If you put the plugin in place and then change config.inc.php you may need to clear the
+      OJS cache and remove the plugin settings from the database.
 
-  .. code-block:: sql
+      .. code-block:: sql
 
-    DELETE FROM ojs3.plugin_settings WHERE plugin_name='plnplugin';
+        DELETE FROM ojs3.plugin_settings WHERE plugin_name='plnplugin';
 
-  .. code-block:: shell
+      .. code-block:: shell
 
-    $ find cache -type f -delete
+        $ find cache -type f -delete
 
 6. Check the plugin Settings. If the plugin settings page loads and you see the test term of use you
-created above in `Initial Setup - Website` then it worked.
+   created above in `Initial Setup - Website` then it worked. Accept the terms by clicking the clicking
+   checkboxes and saving.
 
-.. note::
+   .. note::
 
-    If it didn't work, check your ``pln_url`` settings in config.inc.php, clear your cache and
-    plugin_settings tables as above and try again. Try checking the staging server's
-    service document url, which for my setup looks like this
+        If it didn't work, check your ``pln_url`` settings in config.inc.php, clear your cache and
+        plugin_settings tables as above and try again. Try checking the staging server's
+        service document url, which for my setup looks like this
 
-    http://localhost/pkppln/web/app_dev.php/api/sword/2.0/sd-iri
+        http://localhost/pkppln/web/app_dev.php/api/sword/2.0/sd-iri
 
-    On its own, that URL should return an error about missing request headers. To see a proper
-    service document response try gently hacking it to fake the missing header. This will
-    auto-register a dummy journal. This may cause the Ping step below to issue a processing error.
-    Either ignore the processing error or remove the dummy journal in mysql.
+        On its own, that URL should return an error about missing request headers. To see a proper
+        service document response try gently hacking it to fake the missing header. This will
+        auto-register a dummy journal. This may cause the Ping step below to issue a processing error.
+        Either ignore the processing error or remove the dummy journal in mysql.
 
-    http://localhost/pkppln/web/app_dev.php/api/sword/2.0/sd-iri?On-Behalf-Of=abc&Journal-Url=http://example.com
+        http://localhost/pkppln/web/app_dev.php/api/sword/2.0/sd-iri?On-Behalf-Of=ABC&Journal-Url=http://example.com
 
-    .. code-block:: sql
+        .. code-block:: sql
 
-        delete from pkppln.journal where uuid='ABC';
+            delete from pkppln.journal where uuid='ABC';
 
 7. Now check the staging server. Your journal should have automatically registered and be listed in
-the New Journals panel. It's title will be "untitled." The registration process only includes
-the journal url and UUID. By design, the staging server will not accept deposits from the journal yet.
+   the New Journals panel. It's title will be "untitled." The registration process only includes
+   the journal url and UUID. By design, the staging server will not accept deposits from the journal yet.
 
-8. PING
+8. The staging server must contact the journal to request the journal's title and check if the terms
+   of use have been accepted. There multiple ways to do this.
 
-.. note::
+   A. Use the web user interface to navigate to the journal page using either the New Journals box on
+      the home page or with the tools in the Journals navigation menu. Use the Ping button. The staging server
+      will contact the journal and request extra information.
 
-    At this point our intrepid author noticed a problem with the journal ping shiz but had to go
-    to a meeting unrelated to this project.
+   B. Use the command line tools.
 
+      .. code-block:: shell
+
+         $ ./app/console pln:ping-whitelist -a -v
+        [2019-07-05 16:04:23] processing.NOTICE: Pinging Journal of International Testing
+        [2019-07-05 16:04:24] processing.NOTICE: Ping - 200 - 3.1.2.1 - http://localhost/ojs3/index.php/jit - http://pkppln.dev/web/journal/1
+
+      .. note::
+
+         If you used the On-Behalf-Of and Journal-Url query parameters in step 6 **and** didn't
+         remove the fake journal that step created, you will see an error message. It is safe to
+         ignore the error message.
+
+         .. code-block::
+
+            [2019-07-05 16:04:24] processing.NOTICE: Pinging unknown
+            [2019-07-05 16:04:24] processing.ERROR: Ping - HTTP 404 - - http://example.com - http://pkppln.dev/web/journal/4 - String could not be parsed as XML
+
+   C. Visit the ping URL directly. The URL is visible on the journal's page in the staging server. In
+      my setup it is http://localhost/ojs3/index.php/jit/gateway/plugin/PLNGatewayPlugin
+
+   Steps A and B above should update some of the journal's metadata in the database. If you forgot to
+   accept the terms of use in step 6 you can return to OJS and accept them now. Ping the journal again
+   using method A or B above and the metadata should update.
+
+9. Load some content into OJS. I like the `quick submit plugin`_ (git stable-3_1_2 branch) for this but
+   YMMV. The plugin works by archiving issues, so don't forget to create one!
+
+10. At this point you should run the scheduled tasks. My OJS instance didn't pick up the plugin's
+    deposit
 
 .. _Symfony documentation on file permissions: https://symfony.com/doc/2.7/setup/file_permissions.html
 .. _8e0cdcd27: https://github.com/defstat/pln
+.. _quick submit plugin: https://github.com/pkp/quickSubmit/tree/stable-3_1_2
