@@ -214,7 +214,7 @@ class Deposit
     private $errorCount;
 
     /**
-     * Stae of the deposit in LOCKSSOMatic or the PLN.
+     * State of the deposit in LOCKSSOMatic or the PLN.
      *
      * @var string
      * @ORM\Column(type="string", nullable=true)

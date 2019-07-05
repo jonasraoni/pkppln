@@ -2,13 +2,14 @@
 /* Move the content down, to make room for the nav bar. */
 body > .container {
     padding-top: 70px;
+    flex: 1;
 }
 
 /* Custom app styles */
 
 a[href ^= 'mailto:']::after {
     content: "\2709";
-    
+
     position: relative;
     top: 1px;
     display: inline-block;
@@ -18,13 +19,13 @@ a[href ^= 'mailto:']::after {
     font-weight: 400;
     line-height: 1;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;    
+    -moz-osx-font-smoothing: grayscale;
 }
 
-a[href ^= 'http://']::after, 
+a[href ^= 'http://']::after,
 a[href ^= 'https://']::after {
     content: "\e164";
-    
+
     position: relative;
     top: 1px;
     display: inline-block;
@@ -34,7 +35,7 @@ a[href ^= 'https://']::after {
     font-weight: 400;
     line-height: 1;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;        
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* display changes */
