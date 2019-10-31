@@ -127,7 +127,8 @@ is different you may need to adjust some of the steps below.
         [lockss]
         pln_url = http://localhost/pkppln/web/app_dev.php
 
-4. Put a copy of the PKP PLN Plugin in the right place. I'm using `8e0cdcd27`_.
+4. Put a copy of the PKP PLN Plugin in the right place. I'm using `8e0cdcd27`_. Install the
+   composer dependencies for the plugin.
 
 5. Enable the plugin.
 
@@ -207,8 +208,96 @@ is different you may need to adjust some of the steps below.
 9. Load some content into OJS. I like the `quick submit plugin`_ (git stable-3_1_2 branch) for this but
    YMMV. The plugin works by archiving issues, so don't forget to create one!
 
-10. At this point you should run the scheduled tasks. My OJS instance didn't pick up the plugin's
-    depositor task so I'm stuck.
+10. There are some things that could have gone wrong by now, so you have to check for and fix them.
+
+    * My OJS instance didn't pick up the plugin's depositor task automatically. I used the Acron
+      Plugin's Reload Scheduled Tasks link. That got it loaded.
+    * My install didn't automatically create the database tables for the plugin (the only symptom
+      of that is a JSON-related error message when visiting the plugin's status page). You
+      may need to manually update the tables with the upgrade script like so:
+
+      .. code-block:: shell
+
+        $ php tools/upgrade.php upgrade
+
+11. Run the scheduled tasks. The plugin is configured to run the tasks ever 24 hours. To manually
+    run the tasks use the command line.
+
+    .. code-block:: shell
+
+       $ mysql -e "UPDATE ojs3.scheduled_tasks SET last_run = null WHERE class_name = 'plugins.generic.pln.classes.tasks.Depositor';"
+       $ php tools/runScheduledTasks.php plugins/generic/pln/xml/scheduledTasks.xml
+
+    This should produce two files for each issue in ``files/journals/1/pln/UUID/``. One is an
+    XML file with the deposit metadata. The other is a BagIt zip file with the deposit content. The
+    scheduled task runner thing should have sent the deposit XML file to the staging server.
+
+12. Check that the deposit XML file was sent to the server.
+
+    A. Open  http://localhost/pkppln/web/app_dev.php/journal/1 which should include a count of the deposits in the
+       deposits row.
+
+    B. Open http://localhost/pkppln/web/app_dev.php/journal/1/deposits which should list the deposits
+       for the journal. The state should be ``depositedByJournal``.
+
+    C. Open http://localhost/pkppln/web/app_dev.php/deposit/ which lists all deposits the staging server
+       is aware of.
+
+    These are three views of the same data. If one works they should all work.
+
+13. Check that the deposit is ready to download.
+
+    A. Visit http://localhost/pkppln/web/app_dev.php/deposit/1 or click on the deposit UUID to
+       view all the data about the deposit.
+    B. Verify that the metadata looks correct.
+    C. The URL field is what the staging server will use to fetch the deposit. It should look
+       like http:/​/​localhost/​ojs3/​index.php/​jit/​pln/​deposits/​FA1FBEE8-465C-48C2-A9D4-ABAD84E21D2C
+    D. Use the URL field to download the deposit content.
+
+14. Download the deposit. In the staging server vernacular, this is called a harvest.
+
+  .. code-block:: shell
+
+    $ ./app/console pln:harvest -vvv
+    [2019-07-11 12:47:05] processing.INFO: Processing 1 deposits.
+    [2019-07-11 12:47:05] processing.NOTICE: Harvest expected to consume 1125000 bytes.
+    [2019-07-11 12:47:05] processing.NOTICE: harvest - FA1FBEE8-465C-48C2-A9D4-ABAD84E21D2C
+    [2019-07-11 12:47:05] processing.INFO: Harvest - http://localhost/ojs3/index.php/jit/pln/deposits/FA1FBEE8-465C-48C2-A9D4-ABAD84E21D2C - HTTP 200 - 1124106
+    [2019-07-11 12:47:05] processing.INFO: Writing deposit to /Users/mjoyce/Sites/pkppln/data/received/B1F7314E-C958-49C1-9039-E5BA8B950FC8/FA1FBEE8-465C-48C2-A9D4-ABAD84E21D2C.zip
+
+15. Run the remaining processing commands at the console, so skip them entirely!
+
+    .. code-block:: shell
+
+        $ ./app/console pln:reset complete
+
+    Or, if you want to run all the commands, do so in this order:
+
+    pln:harvest
+      Download deposit content. If a download failed, try ``--retry`` to try again.
+    pln:validate-payload
+      Calculate a checksum of the BagIt zip file and compare it to the metadata in the deposit
+      XML.
+    pln:validate-bag
+      Run the BagIt validation on the deposit to ensure the bag's contents are correct.
+    pln:validate-xml
+      Parse and validate the OJS export XML against the DTD. The command will look for XML files
+      with this specific public identifier ``-//PKP//OJS Articles and Issues XML//EN``
+    pln:virus-scan
+      Scan the deposit for viruses. This command may fail if ClamAV isn't setup and configured. For
+      development and testing purposes this can be ignored.
+    pln:reserialize
+      Add some processing information and metadata to the depost and create a new BagIt zip file.
+    pln:deposit
+      Send LOCKSSOmatic a notification that a new deposit is ready. This command will fail if you
+      do not have a LOCKSSOmatic instance running. It's safe to ignore this failure for development
+      and testing.
+    pln:status
+      Check the status of the deposit in LOCKSSOMatic. This command will fail if you
+      do not have a LOCKSSOmatic instance running. It's safe to ignore this failure for development
+      and testing.
+
+16. Run the OJS scheduled tasks again. The deposit should be complete in the PLN plugin's status page.
 
 .. _Symfony documentation on file permissions: https://symfony.com/doc/2.7/setup/file_permissions.html
 .. _8e0cdcd27: https://github.com/defstat/pln
