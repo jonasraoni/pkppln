@@ -68,7 +68,7 @@ class ValidateXmlCommand extends AbstractProcessingCmd
      *
      * Other errors in the XML, beyond the bad UTF-8, will not be tolerated.
      *
-     * @return DOMDocument
+     * @return DOMDocument|null
      *
      * @param Deposit $deposit
      * @param string  $filename
@@ -76,7 +76,7 @@ class ValidateXmlCommand extends AbstractProcessingCmd
      */
     private function loadXml(Deposit $deposit, $filename, &$report)
     {
-        $dom = new DOMDocument();
+        $dom = new DOMDocument("1.0", "UTF-8");
         try {
             $dom->load($filename, LIBXML_COMPACT | LIBXML_PARSEHUGE);
         } catch (Exception $ex) {
@@ -84,8 +84,7 @@ class ValidateXmlCommand extends AbstractProcessingCmd
                 $deposit->addErrorLog('XML file '.basename($filename).' is not parseable: '.$ex->getMessage());
                 $report .= $ex->getMessage();
                 $report .= "\nCannot validate XML.\n";
-
-                return;
+                return null;
             }
             // The XML files can be arbitrarily large, so stream them, filter
             // the stream, and write to disk. The result may not fit in memory.
@@ -95,7 +94,7 @@ class ValidateXmlCommand extends AbstractProcessingCmd
             $blockSize = 64 * 1024; // 64k blocks
             $changes = 0;
             while ($buffer = fread($in, $blockSize)) {
-                $filtered = iconv('UTF-8', 'UTF-8//IGNORE', $buffer);
+                $filtered = mb_convert_encoding($buffer, "UTF-8", "UTF-8");
                 $changes += strlen($buffer) - strlen($filtered);
                 fwrite($out, $filtered);
             }
