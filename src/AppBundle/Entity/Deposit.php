@@ -129,7 +129,7 @@ class Deposit
      *
      * @var int
      *
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(type="string", nullable=false)
      */
     private $volume;
 
@@ -138,7 +138,7 @@ class Deposit
      *
      * @var int
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      */
     private $issue;
 
@@ -944,7 +944,7 @@ class Deposit
     /**
      * Add a message to the error log.
      *
-     * @param type $error
+     * @param string $error
      *
      * @return Deposit
      */

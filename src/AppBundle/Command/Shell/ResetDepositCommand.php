@@ -111,6 +111,7 @@ class ResetDepositCommand extends ContainerAwareCommand
                 $deposit->setProcessingLog('');
                 $deposit->addToProcessingLog('Deposit reset.');
                 $deposit->setAuContainer(null);
+                $deposit->setHarvestAttempts(0);
             }
         }
         $this->em->flush();

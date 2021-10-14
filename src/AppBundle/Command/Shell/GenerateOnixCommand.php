@@ -134,7 +134,7 @@ class GenerateOnixCommand extends ContainerAwareCommand
             $i++;
             $this->em->detach($journal);
             if($i % self::BATCH_SIZE) {
-                $this->em->clear();
+                  $this->em->clear();
             }
         }
     }

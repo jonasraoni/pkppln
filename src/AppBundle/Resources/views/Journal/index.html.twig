@@ -52,7 +52,7 @@
                             <td>{% if entity.contacted %}{{ entity.contacted|date('Y-m-d H:i:s') }}{% endif %}</td>
                             <td>{{ entity.status }}</td>
                             <td>{{ entity.ojsVersion }}</td>
-                            <td><a href="{{ entity.url }}">{{ entity.url|preg_replace('~/~', '/&#8203;')|raw }}asdsa</a></td>
+                            <td><a href="{{ entity.url }}">{{ entity.url|preg_replace('~/~', '/&#8203;')|raw }}</a></td>
                         </tr>
                     {% endfor %}
                 </tbody>

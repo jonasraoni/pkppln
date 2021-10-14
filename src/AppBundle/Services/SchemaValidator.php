@@ -24,7 +24,7 @@ use DOMDocument;
 /**
  * Simple wrapper around around DOMDocument->validate().
  */
-class DtdValidator
+class SchemaValidator
 {
     /**
      * @var array
@@ -78,11 +78,9 @@ class DtdValidator
         if ($clearErrors) {
             $this->clearErrors();
         }
-        if ($dom->doctype === null) {
-            return;
-        }
-        $oldHandler = set_error_handler(array($this, 'validationError'));
-        $dom->validate();
+        $xsd = $path . '/native.xsd';
+        $oldHandler = set_error_handler([$this, 'validationError']);
+        $dom->schemaValidate($xsd);
         set_error_handler($oldHandler);
     }
 

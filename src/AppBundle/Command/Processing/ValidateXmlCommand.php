@@ -21,6 +21,7 @@ namespace AppBundle\Command\Processing;
 
 require_once 'vendor/scholarslab/bagit/lib/bagit.php';
 
+use AppBundle\Services\SchemaValidator;
 use Exception;
 use AppBundle\Entity\Deposit;
 use AppBundle\Services\DtdValidator;
@@ -49,8 +50,9 @@ class ValidateXmlCommand extends AbstractProcessingCmd
 
     /**
      * Log errors generated during the validation.
+     * @param DtdValidator|SchemaValidator $validator
      */
-    private function logErrors(DtdValidator $validator)
+    private function logErrors($validator)
     {
         foreach ($validator->getErrors() as $error) {
             $this->logger->warning(implode(':', array($error['file'], $error['line'], $error['message'])));
@@ -68,7 +70,7 @@ class ValidateXmlCommand extends AbstractProcessingCmd
      *
      * Other errors in the XML, beyond the bad UTF-8, will not be tolerated.
      *
-     * @return DOMDocument|null
+     * @return DOMDocument
      *
      * @param Deposit $deposit
      * @param string  $filename
@@ -76,7 +78,7 @@ class ValidateXmlCommand extends AbstractProcessingCmd
      */
     private function loadXml(Deposit $deposit, $filename, &$report)
     {
-        $dom = new DOMDocument("1.0", "UTF-8");
+        $dom = new DOMDocument();
         try {
             $dom->load($filename, LIBXML_COMPACT | LIBXML_PARSEHUGE);
         } catch (Exception $ex) {
@@ -84,7 +86,8 @@ class ValidateXmlCommand extends AbstractProcessingCmd
                 $deposit->addErrorLog('XML file '.basename($filename).' is not parseable: '.$ex->getMessage());
                 $report .= $ex->getMessage();
                 $report .= "\nCannot validate XML.\n";
-                return null;
+
+                return;
             }
             // The XML files can be arbitrarily large, so stream them, filter
             // the stream, and write to disk. The result may not fit in memory.
@@ -94,7 +97,7 @@ class ValidateXmlCommand extends AbstractProcessingCmd
             $blockSize = 64 * 1024; // 64k blocks
             $changes = 0;
             while ($buffer = fread($in, $blockSize)) {
-                $filtered = mb_convert_encoding($buffer, "UTF-8", "UTF-8");
+                $filtered = iconv('UTF-8', 'UTF-8//IGNORE', $buffer);
                 $changes += strlen($buffer) - strlen($filtered);
                 fwrite($out, $filtered);
             }
@@ -131,9 +134,18 @@ class ValidateXmlCommand extends AbstractProcessingCmd
                 $valid = false;
                 continue;
             }
-            /* @var DtdValidator */
-            $validator = $this->container->get('dtdvalidator');
-            $validator->validate($dom);
+
+            $root = $dom->documentElement;
+            $validator = null;
+            if ($root->hasAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 'schemaLocation')) {
+                $validator = $this->container->get('schemavalidator');
+            } else {
+                $validator = $this->container->get('dtdvalidator');
+            }
+
+            /* @var DtdValidator|SchemaValidator */
+            $validator->validate($dom, $extractedPath . '/data');
+
             if ($validator->hasErrors()) {
                 $deposit->addErrorLog("{$basename} - XML Validation failed.");
                 $this->logErrors($validator);

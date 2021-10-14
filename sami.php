@@ -1,23 +1,20 @@
 <?php
 
+require 'vendor/autoload.php';
+
 use Sami\Sami;
 use Sami\RemoteRepository\GitHubRemoteRepository;
 use Symfony\Component\Finder\Finder;
 
-$dir = __DIR__;
-
-$config = array(
-//    'theme'                => 'symfony',
-    'title'                => 'Circus Internal API',
-    'build_dir'            => $dir . '/web/docs/api',
-    'cache_dir'            => $dir . '/var/cache/sami',
-    'remote_repository'    => new GitHubRemoteRepository('ubermichael/circus', $dir),
-    'default_opened_level' => 2,
-);
-
 $iterator = Finder::create()
     ->files()
     ->name('*.php')
-    ->in('src');
+    ->exclude('Resources')
+    ->exclude('Tests')
+    ->in(__DIR__ . '/src');
 
-return new Sami($iterator, $config);
+return new Sami($iterator, array(
+    'title' => 'CEWW API',
+    'build_dir' => __DIR__ . '/docs/api',
+    'cache_dir' => __DIR__ . '/var/cache/sami',
+));

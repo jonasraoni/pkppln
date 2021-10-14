@@ -25,21 +25,21 @@ class DtdValidatorTest extends AbstractTestCase {
 	public function testValidateNoDtd() {
 		$dom = new DOMDocument();
 		$dom->loadXML('<root />');
-		$this->validator->validate($dom);
+		$this->validator->validate($dom, '');
 		$this->assertEquals(0, $this->validator->countErrors());
 	}
 	
 	public function testValidate() {
 		$dom = new DOMDocument();
 		$dom->loadXML($this->getValidXml());
-		$this->validator->validate($dom, true);
+		$this->validator->validate($dom, '', true);
 		$this->assertEquals(0, $this->validator->countErrors());
 	}
 	
 	public function testValidateWithErrors() {
 		$dom = new DOMDocument();
 		$dom->loadXML($this->getinvalidXml());
-		$this->validator->validate($dom, true);
+		$this->validator->validate($dom, '', true);
 		$this->assertEquals(1, $this->validator->countErrors());
 	}
 	

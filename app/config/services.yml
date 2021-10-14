@@ -45,6 +45,9 @@ services:
     dtdvalidator:
         class: AppBundle\Services\DtdValidator
 
+    schemavalidator:
+        class: AppBundle\Services\SchemaValidator
+
     virus_scanner:
         class: AppBundle\Services\VirusScanner
         arguments: ["%clamdscan_path%"]

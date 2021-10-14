@@ -23,7 +23,7 @@ use AppBundle\Entity\Deposit;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Message\Response;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -72,9 +72,10 @@ class HarvestCommand extends AbstractProcessingCmd
     public function getClient()
     {
         if (!$this->client) {
-            $this->client = new Client(['headers' => [
-                'User-Agent' => 'PkpPlnBot 1.0; http://pkp.sfu.ca',
-            ]]);
+            $this->client = new Client();
+            $headers = $this->client->getDefaultOption('headers');
+            $headers['User-Agent'] = 'PkpPlnBot 1.0; http://pkp.sfu.ca';
+            $this->client->setDefaultOption('headers', $headers);
         }
 
         return $this->client;
@@ -134,11 +135,11 @@ class HarvestCommand extends AbstractProcessingCmd
         $client = $this->getClient();
         try {
             $response = $client->get($url);
-            $this->logger->info("Harvest - {$url} - HTTP {$response->getStatusCode()} - {$response->getHeader('Content-Length')[0]}");
+            $this->logger->info("Harvest - {$url} - HTTP {$response->getStatusCode()} - {$response->getHeader('Content-Length')}");
             if ($response->getStatusCode() !== 200) {
                 $this->logger->error("Harvest - {$url} - HTTP {$response->getHttpStatus()} - {$url} - {$response->getError()}");
             }
-        } catch (RequestException $e) {
+        } catch (Exception $e) {
             $this->logger->error($e);
             if ($e->hasResponse()) {
                 $this->logger->error($e->getResponse()->getStatusCode().' '.$e->getResponse()->getReasonPhrase());
@@ -176,7 +177,8 @@ class HarvestCommand extends AbstractProcessingCmd
                 }
                 throw new Exception($message);
             }
-            $expectedSize = ceil($reportedSize[0] / 1000); // This is how the pln plugin does it.
+            
+            $expectedSize = ceil($reportedSize / 1000); // This is how the pln plugin does it.
             $difference = abs($expectedSize - $deposit->getSize()) / max([$expectedSize, $deposit->getSize()]);
             if ($difference > self::FILE_SIZE_THRESHOLD) {
                 $deposit->addErrorLog("Expected file size {$expectedSize} is not close to reported size {$reportedSize}");
@@ -237,7 +239,7 @@ class HarvestCommand extends AbstractProcessingCmd
         $deposit->setHarvestAttempts($deposit->getHarvestAttempts() + 1);
         $this->checkSize($deposit);
         $response = $this->fetchDeposit($deposit->getUrl(), $deposit->getSize());
-        $deposit->setFileType($response->getHeader('Content-Type')[0]);
+        $deposit->setFileType($response->getHeader('Content-Type'));
         $filePath = $this->filePaths->getHarvestFile($deposit);
 
         return $this->writeDeposit($filePath, $response);

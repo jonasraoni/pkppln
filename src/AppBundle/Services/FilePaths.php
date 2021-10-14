@@ -213,7 +213,7 @@ class FilePaths
      *
      * @param Deposit $deposit
      *
-     * @return type
+     * @return string
      */
     public function getProcessingBagPath(Deposit $deposit)
     {
