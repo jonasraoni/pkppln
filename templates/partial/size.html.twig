@@ -1,0 +1,21 @@
+{% apply spaceless %}
+    {# LOCKSS reports box status in 1000-byte units, not in bytes. #}
+    {% set kilobyte = 1 %}
+    {% set megabyte = kilobyte * 1000 %}
+    {% set gigabyte = megabyte * 1000 %}
+    {% set terabyte = gigabyte * 1000 %}
+
+    {% if not(bytes) %}
+        {% block none %}{% endblock %}
+    {% elseif bytes < kilobyte %}
+        {{ bytes ~ ' B' }}
+    {% elseif bytes < megabyte %}
+        {{ (bytes / kilobyte)|number_format(2, '.') ~ ' KB' }}
+    {% elseif bytes < gigabyte %}
+        {{ (bytes / megabyte)|number_format(2, '.') ~ ' MB' }}
+    {% elseif bytes < terabyte %}
+        {{ (bytes / gigabyte)|number_format(2, '.') ~ ' GB' }}
+    {% else %}
+        {{ (bytes / terabyte)|number_format(2, '.') ~ ' TB' }}
+    {% endif %}
+{% endapply %}

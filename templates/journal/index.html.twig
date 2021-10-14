@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Journal List{% endblock %}
+
+{% block pageheader %}
+    <h1>Journal List</h1>
+    <p class="count">
+        Displaying {{ journals|length }} journals of {{ journals.getTotalItemCount }} total.
+    </p>
+ {% endblock %} 
+
+{% block body %}
+
+        <div class='btn-toolbar pull-right'>
+        <div class='btn-group'>
+            <a href="{{ path('journal_search') }}" class="btn btn-default">
+                <span class="glyphicon glyphicon-search"></span> Search
+            </a>
+        </div>
+    </div>
+        
+    <table class="table table-bordered table-condensed table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Uuid</th>
+                <th>Ojs Version</th>
+                <th>Title</th>
+                <th>Publisher Name</th>
+                </tr>
+        </thead>
+        <tbody>
+        {% for journal in journals %}
+            <tr>
+                <td>
+                    <a href="{{ path('journal_show', { 'id': journal.id }) }}">
+                        {{ journal.uuid }}
+                    </a>
+                </td>
+                <td>{{ journal.ojsVersion }}</td>
+                <td>{{ journal.title }}</td>
+                <td>{{ journal.publisherName }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+        
+    <div class="navigation">
+        {{ knp_pagination_render(journals) }}
+    </div>
+
+{% endblock %}
