@@ -1,7 +1,8 @@
-pkppln2
-=======
+# PKP PLN Staging Software
 
-A Symfony project created on February 23, 2018, 2:00 pm.
+This branch contains an import of the https://github.com/SFULibrary/pkppln-44 repository, which was a rewrite of the PKP Preservation Network staging server based on Symfony 4.4.
+
+This branch is **untested** in production and its feature-compatibility with the `production` branch is **uncertain**. Proceed with caution.
 
 Requirements
 ------------
@@ -30,8 +31,8 @@ somewhere accessible to the web. The instructions below assume that the applicat
 will be accessed at http://somehost/pkppln
 
 ```bash
-$ git clone https://git.lib.sfu.ca/mjoyce/pkppln-v2.git
-$ sudo mv pkppln-v2 /var/www/html/pkppln
+$ git clone -b https://github.com/pkp/pkppln
+$ sudo mv pkppln /var/www/html/pkppln
 $ cd /var/www/html/pkppln
 $ git submodule update --init
 ```
