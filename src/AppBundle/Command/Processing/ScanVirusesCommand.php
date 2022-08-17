@@ -48,7 +48,7 @@ class ScanVirusesCommand extends AbstractProcessingCmd {
             $dom->load($filename, LIBXML_COMPACT | LIBXML_PARSEHUGE);
             return $dom;
         } catch (Exception $e) {
-            $report .= "{$filename} cannot be parsed: {$e->getMessage()}\n";
+            $this->logger->debug("{$filename} cannot be parsed: {$e->getMessage()}");
         }
         
         $filteredFilename = "{$filename}-filtered.xml";
@@ -64,7 +64,7 @@ class ScanVirusesCommand extends AbstractProcessingCmd {
         
         try {
             $dom->load($filteredFilename, LIBXML_COMPACT | LIBXML_PARSEHUGE);
-            $report .= "{$filteredFilename} will be used instead.\n";
+            $this->logger->debug("{$filteredFilename} will be used instead.");
             return $dom;
         } catch (Exception $e) {
             $report .= "Filtering out invalid UTF-8 characters failed. Cannot parse XML at all: {$e->getMessage()}\n";
@@ -124,14 +124,9 @@ class ScanVirusesCommand extends AbstractProcessingCmd {
                 $report .= "{$d->getPath()} - {$d->getDescription()}\n";
             }
         }
-        
-        $bag = new BagIt($extractedPath);
-        foreach($bag->getBagContents() as $filename) {
-            if (substr($filename, -4) !== '.xml') {
-                continue;
-            }
-            $this->scanEmbeddedData($filename, $report);
-        }
+
+        $filename = $extractedPath . '/data/' . 'Issue' . $deposit->getDepositUuid() . '.xml';
+        $this->scanEmbeddedData($filename, $report);
         if($report) {
             $deposit->addToProcessingLog($report);
             print $report;
