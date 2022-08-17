@@ -238,6 +238,18 @@ class HarvestCommand extends AbstractProcessingCmd
      */
     protected function processDeposit(Deposit $deposit)
     {
+        $processingFolder = $this->filePaths->getProcessingBagPath($deposit);
+        if ($this->fs->exists($processingFolder)) {
+            $this->fs->remove($processingFolder);
+        }
+        $harvestFile = $this->filePaths->getHarvestFile($deposit);
+        if ($this->fs->exists($harvestFile)) {
+            $this->fs->remove($harvestFile);
+        }
+        $stagingFile = $this->filePaths->getStagingBagPath($deposit);
+        if ($this->fs->exists($stagingFile)) {
+            $this->fs->remove($stagingFile);
+        }
         $this->logger->notice("harvest - {$deposit->getDepositUuid()}");
         if($deposit->getHarvestAttempts() > $this->maxAttempts) {
             $this->logger->notice("skipping - {$deposit->getDepositUuid()} - too many failed harvests.");
