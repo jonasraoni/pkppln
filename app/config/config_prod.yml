@@ -19,6 +19,8 @@ monolog:
             type:         rotating_file
             level: error
             handler:      nested
+            max_files: 10
+            channels: ['!sword','!processing','!lockss']
         nested:
             type:  rotating_file
             path:  "%kernel.logs_dir%/%kernel.environment%.log"
