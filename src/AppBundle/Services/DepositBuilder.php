@@ -190,6 +190,7 @@ class DepositBuilder
         if ($action === 'add') {
             $deposit->addToProcessingLog('Deposit received.');
         } else {
+            $deposit->setHarvestAttempts(0);
             $deposit->addToProcessingLog('Deposit edited or reset by journal manager.');
         }
 
