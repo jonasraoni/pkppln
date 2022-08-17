@@ -324,8 +324,6 @@ class SwordController extends Controller
             $acceptingLog = 'accepting';
         }
 
-        $logger->notice("statement - {$request->getClientIp()} - {$journal_uuid} - {$acceptingLog}");
-
         if (!$accepting && !$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             throw new SwordException(400, 'Not authorized to request statements.');
         }
@@ -357,6 +355,10 @@ class SwordController extends Controller
             'deposit' => $deposit,
         ));
         $response->headers->set('Content-Type', 'text/xml');
+
+        $processingState = $deposit->getState() === 'complete' ? 'deposited' : $deposit->getState();
+        
+        $logger->notice("statement - {$request->getClientIp()} - {$journal_uuid}/{$deposit_uuid} - {$processingState}/{$deposit->getPlnState()}");
 
         return $response;
     }

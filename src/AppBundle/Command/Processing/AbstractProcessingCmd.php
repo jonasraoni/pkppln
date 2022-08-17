@@ -164,6 +164,22 @@ abstract class AbstractProcessingCmd extends ContainerAwareCommand
     }
 
     /**
+     * Code to run after each successfully deposit is saved to the database.
+     */
+    protected function afterSuccess(Deposit $deposit)
+    {
+        // do nothing, let subclasses override if needed.
+    }
+
+    /**
+     * Code to run after each failed deposit is saved to the database.
+     */
+    protected function afterFailure(Deposit $deposit)
+    {
+        // do nothing, let subclasses override if needed.
+    }
+
+    /**
      * @param bool  $retry      retry failed deposits
      * @param int[] $depositIds zero or more deposit Ids to filter
      *
@@ -181,7 +197,7 @@ abstract class AbstractProcessingCmd extends ContainerAwareCommand
             $query['id'] = $depositIds;
         }
 
-        return $repo->findBy($query);
+        return $repo->findBy($query, ['action' => 'ASC', 'size' => 'ASC']);
     }
 
     /**
@@ -217,6 +233,7 @@ abstract class AbstractProcessingCmd extends ContainerAwareCommand
                 $deposit->addToProcessingLog($this->failureLogMessage());
                 $deposit->addErrorLog(get_class($e).$e->getMessage());
                 $this->em->flush($deposit);
+                $this->afterFailure($deposit);
                 continue;
             }
 
@@ -237,7 +254,12 @@ abstract class AbstractProcessingCmd extends ContainerAwareCommand
             } elseif($result === null) {
                 // dunno, do nothing I guess.
             }
-            $this->em->flush($deposit); 
+            $this->em->flush($deposit);
+            if ($result === true) {
+                $this->afterSuccess($deposit);
+            } elseif ($result === false) {
+                $this->afterFailure($deposit);
+            } 
         }
     }
 }

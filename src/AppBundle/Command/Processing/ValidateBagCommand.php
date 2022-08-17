@@ -24,6 +24,7 @@ require_once 'vendor/scholarslab/bagit/lib/bagit.php';
 
 use AppBundle\Entity\Deposit;
 use BagIt;
+use Exception;
 use ZipArchive;
 
 /**
@@ -89,6 +90,29 @@ class ValidateBagCommand extends AbstractProcessingCmd
         }
 
         return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function afterFailure(Deposit $deposit) {
+        $extractedPath = $this->filePaths->getProcessingBagPath($deposit);
+        if (file_exists($extractedPath)) {
+            $this->logger->info("Removing failed bag files {$extractedPath}.");
+            $this->fs->remove($extractedPath);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function afterSuccess(Deposit $deposit)
+    {
+        $harvestedPath = $this->filePaths->getHarvestFile($deposit);
+        if (file_exists($harvestedPath)) {
+            $this->logger->info("The bag is validated, removing initial harvested file {$harvestedPath}.");
+            $this->fs->remove($harvestedPath);
+        }
     }
 
     /**
