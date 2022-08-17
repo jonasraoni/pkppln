@@ -103,6 +103,7 @@ class HarvestCommand extends AbstractProcessingCmd
     protected function writeDeposit($path, Response $response)
     {
         $this->logger->info("Writing deposit to {$path}");
+        $fh = null;
         try {
             $fh = fopen($path, 'wb');
             $body = $response->getBody();
@@ -111,10 +112,16 @@ class HarvestCommand extends AbstractProcessingCmd
             }
             // 64k chunks.
             while ($bytes = $body->read(64 * 1024)) {
-                fwrite($fh, $bytes);
+                if (fwrite($fh, $bytes) !== strlen($bytes)) {
+                    throw new Exception("Failed to write {$bytes} bytes");
+                }
             }
             fclose($fh);
         } catch (Exception $ex) {
+            if ($fh) {
+                fclose($fh);
+                unlink($path);
+            }
             $this->logger->error("Cannot write data to {$path}.");
             throw $ex;
         }
