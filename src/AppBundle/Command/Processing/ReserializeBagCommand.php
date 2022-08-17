@@ -121,6 +121,29 @@ class ReserializeBagCommand extends AbstractProcessingCmd
     /**
      * {@inheritdoc}
      */
+    protected function afterFailure(Deposit $deposit) {
+        $path = $this->filePaths->getStagingBagPath($deposit);
+        if (file_exists($path)) {
+            $this->logger->info("Removing failed attempt to reserialize the bag {$extractedPath}.");
+            $this->fs->remove($path);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function afterSuccess(Deposit $deposit)
+    {
+        $extractedPath = $this->filePaths->getProcessingBagPath($deposit);
+        if (file_exists($extractedPath)) {
+            $this->logger->info("Bag was reserialized, removing extracted bag files {$extractedPath}.");
+            $this->fs->remove($extractedPath);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function failureLogMessage()
     {
         return 'Bag Reserialize failed.';

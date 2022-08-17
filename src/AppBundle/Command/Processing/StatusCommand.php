@@ -105,17 +105,33 @@ class StatusCommand extends AbstractProcessingCmd
         $status = (string) $statement->xpath('//atom:category[@scheme="http://purl.org/net/sword/terms/state"]/@term')[0];
         $this->logger->notice('Deposit is '.$status);
         $deposit->setPlnState($status);
-        if ($status === 'agreement' && $this->cleanup) {
-            $this->logger->notice("Deposit complete. Removing processing files for deposit {$deposit->getId()}.");
-            unlink($this->filePaths->getHarvestFile($deposit));
-            $this->deltree($this->filePaths->getProcessingBagPath($deposit));
-            unlink($this->filePaths->getStagingBagPath($deposit));
-        }
 
         if($status === 'agreement') {
             return true;
         }
         return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function afterSuccess(Deposit $deposit)
+    {
+        if ($this->cleanup) {
+            $this->logger->notice("Deposit complete. Removing processing files for deposit {$deposit->getId()}.");
+            $harvestFile = $this->filePaths->getHarvestFile($deposit);
+            if (file_exists($harvestFile)) {
+                unlink($harvestFile);
+            }
+            $processingFolder = $this->filePaths->getProcessingBagPath($deposit);
+            if (is_dir($processingFolder)) {
+                $this->deltree($processingFolder);
+            }
+            $stagingFile = $this->filePaths->getStagingBagPath($deposit);
+            if (file_exists($stagingFile)) {
+                unlink($stagingFile);
+            }
+        }
     }
 
     /**
