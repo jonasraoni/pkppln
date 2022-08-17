@@ -747,7 +747,7 @@ class Deposit
      */
     public function getFileName()
     {
-        $extension = '';
+        $extension = '.zip';
         switch ($this->getFileType()) {
             case 'application/zip':
                 $extension = '.zip';
