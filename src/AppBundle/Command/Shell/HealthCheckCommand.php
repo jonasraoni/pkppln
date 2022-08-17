@@ -123,7 +123,7 @@ class HealthCheckCommand extends ContainerAwareCommand
      */
     protected function pingJournal(Journal $journal)
     {
-        $client = new Client();
+        $client = new Client(['defaults' => ['verify' => false, 'connect_timeout' => 15]]);
         try {
             $response = $client->get($journal->getGatewayUrl());
             if ($response->getStatusCode() !== 200) {

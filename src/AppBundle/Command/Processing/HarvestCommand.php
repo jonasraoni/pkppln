@@ -72,7 +72,7 @@ class HarvestCommand extends AbstractProcessingCmd
     public function getClient()
     {
         if (!$this->client) {
-            $this->client = new Client();
+            $this->client = new Client(['defaults' => ['verify' => false, 'connect_timeout' => 15]]);
             $headers = $this->client->getDefaultOption('headers');
             $headers['User-Agent'] = 'PkpPlnBot 1.0; http://pkp.sfu.ca';
             $this->client->setDefaultOption('headers', $headers);

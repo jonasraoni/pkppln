@@ -86,7 +86,7 @@ class Ping
     public function getClient()
     {
         if (!$this->client) {
-            $this->client = new Client();
+            $this->client = new Client(['defaults' => ['verify' => false, 'connect_timeout' => 15]]);
         }
 
         return $this->client;

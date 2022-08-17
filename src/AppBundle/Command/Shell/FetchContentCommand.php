@@ -114,7 +114,7 @@ class FetchContentCommand extends ContainerAwareCommand
     public function getHttpClient()
     {
         if (!$this->httpClient) {
-            $this->httpClient = new Client();
+            $this->httpClient = new Client(['defaults' => ['verify' => false, 'connect_timeout' => 15]]);
         }
 
         return $this->httpClient;
