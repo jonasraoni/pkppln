@@ -117,49 +117,43 @@ class ValidateXmlCommand extends AbstractProcessingCmd
      */
     protected function processDeposit(Deposit $deposit)
     {
-        $extractedPath = $this->filePaths->getProcessingBagPath($deposit);
+       $extractedPath = $this->filePaths->getProcessingBagPath($deposit);
 
         $this->logger->info("Validating {$extractedPath} XML files.");
-        $bag = new BagIt($extractedPath);
-        $valid = true;
         $report = '';
-
-        foreach ($bag->getBagContents() as $filename) {
-            if (substr($filename, -4) !== '.xml') {
-                continue;
-            }
-            $basename = basename($filename);
-            $dom = $this->loadXml($deposit, $filename, $report);
-            if ($dom === null) {
-                $valid = false;
-                continue;
-            }
-
-            $root = $dom->documentElement;
-            $validator = null;
-            if ($root->hasAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 'schemaLocation')) {
-                $validator = $this->container->get('schemavalidator');
-            } else {
-                $validator = $this->container->get('dtdvalidator');
-            }
-
-            /* @var DtdValidator|SchemaValidator */
-            $validator->validate($dom, $extractedPath . '/data');
-
-            if ($validator->hasErrors()) {
-                $deposit->addErrorLog("{$basename} - XML Validation failed.");
-                $this->logErrors($validator);
-                $report .= "{$basename} validation failed.\n";
-                foreach ($validator->getErrors() as $error) {
-                    $report .= "On line {$error['line']}: {$error['message']}\n";
-                }
-            } else {
-                $report .= "{$basename} validation succeeded.\n";
-            }
+        $filename = $extractedPath . '/data/' . 'Issue' . $deposit->getDepositUuid() . '.xml';
+        $basename = basename($filename);
+        $dom = $this->loadXml($deposit, $filename, $report);
+        if ($dom === null) {
+            $deposit->addToProcessingLog($report);
+            return false;
         }
-        $deposit->addToProcessingLog($report);
 
-        return $valid;
+        $root = $dom->documentElement;
+        $validator = null;
+        if ($root->hasAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 'schemaLocation')) {
+            $validator = $this->container->get('schemavalidator');
+        } else {
+            $validator = $this->container->get('dtdvalidator');
+        }
+
+        /* @var DtdValidator|SchemaValidator */
+        $validator->validate($dom, $extractedPath . '/data');
+
+        $hasErrors = $validator->hasErrors();
+        if ($hasErrors) {
+            $deposit->addErrorLog("{$basename} - XML Validation failed.");
+            $this->logErrors($validator);
+            $report .= "{$basename} validation failed.\n";
+            foreach ($validator->getErrors() as $error) {
+                $report .= "On line {$error['line']}: {$error['message']}\n";
+            }
+        } else {
+            $report .= "{$basename} validation succeeded.\n";
+        }
+
+        $deposit->addToProcessingLog($report);
+        return !$hasErrors;
     }
 
     /**
