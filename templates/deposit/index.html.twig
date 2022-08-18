@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Deposit List{% endblock %}
+
+{% block pageheader %}
+    <h1>Deposit List</h1>
+    <p class="count">
+        Displaying {{ deposits|length }} deposits of {{ deposits.getTotalItemCount }} total.
+    </p>
+{% endblock %}
+
+{% block body %}
+
+    <div class='btn-toolbar pull-right'>
+        <div class='btn-group'>
+            <a href="{{ path('deposit_search', {'journalId': journal.id}) }}" class="btn btn-default">
+                <span class="glyphicon glyphicon-search"></span> Search
+            </a>
+        </div>
+    </div>
+
+    <table class="table table-bordered table-condensed table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Deposit Uuid</th>
+                <th>Received</th>
+                <th>Processing Status</th>
+                <th>PLN Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for deposit in deposits %}
+                <tr>
+                    <td>
+                        <a href="{{ path('deposit_show', { 'id': deposit.id, 'journalId': journal.id }) }}">
+                            {{ deposit.depositUuid }}
+                        </a>
+                    </td>
+                    <td>{% if deposit.received %}{{ deposit.received|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <td>{{ deposit.state }}</td>
+                    <td>{{ deposit.plnState }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(deposits) }}
+    </div>
+
+{% endblock %}

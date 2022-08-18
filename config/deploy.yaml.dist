@@ -1,0 +1,28 @@
+
+# define the hosts
+hostname:
+    stage: ~
+    become: ~
+    deploy_path: ~
+    user: ~
+    ssh_multiplexing: false
+
+# The settings key must start with a dot(.) to prevent it being treated as
+# a host in the inventory.
+.settings:
+    application: ~
+    repository: ~
+    branch: master
+    shared_dirs:
+        - var/log
+        - var/sessions
+        - var/cache
+        - public/images
+    writable_dirs:
+        - var/log
+        - var/sessions
+        - var/cache
+        - public/images
+    context: system_u:object_r:httpd_sys_rw_content_t:s0
+    composer_options: 'install --no-progress --optimize-autoloader --no-interaction'
+    site_path: /doceww

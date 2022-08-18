@@ -1,0 +1,118 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    router.request_context.scheme: '%env(string:ROUTE_PROTOCOL)%'
+    router.request_context.host: '%env(string:ROUTE_HOST)%'
+    router.request_context.base_url: '%env(string:ROUTE_BASE)%'
+
+    asset.request_context.base_path: '%env(string:ROUTE_BASE)%'
+    asset.request_context.secure: auto
+
+    pln.data_dir: '%env(string:PLN_DATA_DIR)%'
+    pln.clamd_socket: '%env(string:PLN_CLAMD_SOCKET)%'
+    pln.uuid: '%env(string:PLN_UUID)%'
+    pln.remove_completed_deposits: '%env(string:PLN_REMOVE_COMPLETE_DEPOSIT)%'
+    pln.save_deposit_xml: '%env(string:PLN_SAVE_XML)%'
+    pln.service_uri: '%env(string:PLN_SERVICE_URI)%'
+    pln.accepting: '%env(bool:PLN_ACCEPTING)%'
+
+    pln.network_default: The PKP PLN does not know about this journal yet.
+    pln.network_accepting: The PKP PLN can accept deposits from this journal.
+    pln.network_oldojs: This journal must be running OJS 2.4.8 to make deposits to the PKP PLN.
+
+    pln.min_ojs_version: 2.4.8.0
+    pln.held_versions: ~
+    pln.max_harvest_attempts: 5
+    pln.max_au: 100000000
+    pln.max_upload: 1000000
+    pln.checksum_type: SHA-1
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments', 'knp_paginator.injectable']
+
+    App\Controller\LockssController:
+        calls:
+            - [ setLogger, ['@monolog.logger.lockss'] ]
+
+    App\Controller\SwordController:
+        calls:
+            - [ setLogger, ['@monolog.logger.sword'] ]
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
+    App\EventListener\SwordExceptionListener:
+        arguments: ["%kernel.environment%"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+            - { name: kernel.event_listener, event: kernel.controller }
+
+    App\EventListener\TermsOfUseListener:
+        tags:
+            - { name: doctrine.event_listener, event: postPersist }
+            - { name: doctrine.event_listener, event: postUpdate }
+            - { name: doctrine.event_listener, event: preRemove }
+
+    App\Menu\Builder:
+        tags:
+            - { name: knp_menu.menu_builder, method: mainMenu, alias: main}
+
+    blackwhitelist:
+        class: App\Services\BlackWhiteList
+
+    App\Services\FilePaths:
+        arguments:
+            $root: '%pln.data_dir%'
+            $projectDir: '%kernel.project_dir%'
+
+    App\Services\Ping:
+        arguments:
+            $minOjsVersion: '%pln.min_ojs_version%'
+
+    App\Services\Processing\Depositor:
+        arguments:
+            $heldVersions: '%pln.held_versions%'
+
+    App\Services\Processing\Harvester:
+        arguments:
+            $maxHarvestAttempts: '%pln.max_harvest_attempts%'
+
+    App\Services\Processing\VirusScanner:
+        arguments:
+            $socketPath: '%pln.clamd_socket%'
+
+    App\Services\Processing\StatusChecker:
+        arguments:
+            $cleanup: '%pln.remove_completed_deposits%'
+
+    App\Services\Processing\BagReserializer:
+        arguments:
+            $maxAuSize: '%pln.max_au%'
+
+    App\Services\SwordClient:
+        arguments:
+            $serviceUri: '%pln.service_uri%'
+            $uuid: '%pln.uuid%'
+            $saveXml: '%pln.save_deposit_xml%'
+
+    App\Command\UpgradeCommand:
+        arguments:
+            $oldEm: '@doctrine.dbal.oldversion_connection'

@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Journal{% endblock %}
+
+{% block pageheader %}
+    <h1>Journal Details</h1>
+{% endblock %}
+
+{% block body %}
+    <div class="btn-toolbar">
+        <div class="btn-group pull-right">
+            <a href="{{ path('journal_show', {'id': journal.id}) }}" class="btn btn-default">
+                <span class="glyphicon glyphicon-arrow-left"></span> Back
+            </a>
+        </div>
+    </div>
+    <table class="table table-bordered table-condensed table-hover table-striped">
+        <tbody>
+            <tr>
+                <th>Uuid</th>
+                <td>{{ journal.uuid }}</td>
+            </tr>
+            <tr>
+                <th>Contacted</th>
+                <td>{% if journal.contacted %}{{ journal.contacted|date }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ journal.title }}</td>
+            </tr>
+            <tr>
+                <th>Issn</th>
+                <td>{{ journal.issn }}</td>
+            </tr>
+            <tr>
+                <th>Url</th>
+                <td>
+                    <a href="{{ journal.url }}">
+                        {{ journal.url }}
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Ping Result</h2>
+
+    <dl class="dl-horizontal">
+        <dt>HTTP Status</dt>
+        <dd>{{ result.getHttpStatus() }}</dd>
+        {% if result.hasError() %}
+            <dt>Error</dt>
+            <dd>{{ result.getError() }}</dd>
+        {% else %}
+            <dt>OJS Version</dt>
+            <dd>{{ result.getOjsRelease() }}</dd>
+
+            <dt>Plugin Version</dt>
+            <dd>{{ result.getPluginReleaseVersion() }}</dd>
+
+            <dt>Plugin Date</dt>
+            <dd>{{ result.getPluginReleaseDate() }}</dd>
+
+            <dt>Plugin Current</dt>
+            <dd>{% if result.isPluginCurrent() %}Yes{% else %}No{% endif %}</dd>
+
+            <dt>Terms Accepted</dt>
+            <dd>{% if result.areTermsAccepted() %}Yes{% else %}No{% endif %}</dd>
+
+            <dt>Journal Title</dt>
+            <dd>{{ result.getJournalTitle() }}</dd>
+        {% endif %}
+    </dl>
+
+    {% if result.getArticleCount() > 0 %}
+        <h3>Articles: {{ result.getArticleCount() }}</h3>
+        <ul>
+            {% for title in result.getArticleTitles() %}
+                <li>
+                    {{ title['title'] }} <br/>
+                    {{ title['date'] }}
+                </li>
+                {% endfor %}
+        </ul>
+    {% endif %}
+
+{% endblock %}

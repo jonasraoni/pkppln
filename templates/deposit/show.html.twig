@@ -1,0 +1,167 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Deposit{% endblock %}
+
+{% block pageheader %}
+    <h1>Deposit Details</h1>
+{% endblock %}
+
+{% block body %}
+    <div class="btn-toolbar">
+        <div class="btn-group pull-right">
+            <a href="{{ path('deposit_index', {'journalId': journal.id}) }}" class="btn btn-default">
+                <span class="glyphicon glyphicon-arrow-left"></span> Back
+            </a>
+        </div>
+    </div>
+    <table class="table table-bordered table-condensed table-hover table-striped">
+        <tbody>
+            <tr>
+                <th>Journal Version</th>
+                <td>{{ deposit.journalVersion }}</td>
+            </tr>
+            <tr>
+                <th>License</th>
+                <td>{% if deposit.license %}{{ deposit.license|join(', ') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>File Type</th>
+                <td>{{ deposit.fileType }}</td>
+            </tr>
+            <tr>
+                <th>Deposit Uuid</th>
+                <td>{{ deposit.depositUuid }}</td>
+            </tr>
+            <tr>
+                <th>AU Container</th>
+                <td>
+                    {% if deposit.auContainer %}
+                        <a href='{{ path('aucontainer_show', {'id': deposit.auContainer.id}) }}'>{{ deposit.auContainer.id }}</a>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Received</th>
+                <td>{% if deposit.received %}{{ deposit.received|date }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Action</th>
+                <td>{{ deposit.action }}</td>
+            </tr>
+            <tr>
+                <th>Volume</th>
+                <td>{{ deposit.volume }}</td>
+            </tr>
+            <tr>
+                <th>Issue</th>
+                <td>{{ deposit.issue }}</td>
+            </tr>
+            <tr>
+                <th>Pub Date</th>
+                <td>{% if deposit.pubDate %}{{ deposit.pubDate|date('Y-m-d') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Checksum Type</th>
+                <td>{{ deposit.checksumType }}</td>
+            </tr>
+            <tr>
+                <th>Checksum Value</th>
+                <td>{{ deposit.checksumValue }}</td>
+            </tr>
+            <tr>
+                <th>Url</th>
+                <td>
+                    <a href="{{ deposit.url }}">
+                        {{ deposit.url }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <th>Size</th>
+                <td>{% embed 'partial/size.html.twig' with {bytes: deposit.size} %}{% endembed %}</td>
+            </tr>
+            <tr>
+                <th>State</th>
+                <td>{{ deposit.state }}</td>
+            </tr>
+            <tr>
+                <th>Staging Server Receipt</th>
+                <td>
+                    <a href="{{ url('sword_statement', {'journal_uuid': deposit.journal.uuid, 'deposit_uuid': deposit.depositUuid}) }}">
+                        {{ url('sword_statement', {'journal_uuid': deposit.journal.uuid, 'deposit_uuid': deposit.depositUuid}) }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <th>Error Log</th>
+                <td>{% if deposit.errorLog %}{{ deposit.errorLog|join(', ') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Pln State</th>
+                <td>{{ deposit.plnState }}</td>
+            </tr>
+            <tr>
+                <th>Package Size</th>
+                <td>
+                    {% embed 'partial/size.html.twig' with {bytes: deposit.packageSize} %}
+                        {% block none %}<i>Not packaged yet</i>{% endblock %}
+                    {% endembed %}
+                </td>
+            </tr>
+            <tr>
+                <th>Package Checksum Type</th>
+                <td>{{ deposit.packageChecksumType }}</td>
+            </tr>
+            <tr>
+                <th>Package Checksum Value</th>
+                <td>{{ deposit.packageChecksumValue }}</td>
+            </tr>
+            <tr>
+                <th>LOM Fetch URL</th>
+                <td>
+                    <a href="{{ url('fetch', { 'journalUuid': deposit.journal.uuid, 'depositUuid': deposit.depositUuid }) }}">
+                        {{ url('fetch', { 'journalUuid': deposit.journal.uuid, 'depositUuid': deposit.depositUuid }) }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <th>Deposit Date</th>
+                <td>{% if deposit.depositDate %}{{ deposit.depositDate|date('Y-m-d') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>LOM Deposit Receipt</th>
+                <td>
+                    {% if deposit.depositReceipt %}
+                        <a href="{{ deposit.depositReceipt }}">
+                            {{ deposit.depositReceipt }}
+                        </a>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Processing Log</th>
+                <td>{{ deposit.processingLog|nl2br }}</td>
+            </tr>
+            <tr>
+                <th>Harvest Attempts</th>
+                <td>{{ deposit.harvestAttempts }}</td>
+            </tr>
+            <tr>
+                <th>Created</th>
+                <td>{% if deposit.created %}{{ deposit.created|date }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Updated</th>
+                <td>{% if deposit.updated %}{{ deposit.updated|date }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Journal</th>
+                <td>
+                    <a href="{{ path('journal_show', { 'id': deposit.journal.id}) }}">
+                        {{ deposit.journal }}
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}
