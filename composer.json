@@ -46,6 +46,7 @@
         "doctrine/doctrine-fixtures-bundle": "^3.3",
         "liip/test-fixtures-bundle": "^1.6",
         "mikey179/vfsstream": "^1.6",
+        "phpunit/phpunit": "^8.5",
         "symfony/debug-pack": "*",
         "symfony/maker-bundle": "^1.0",
         "symfony/profiler-pack": "*",
@@ -61,7 +62,10 @@
         "preferred-install": {
             "*": "dist"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "symfony/flex": true
+        }
     },
     "autoload": {
         "psr-4": {
