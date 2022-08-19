@@ -80,7 +80,7 @@ class SwordExceptionListener {
      * @throws SyntaxError
      */
     public function onKernelException(ExceptionEvent $event) : void {
-        if ( ! $this->controller[0] instanceof SwordController) {
+        if ( ! ($this->controller[0] ?? null) instanceof SwordController) {
             return;
         }
 
