@@ -15,7 +15,7 @@ use App\Utilities\XmlParser;
 use DOMDocument;
 use DOMElement;
 use DOMXPath;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 use Socket\Raw\Factory;
 use Socket\Raw\Socket;
 use Xenolope\Quahog\Client;
@@ -24,7 +24,7 @@ use Xenolope\Quahog\Client;
  * This test makes use of the EICAR test signature found here:
  * http://www.eicar.org/86-0-Intended-use.html.
  */
-class VirusScannerTest extends ControllerBaseCase {
+class VirusScannerTest extends BaseControllerTestCase {
     /**
      * @var VirusScanner
      */
@@ -36,7 +36,9 @@ class VirusScannerTest extends ControllerBaseCase {
 
     public function testGetClient() : void {
         $factory = $this->createMock(Factory::class);
-        $factory->method('createClient')->willReturn(new Socket(null));
+        $socket = $this->createMock(Socket::class);
+        $socket->method('send')->willReturn(null);
+        $factory->method('createClient')->willReturn($socket);
         $this->scanner->setFactory($factory);
         $client = $this->scanner->getClient();
         $this->assertInstanceOf(Client::class, $client);
