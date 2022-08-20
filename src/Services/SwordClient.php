@@ -17,9 +17,9 @@ use DateTime;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\Message;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
-use function GuzzleHttp\Psr7\str;
 use SimpleXMLElement;
 use Symfony\Component\Filesystem\Filesystem;
 use Twig\Environment;
@@ -162,9 +162,10 @@ class SwordClient {
 
             return $this->client->send($request, $options);
         } catch (RequestException $e) {
-            $message = str($e->getRequest());
+            
+            $message = Message::toString($e->getRequest());
             if ($e->hasResponse()) {
-                $message .= "\n\n" . str($e->getResponse());
+                $message .= "\n\n" . Message::toString($e->getResponse());
             }
             if ($deposit) {
                 $deposit->addErrorLog($message);
@@ -267,7 +268,7 @@ class SwordClient {
      */
     public function fetch(Deposit $deposit) {
         $statement = $this->statement($deposit);
-        $original = $statement->xpath('//sword:originalDeposit/@href')[0];
+        $original = (string) $statement->xpath('//sword:originalDeposit/@href')[0];
         $filepath = $this->fp->getRestoreFile($deposit);
 
         $this->request('GET', $original, [], null, $deposit, [
