@@ -114,7 +114,7 @@ class Harvester {
      */
     public function writeDeposit($path, ResponseInterface $response) {
         $body = $response->getBody();
-        if ( ! $body) {
+        if (! $body->getSize()) {
             throw new Exception('Response body was empty.');
         }
         if ($this->fs->exists($path)) {
