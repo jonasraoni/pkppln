@@ -11,12 +11,12 @@ declare(strict_types=1);
 namespace App\Tests\Services\Processing;
 
 use App\Services\Processing\XmlValidator;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 
 /**
  * Description of PayloadValidatorTest.
  */
-class XmlValidatorTest extends ControllerBaseCase {
+class XmlValidatorTest extends BaseControllerTestCase {
     /**
      * @var XmlValidator
      */

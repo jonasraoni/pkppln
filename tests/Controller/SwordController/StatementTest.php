@@ -45,9 +45,9 @@ class StatementTest extends AbstractSwordTestCase {
         $whitelist = new Whitelist();
         $whitelist->setUuid($this->getReference('journal.1')->getUuid());
         $whitelist->setComment('b');
-        $this->entityManager->persist($whitelist);
-        $this->entityManager->flush();
-        $this->entityManager->clear();
+        $this->em->persist($whitelist);
+        $this->em->flush();
+        $this->em->clear();
 
         $this->client->request('GET', '/api/sword/2.0/cont-iri/04F2C06E-35B8-43C1-B60C-1934271B0B7E/4ECC5D8B-ECC9-435C-A072-6DCF198ACD6D/state');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());

@@ -13,9 +13,9 @@ namespace App\Tests\Controller;
 use App\DataFixtures\WhitelistFixtures;
 use App\Entity\Whitelist;
 use Nines\UserBundle\DataFixtures\UserFixtures;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 
-class WhitelistControllerTest extends ControllerBaseCase {
+class WhitelistControllerTest extends BaseControllerTestCase {
     protected function fixtures() : array {
         return [
             UserFixtures::class,
@@ -30,14 +30,14 @@ class WhitelistControllerTest extends ControllerBaseCase {
     }
 
     public function testUserIndex() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/whitelist/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(0, $crawler->selectLink('New')->count());
     }
 
     public function testAdminIndex() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/whitelist/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->selectLink('New')->count());
@@ -52,7 +52,7 @@ class WhitelistControllerTest extends ControllerBaseCase {
     }
 
     public function testUserShow() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/whitelist/1');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(0, $crawler->selectLink('Edit')->count());
@@ -60,7 +60,7 @@ class WhitelistControllerTest extends ControllerBaseCase {
     }
 
     public function testAdminShow() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/whitelist/1');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->selectLink('Edit')->count());
@@ -75,7 +75,7 @@ class WhitelistControllerTest extends ControllerBaseCase {
     }
 
     public function testUserSearch() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $formCrawler = $this->client->request('GET', '/whitelist/search');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $form = $formCrawler->selectButton('Search')->form([
@@ -87,7 +87,7 @@ class WhitelistControllerTest extends ControllerBaseCase {
     }
 
     public function testAdminSearch() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/whitelist/search');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $form = $formCrawler->selectButton('Search')->form([
@@ -106,13 +106,13 @@ class WhitelistControllerTest extends ControllerBaseCase {
     }
 
     public function testUserEdit() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/whitelist/1/edit');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminEdit() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/whitelist/1/edit');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
@@ -136,13 +136,13 @@ class WhitelistControllerTest extends ControllerBaseCase {
     }
 
     public function testUserNew() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/whitelist/new');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminNew() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/whitelist/new');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
@@ -166,22 +166,22 @@ class WhitelistControllerTest extends ControllerBaseCase {
     }
 
     public function testUserDelete() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/whitelist/1/delete');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminDelete() : void {
-        $preCount = count($this->entityManager->getRepository(Whitelist::class)->findAll());
-        $this->login('user.admin');
+        $preCount = count($this->em->getRepository(Whitelist::class)->findAll());
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/whitelist/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($this->client->getResponse()->isRedirect());
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
-        $this->entityManager->clear();
-        $postCount = count($this->entityManager->getRepository(Whitelist::class)->findAll());
+        $this->em->clear();
+        $postCount = count($this->em->getRepository(Whitelist::class)->findAll());
         $this->assertSame($preCount - 1, $postCount);
     }
 }

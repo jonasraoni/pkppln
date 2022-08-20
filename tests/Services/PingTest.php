@@ -21,12 +21,12 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 
 /**
  * Description of PingTest.
  */
-class PingTest extends ControllerBaseCase {
+class PingTest extends BaseControllerTestCase {
     /**
      * @var Ping
      */
@@ -113,7 +113,7 @@ ENDXML;
 
         $journal = $this->getReference('journal.1');
         $this->ping->process($journal, $result);
-        $this->entityManager->flush();
+        $this->em->flush();
         $this->assertSame('healthy', $journal->getStatus());
         $this->assertFalse($this->list->isListed($journal->getUuid()));
     }
@@ -129,11 +129,11 @@ ENDXML;
         $whitelist = new Whitelist();
         $whitelist->setUuid($journal->getUuid());
         $whitelist->setComment('testing.');
-        $this->entityManager->persist($whitelist);
-        $this->entityManager->flush();
+        $this->em->persist($whitelist);
+        $this->em->flush();
 
         $this->ping->process($journal, $result);
-        $this->entityManager->flush();
+        $this->em->flush();
         $this->assertSame('healthy', $journal->getStatus());
     }
 
@@ -146,7 +146,7 @@ ENDXML;
 
         $journal = $this->getReference('journal.1');
         $this->ping->process($journal, $result);
-        $this->entityManager->clear();
+        $this->em->clear();
         $this->assertSame('healthy', $journal->getStatus());
         $this->assertTrue($this->list->isListed($journal->getUuid()));
     }
@@ -174,7 +174,7 @@ ENDXML;
         $this->ping->setClient($client);
         $journal = $this->getReference('journal.1');
         $this->ping->ping($journal);
-        $this->entityManager->flush();
+        $this->em->flush();
         $this->assertSame('healthy', $journal->getStatus());
         $this->assertTrue($this->list->isListed($journal->getUuid()));
     }

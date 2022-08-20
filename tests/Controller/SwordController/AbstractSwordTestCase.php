@@ -17,11 +17,11 @@ use App\DataFixtures\TermOfUseFixtures;
 use App\DataFixtures\WhitelistFixtures;
 use App\Utilities\Namespaces;
 use Exception;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 use SimpleXMLElement;
 use Symfony\Component\BrowserKit\Client;
 
-abstract class AbstractSwordTestCase extends ControllerBaseCase {
+abstract class AbstractSwordTestCase extends BaseControllerTestCase {
 
     protected function getXml() {
         $xml = new SimpleXMLElement($this->client->getResponse()->getContent());

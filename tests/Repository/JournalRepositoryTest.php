@@ -15,12 +15,12 @@ use App\Entity\Blacklist;
 use App\Entity\Journal;
 use App\Entity\Whitelist;
 use App\Repository\JournalRepository;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 
 /**
  * Description of JournalRepositoryTest.
  */
-class JournalRepositoryTest extends ControllerBaseCase {
+class JournalRepositoryTest extends BaseControllerTestCase {
     /**
      * @return JournalRepository
      */
@@ -40,22 +40,22 @@ class JournalRepositoryTest extends ControllerBaseCase {
         $whitelist = new Whitelist();
         $whitelist->setUuid(JournalFixtures::UUIDS[0]);
         $whitelist->setComment('Test');
-        $this->entityManager->persist($whitelist);
+        $this->em->persist($whitelist);
 
         $blacklist = new Blacklist();
         $blacklist->setUuid(JournalFixtures::UUIDS[1]);
         $blacklist->setComment('Test');
-        $this->entityManager->persist($blacklist);
+        $this->em->persist($blacklist);
 
-        $this->entityManager->flush();
+        $this->em->flush();
 
         $this->assertSame(2, count($this->repo->getJournalsToPing()));
     }
 
     public function testGetJournalsToPingPingErrors() : void {
-        $journal = $this->entityManager->find(Journal::class, 1);
+        $journal = $this->em->find(Journal::class, 1);
         $journal->setStatus('ping-error');
-        $this->entityManager->flush();
+        $this->em->flush();
 
         $this->assertSame(3, count($this->repo->getJournalsToPing()));
     }
@@ -83,6 +83,6 @@ class JournalRepositoryTest extends ControllerBaseCase {
 
     protected function setup() : void {
         parent::setUp();
-        $this->repo = $this->entityManager->getRepository(Journal::class);
+        $this->repo = $this->em->getRepository(Journal::class);
     }
 }

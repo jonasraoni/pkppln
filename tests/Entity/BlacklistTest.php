@@ -11,12 +11,12 @@ declare(strict_types=1);
 namespace App\Tests\Entity;
 
 use App\Entity\Blacklist;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 
 /**
  * Description of BlacklistTest.
  */
-class BlacklistTest extends ControllerBaseCase {
+class BlacklistTest extends BaseControllerTestCase {
     private $blacklist;
 
     public function testInstance() : void {

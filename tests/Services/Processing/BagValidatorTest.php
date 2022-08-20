@@ -14,13 +14,13 @@ use App\DataFixtures\DepositFixtures;
 use App\DataFixtures\JournalFixtures;
 use App\Services\Processing\BagValidator;
 use App\Utilities\BagReader;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 use whikloj\BagItTools\Bag;
 
 /**
  * Description of PayloadValidatorTest.
  */
-class BagValidatorTest extends ControllerBaseCase {
+class BagValidatorTest extends BaseControllerTestCase {
     /**
      * @var BagValidator
      */

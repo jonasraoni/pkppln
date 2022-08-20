@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 
-class AuContainerTest extends ControllerBaseCase {
+class AuContainerTest extends BaseControllerTestCase {
     /**
      * @var AuContainer
      */

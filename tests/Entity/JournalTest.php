@@ -12,12 +12,13 @@ namespace App\Tests\Entity;
 
 use App\Entity\Journal;
 use DateTime;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
+use DateTimeInterface;
 
 /**
  * Description of JournalTest.
  */
-class JournalTest extends ControllerBaseCase {
+class JournalTest extends BaseControllerTestCase {
     private $journal;
 
     public function testInstance() : void {
@@ -31,7 +32,7 @@ class JournalTest extends ControllerBaseCase {
 
     public function testSetNotified() : void {
         $this->journal->setNotified(new DateTime());
-        $this->assertInstanceOf(DateTime::class, $this->journal->getNotified());
+        $this->assertInstanceOf(DateTimeInterface::class, $this->journal->getNotified());
     }
 
     protected function setup() : void {

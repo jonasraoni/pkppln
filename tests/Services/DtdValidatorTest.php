@@ -12,9 +12,9 @@ namespace App\Tests\Services;
 
 use App\Services\DtdValidator;
 use DOMDocument;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 
-class DtdValidatorTest extends ControllerBaseCase {
+class DtdValidatorTest extends BaseControllerTestCase {
     /**
      * @var DtdValidator
      */
@@ -71,7 +71,7 @@ ENDSTR;
 
     public function testValidateWithErrors() : void {
         $dom = new DOMDocument();
-        $dom->loadXML($this->getinvalidXml());
+        $dom->loadXML($this->getInvalidXml());
         $this->validator->validate($dom, true);
         $this->assertTrue($this->validator->hasErrors());
         $this->assertSame(1, $this->validator->countErrors());

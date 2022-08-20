@@ -14,12 +14,12 @@ use App\DataFixtures\DepositFixtures;
 use App\DataFixtures\JournalFixtures;
 use App\Entity\Deposit;
 use App\Repository\DepositRepository;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 
 /**
  * Description of DepositRepositoryTest.
  */
-class DepositRepositoryTest extends ControllerBaseCase {
+class DepositRepositoryTest extends BaseControllerTestCase {
     /**
      * @return DepositRepository
      */
@@ -64,6 +64,6 @@ class DepositRepositoryTest extends ControllerBaseCase {
 
     protected function setup() : void {
         parent::setUp();
-        $this->repo = $this->entityManager->getRepository(Deposit::class);
+        $this->repo = $this->em->getRepository(Deposit::class);
     }
 }

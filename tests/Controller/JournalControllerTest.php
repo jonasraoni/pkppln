@@ -12,9 +12,9 @@ namespace App\Tests\Controller;
 
 use App\DataFixtures\JournalFixtures;
 use Nines\UserBundle\DataFixtures\UserFixtures;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 
-class JournalControllerTest extends ControllerBaseCase {
+class JournalControllerTest extends BaseControllerTestCase {
     protected function fixtures() : array {
         return [
             UserFixtures::class,
@@ -29,13 +29,13 @@ class JournalControllerTest extends ControllerBaseCase {
     }
 
     public function testUserIndex() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/journal/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminIndex() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/journal/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
     }
@@ -47,13 +47,13 @@ class JournalControllerTest extends ControllerBaseCase {
     }
 
     public function testUserShow() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/journal/1');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminShow() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/journal/1');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
     }
@@ -66,7 +66,7 @@ class JournalControllerTest extends ControllerBaseCase {
     }
 
     public function testUserSearch() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $formCrawler = $this->client->request('GET', '/journal/search');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $form = $formCrawler->selectButton('Search')->form([
@@ -78,7 +78,7 @@ class JournalControllerTest extends ControllerBaseCase {
     }
 
     public function testAdminSearch() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/journal/search');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $form = $formCrawler->selectButton('Search')->form([
@@ -97,13 +97,13 @@ class JournalControllerTest extends ControllerBaseCase {
     }
 
     public function testUserPing() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $this->client->request('GET', '/journal/1/ping');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminPing() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $this->client->request('GET', '/journal/1/ping');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
     }

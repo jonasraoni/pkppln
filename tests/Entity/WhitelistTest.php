@@ -11,12 +11,12 @@ declare(strict_types=1);
 namespace App\Tests\Entity;
 
 use App\Entity\Whitelist;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 
 /**
  * Description of WhitelistTest.
  */
-class WhitelistTest extends ControllerBaseCase {
+class WhitelistTest extends BaseControllerTestCase {
     private $whitelist;
 
     public function testInstance() : void {

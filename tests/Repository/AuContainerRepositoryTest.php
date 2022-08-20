@@ -11,9 +11,9 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\DataFixtures\AuContainerFixtures;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 
-class AuContainerRepositoryTest extends ControllerBaseCase {
+class AuContainerRepositoryTest extends BaseControllerTestCase {
     /**
      * @var AuContainer
      */
@@ -34,6 +34,6 @@ class AuContainerRepositoryTest extends ControllerBaseCase {
 
     public function setUp() : void {
         parent::setUp();
-        $this->repository = $this->entityManager->getRepository('App:AuContainer');
+        $this->repository = $this->em->getRepository('App:AuContainer');
     }
 }

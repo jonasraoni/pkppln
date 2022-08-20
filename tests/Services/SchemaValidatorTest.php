@@ -12,9 +12,9 @@ namespace App\Tests\Services;
 
 use App\Services\SchemaValidator;
 use DOMDocument;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 
-class SchemaValidatorTest extends ControllerBaseCase {
+class SchemaValidatorTest extends BaseControllerTestCase {
     /**
      * @var SchemaValidator
      */

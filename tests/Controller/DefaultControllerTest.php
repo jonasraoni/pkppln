@@ -12,9 +12,9 @@ namespace App\Tests\Controller;
 
 use App\DataFixtures\DepositFixtures;
 use Nines\UserBundle\DataFixtures\UserFixtures;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 
-class DefaultControllerTest extends ControllerBaseCase {
+class DefaultControllerTest extends BaseControllerTestCase {
     protected function fixtures() : array {
         return [
             DepositFixtures::class,
@@ -29,13 +29,13 @@ class DefaultControllerTest extends ControllerBaseCase {
     }
 
     public function testUserIndex() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminIndex() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
     }
@@ -48,7 +48,7 @@ class DefaultControllerTest extends ControllerBaseCase {
     }
 
     public function testUserDepositSearch() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $formCrawler = $this->client->request('GET', '/deposit_search');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $form = $formCrawler->selectButton('Search')->form([
@@ -60,7 +60,7 @@ class DefaultControllerTest extends ControllerBaseCase {
     }
 
     public function testAdminDepositSearch() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/deposit_search');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $form = $formCrawler->selectButton('Search')->form([

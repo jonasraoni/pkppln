@@ -14,13 +14,13 @@ use App\DataFixtures\JournalFixtures;
 use App\Entity\Journal;
 use App\Services\JournalBuilder;
 use App\Utilities\Namespaces;
-use DateTime;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
+use DateTimeInterface;
 
 /**
  * Description of JournalBuilderTest.
  */
-class JournalBuilderTest extends ControllerBaseCase {
+class JournalBuilderTest extends BaseControllerTestCase {
     /**
      * @var JournalBuilder
      */
@@ -77,7 +77,7 @@ ENDXML;
 
     public function testGetContacted() : void {
         $this->journal = $this->builder->fromXml($this->getXml(), 'B99FE131-48B5-440A-A552-4F1BF2BFDE82');
-        $this->assertInstanceOf(DateTime::class, $this->journal->getContacted());
+        $this->assertInstanceOf(DateTimeInterface::class, $this->journal->getContacted());
     }
 
     /**

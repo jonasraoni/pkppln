@@ -13,12 +13,12 @@ namespace App\Tests\Repository;
 use App\DataFixtures\TermOfUseFixtures;
 use App\Entity\TermOfUse;
 use App\Repository\TermOfUseRepository;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 
 /**
  * Description of JournalRepositoryTest.
  */
-class TermOfUseRepositoryTest extends ControllerBaseCase {
+class TermOfUseRepositoryTest extends BaseControllerTestCase {
     /**
      * @return TermOfUseRepository
      */
@@ -41,6 +41,6 @@ class TermOfUseRepositoryTest extends ControllerBaseCase {
 
     protected function setup() : void {
         parent::setUp();
-        $this->repo = $this->entityManager->getRepository(TermOfUse::class);
+        $this->repo = $this->em->getRepository(TermOfUse::class);
     }
 }

@@ -11,12 +11,12 @@ declare(strict_types=1);
 namespace App\Tests\Entity;
 
 use App\Entity\Deposit;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 
 /**
  * Description of DepositTest.
  */
-class DepositTest extends ControllerBaseCase {
+class DepositTest extends BaseControllerTestCase {
     private $deposit;
 
     public function testInstance() : void {

@@ -15,14 +15,14 @@ use App\Entity\Journal;
 use App\Services\FilePaths;
 use App\Services\Processing\PayloadValidator;
 use Exception;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 
 /**
  * Description of PayloadValidatorTest.
  */
-class PayloadValidatorTest extends ControllerBaseCase {
+class PayloadValidatorTest extends BaseControllerTestCase {
     /**
      * @var PayloadValidator
      */

@@ -15,13 +15,13 @@ use App\DataFixtures\JournalFixtures;
 use App\Entity\Deposit;
 use App\Services\DepositBuilder;
 use App\Utilities\Namespaces;
-use DateTime;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
+use DateTimeInterface;
 
 /**
  * Description of DepositBuilderTest.
  */
-class DepositBuilderTest extends ControllerBaseCase {
+class DepositBuilderTest extends BaseControllerTestCase {
     private $deposit;
 
     private function getXml() {
@@ -69,7 +69,7 @@ ENDXML;
     }
 
     public function testReceived() : void {
-        $this->assertInstanceOf(DateTime::class, $this->deposit->getReceived());
+        $this->assertInstanceOf(DateTimeInterface::class, $this->deposit->getReceived());
     }
 
     public function testProcessingLog() : void {

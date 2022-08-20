@@ -12,12 +12,12 @@ namespace App\Tests\EventListener;
 
 use App\Entity\TermOfUse;
 use App\Entity\TermOfUseHistory;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 
 /**
  * Description of TermsOfUseListenerTest.
  */
-class TermsOfUseListenerTest extends ControllerBaseCase {
+class TermsOfUseListenerTest extends BaseControllerTestCase {
     protected function fixtures() : array {
         return [];
     }
@@ -28,10 +28,10 @@ class TermsOfUseListenerTest extends ControllerBaseCase {
         $term->setKeyCode('t1');
         $term->setWeight(1);
 
-        $this->entityManager->persist($term);
-        $this->entityManager->flush();
+        $this->em->persist($term);
+        $this->em->flush();
 
-        $history = $this->entityManager->getRepository(TermOfUseHistory::class)->findOneBy([
+        $history = $this->em->getRepository(TermOfUseHistory::class)->findOneBy([
             'termId' => $term->getId(),
         ]);
         $this->assertNotNull($history);
@@ -49,15 +49,15 @@ class TermsOfUseListenerTest extends ControllerBaseCase {
         $term->setKeyCode('t1');
         $term->setWeight(1);
 
-        $this->entityManager->persist($term);
-        $this->entityManager->flush();
+        $this->em->persist($term);
+        $this->em->flush();
 
         $term->setContent('updated');
         $term->setKeyCode('u1');
         $term->setWeight(3);
-        $this->entityManager->flush();
+        $this->em->flush();
 
-        $history = $this->entityManager->getRepository(TermOfUseHistory::class)->findOneBy([
+        $history = $this->em->getRepository(TermOfUseHistory::class)->findOneBy([
             'termId' => $term->getId(),
             'action' => 'update',
         ]);
@@ -76,16 +76,16 @@ class TermsOfUseListenerTest extends ControllerBaseCase {
         $term->setKeyCode('t1');
         $term->setWeight(1);
 
-        $this->entityManager->persist($term);
-        $this->entityManager->flush();
+        $this->em->persist($term);
+        $this->em->flush();
 
         // save for later.
         $termId = $term->getId();
 
-        $this->entityManager->remove($term);
-        $this->entityManager->flush();
+        $this->em->remove($term);
+        $this->em->flush();
 
-        $history = $this->entityManager->getRepository(TermOfUseHistory::class)->findOneBy([
+        $history = $this->em->getRepository(TermOfUseHistory::class)->findOneBy([
             'termId' => $termId,
             'action' => 'delete',
         ]);

@@ -13,9 +13,9 @@ namespace App\Tests\Services;
 use App\DataFixtures\BlacklistFixtures;
 use App\DataFixtures\WhitelistFixtures;
 use App\Services\BlackWhiteList;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 
-class BlackWhiteListTest extends ControllerBaseCase {
+class BlackWhiteListTest extends BaseControllerTestCase {
     /**
      * @var BlackWhiteList
      */

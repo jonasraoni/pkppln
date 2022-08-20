@@ -13,7 +13,7 @@ namespace App\Tests\Command\Processing;
 use App\DataFixtures\DepositFixtures;
 use App\DataFixtures\JournalFixtures;
 use App\Entity\Deposit;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -21,7 +21,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author michael
  */
-class AbstractProcessingCmdTest extends ControllerBaseCase {
+class AbstractProcessingCmdTest extends BaseControllerTestCase {
     /**
      * @var OutputInterface
      */
@@ -35,116 +35,116 @@ class AbstractProcessingCmdTest extends ControllerBaseCase {
     }
 
     public function testSuccessfulRun() : void {
-        $deposit = $this->entityManager->find(Deposit::class, 1);
+        $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-state');
-        $cmd = new DummyCommand($this->entityManager, true);
+        $cmd = new DummyCommand($this->em, true);
         $cmd->runDeposit($deposit, $this->output);
         $this->assertSame('next-state', $deposit->getState());
         $this->assertStringEndsWith('success', trim($deposit->getProcessingLog()));
     }
 
     public function testFailureRun() : void {
-        $deposit = $this->entityManager->find(Deposit::class, 1);
+        $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-state');
-        $cmd = new DummyCommand($this->entityManager, false);
+        $cmd = new DummyCommand($this->em, false);
         $cmd->runDeposit($deposit, $this->output);
         $this->assertSame('dummy-error', $deposit->getState());
         $this->assertStringEndsWith('dummy log message', trim($deposit->getProcessingLog()));
     }
 
     public function testUncertainRun() : void {
-        $deposit = $this->entityManager->find(Deposit::class, 1);
+        $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-state');
-        $cmd = new DummyCommand($this->entityManager, null);
+        $cmd = new DummyCommand($this->em, null);
         $cmd->runDeposit($deposit, $this->output);
         $this->assertSame('dummy-state', $deposit->getState());
         $this->assertSame('', trim($deposit->getProcessingLog()));
     }
 
     public function testCustomRun() : void {
-        $deposit = $this->entityManager->find(Deposit::class, 1);
+        $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-state');
-        $cmd = new DummyCommand($this->entityManager, 'held');
+        $cmd = new DummyCommand($this->em, 'held');
         $cmd->runDeposit($deposit, $this->output);
         $this->assertSame('held', $deposit->getState());
         $this->assertStringEndsWith('Holding deposit.', trim($deposit->getProcessingLog()));
     }
 
     public function testSuccessfulDryRun() : void {
-        $deposit = $this->entityManager->find(Deposit::class, 1);
+        $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-state');
-        $cmd = new DummyCommand($this->entityManager, true);
+        $cmd = new DummyCommand($this->em, true);
         $cmd->runDeposit($deposit, $this->output, true);
         $this->assertSame('dummy-state', $deposit->getState());
         $this->assertStringEndsWith('', trim($deposit->getProcessingLog()));
     }
 
     public function testFailureDryRun() : void {
-        $deposit = $this->entityManager->find(Deposit::class, 1);
+        $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-state');
-        $cmd = new DummyCommand($this->entityManager, false);
+        $cmd = new DummyCommand($this->em, false);
         $cmd->runDeposit($deposit, $this->output, true);
         $this->assertSame('dummy-state', $deposit->getState());
         $this->assertStringEndsWith('', trim($deposit->getProcessingLog()));
     }
 
     public function testUncertainDryRun() : void {
-        $deposit = $this->entityManager->find(Deposit::class, 1);
+        $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-state');
-        $cmd = new DummyCommand($this->entityManager, null);
+        $cmd = new DummyCommand($this->em, null);
         $cmd->runDeposit($deposit, $this->output, true);
         $this->assertSame('dummy-state', $deposit->getState());
         $this->assertSame('', trim($deposit->getProcessingLog()));
     }
 
     public function testCustomDryRun() : void {
-        $deposit = $this->entityManager->find(Deposit::class, 1);
+        $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-state');
-        $cmd = new DummyCommand($this->entityManager, 'held');
+        $cmd = new DummyCommand($this->em, 'held');
         $cmd->runDeposit($deposit, $this->output, true);
         $this->assertSame('dummy-state', $deposit->getState());
         $this->assertStringEndsWith('', trim($deposit->getProcessingLog()));
     }
 
     public function testGetDeposits() : void {
-        $deposit = $this->entityManager->find(Deposit::class, 1);
+        $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-state');
-        $this->entityManager->flush();
+        $this->em->flush();
 
-        $cmd = new DummyCommand($this->entityManager, 'held');
+        $cmd = new DummyCommand($this->em, 'held');
         $deposits = $cmd->getDeposits();
         $this->assertSame(1, count($deposits));
         $this->assertSame($deposit->getDepositUuid(), $deposits[0]->getDepositUuid());
     }
 
     public function testGetDepositsRetry() : void {
-        $deposit = $this->entityManager->find(Deposit::class, 1);
+        $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-error');
-        $this->entityManager->flush();
+        $this->em->flush();
 
-        $cmd = new DummyCommand($this->entityManager, 'held');
+        $cmd = new DummyCommand($this->em, 'held');
         $deposits = $cmd->getDeposits(true);
         $this->assertSame(1, count($deposits));
         $this->assertSame($deposit->getDepositUuid(), $deposits[0]->getDepositUuid());
     }
 
     public function testGetDepositsId() : void {
-        $deposit = $this->entityManager->find(Deposit::class, 1);
+        $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-state');
-        $this->entityManager->flush();
+        $this->em->flush();
 
-        $cmd = new DummyCommand($this->entityManager, 'held');
+        $cmd = new DummyCommand($this->em, 'held');
         $deposits = $cmd->getDeposits(false, [1]);
         $this->assertSame(1, count($deposits));
         $this->assertSame($deposit->getDepositUuid(), $deposits[0]->getDepositUuid());
     }
 
     public function testGetDepositsRetryId() : void {
-        $deposit = $this->entityManager->find(Deposit::class, 1);
+        $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-error');
-        $this->entityManager->flush();
+        $this->em->flush();
 
-        $cmd = new DummyCommand($this->entityManager, 'held');
+        $cmd = new DummyCommand($this->em, 'held');
         $deposits = $cmd->getDeposits(true, [1]);
         $this->assertSame(1, count($deposits));
         $this->assertSame($deposit->getDepositUuid(), $deposits[0]->getDepositUuid());

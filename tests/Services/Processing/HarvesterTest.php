@@ -18,14 +18,14 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 use Psr\Http\Message\StreamInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Description of HarvesterTest.
  */
-class HarvesterTest extends ControllerBaseCase {
+class HarvesterTest extends BaseControllerTestCase {
     private $harvester;
 
     public function testInstance() : void {
@@ -35,6 +35,7 @@ class HarvesterTest extends ControllerBaseCase {
     public function testWriteDeposit() : void {
         $body = $this->createMock(StreamInterface::class);
         $body->method('read')->will($this->onConsecutiveCalls('abc', 'def', ''));
+        $body->method('getSize')->willReturn(6);
         $response = $this->createMock(Response::class);
         $response->method('getBody')->willReturn($body);
         $fs = $this->createMock(Filesystem::class);
@@ -51,7 +52,7 @@ class HarvesterTest extends ControllerBaseCase {
     public function testWriteDepositNoBody() : void {
         $this->expectException(Exception::class);
         $response = $this->createMock(Response::class);
-        $response->method('getBody')->willReturn(null);
+        $response->method('getBody')->willReturn(\GuzzleHttp\Psr7\Utils::streamFor());
         $this->harvester->writeDeposit('', $response);
     }
 

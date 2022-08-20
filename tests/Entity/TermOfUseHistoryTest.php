@@ -11,12 +11,12 @@ declare(strict_types=1);
 namespace App\Tests\Entity;
 
 use App\Entity\TermOfUseHistory;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 
 /**
  * Description of TermOfUseHistoryTest.
  */
-class TermOfUseHistoryTest extends ControllerBaseCase {
+class TermOfUseHistoryTest extends BaseControllerTestCase {
     private $history;
 
     public function testToString() : void {

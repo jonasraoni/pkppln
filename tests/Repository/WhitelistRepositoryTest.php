@@ -13,12 +13,12 @@ namespace App\Tests\Repository;
 use App\DataFixtures\WhitelistFixtures;
 use App\Entity\Whitelist;
 use App\Repository\WhitelistRepository;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 
 /**
  * Description of WhitelistRepositoryTest.
  */
-class WhitelistRepositoryTest extends ControllerBaseCase {
+class WhitelistRepositoryTest extends BaseControllerTestCase {
     /**
      * @return WhitelistRepository
      */
@@ -38,6 +38,6 @@ class WhitelistRepositoryTest extends ControllerBaseCase {
 
     protected function setup() : void {
         parent::setUp();
-        $this->repo = $this->entityManager->getRepository(Whitelist::class);
+        $this->repo = $this->em->getRepository(Whitelist::class);
     }
 }

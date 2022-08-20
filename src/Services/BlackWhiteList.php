@@ -12,7 +12,7 @@ namespace App\Services;
 
 use App\Entity\Blacklist;
 use App\Entity\Whitelist;
-use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -38,7 +38,7 @@ class BlackWhiteList {
      *
      * @param string $uuid
      */
-    private function getEntry(ObjectRepository $repo, $uuid) {
+    private function getEntry(ServiceEntityRepository $repo, $uuid) {
         return null !== $repo->findOneBy(['uuid' => strtoupper($uuid)]);
     }
 

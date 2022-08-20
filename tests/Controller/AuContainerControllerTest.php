@@ -15,10 +15,10 @@ use App\DataFixtures\BlacklistFixtures;
 use App\DataFixtures\DepositFixtures;
 use App\DataFixtures\JournalFixtures;
 use Nines\UserBundle\DataFixtures\UserFixtures;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class AuContainerControllerTest extends ControllerBaseCase {
+class AuContainerControllerTest extends BaseControllerTestCase {
     protected function fixtures() : array {
         return [
             UserFixtures::class,
@@ -30,7 +30,7 @@ class AuContainerControllerTest extends ControllerBaseCase {
     }
 
     public function testIndex() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $this->client->request('GET', '/aucontainer/');
         $response = $this->client->getResponse();
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());

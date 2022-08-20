@@ -45,7 +45,7 @@ ENDXML;
     }
 
     public function testEditDepositNotWhitelisted() : void {
-        $depositCount = count($this->entityManager->getRepository('App:Deposit')->findAll());
+        $depositCount = count($this->em->getRepository('App:Deposit')->findAll());
         $this->client->request(
             'PUT',
             '/api/sword/2.0/cont-iri/04F2C06E-35B8-43C1-B60C-1934271B0B7E/F93A8108-B705-4763-A592-B718B00BD4EA/edit',
@@ -54,14 +54,14 @@ ENDXML;
             [],
             $this->getEditXml()
         );
-        $this->entityManager->clear();
+        $this->em->clear();
         $response = $this->client->getResponse();
         $this->assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-        $this->assertSame($depositCount, count($this->entityManager->getRepository('App:Deposit')->findAll()));
+        $this->assertSame($depositCount, count($this->em->getRepository('App:Deposit')->findAll()));
     }
 
     public function testEditDepositDepositMissing() : void {
-        $depositCount = count($this->entityManager->getRepository('App:Deposit')->findAll());
+        $depositCount = count($this->em->getRepository('App:Deposit')->findAll());
         $this->client->request(
             'PUT',
             '/api/sword/2.0/cont-iri/44428B12-CDC4-453E-8157-319004CD8CE6/c0a65967-32bd-4ee8-96de-c469743e563a/edit',
@@ -70,14 +70,14 @@ ENDXML;
             [],
             $this->getEditXml()
         );
-        $this->entityManager->clear();
+        $this->em->clear();
         $response = $this->client->getResponse();
         $this->assertSame(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-        $this->assertSame($depositCount, count($this->entityManager->getRepository('App:Deposit')->findAll()));
+        $this->assertSame($depositCount, count($this->em->getRepository('App:Deposit')->findAll()));
     }
 
     public function testEditDepositJournalMismatch() : void {
-        $depositCount = count($this->entityManager->getRepository('App:Deposit')->findAll());
+        $depositCount = count($this->em->getRepository('App:Deposit')->findAll());
         $this->client->request(
             'PUT',
             '/api/sword/2.0/cont-iri/44428B12-CDC4-453E-8157-319004CD8CE6/4ECC5D8B-ECC9-435C-A072-6DCF198ACD6D/edit',
@@ -86,21 +86,21 @@ ENDXML;
             [],
             $this->getEditXml()
         );
-        $this->entityManager->clear();
+        $this->em->clear();
         $response = $this->client->getResponse();
         $this->assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-        $this->assertSame($depositCount, count($this->entityManager->getRepository('App:Deposit')->findAll()));
+        $this->assertSame($depositCount, count($this->em->getRepository('App:Deposit')->findAll()));
     }
 
     public function testEditDepositSuccess() : void {
         $whitelist = new Whitelist();
         $whitelist->setUuid($this->getReference('journal.1')->getUuid());
         $whitelist->setComment('b');
-        $this->entityManager->persist($whitelist);
-        $this->entityManager->flush();
-        $this->entityManager->clear();
+        $this->em->persist($whitelist);
+        $this->em->flush();
+        $this->em->clear();
 
-        $depositCount = count($this->entityManager->getRepository('App:Deposit')->findAll());
+        $depositCount = count($this->em->getRepository('App:Deposit')->findAll());
         $this->client->request(
             'PUT',
             '/api/sword/2.0/cont-iri/04F2C06E-35B8-43C1-B60C-1934271B0B7E/F93A8108-B705-4763-A592-B718B00BD4EA/edit',
@@ -109,12 +109,12 @@ ENDXML;
             [],
             $this->getEditXml()
         );
-        $this->entityManager->clear();
+        $this->em->clear();
         $response = $this->client->getResponse();
         $this->assertSame(Response::HTTP_CREATED, $response->getStatusCode());
-        $this->assertSame($depositCount + 1, count($this->entityManager->getRepository('App:Deposit')->findAll()));
+        $this->assertSame($depositCount + 1, count($this->em->getRepository('App:Deposit')->findAll()));
 
-        $deposit = $this->entityManager->getRepository('App:Deposit')->findOneBy([
+        $deposit = $this->em->getRepository('App:Deposit')->findOneBy([
             'depositUuid' => strtoupper('d38e7ecb-7d7e-408d-94b0-b00d434fdbd2'),
         ]);
         $this->assertSame('55CA6286E3E4F4FBA5D0448333FA99FC5A404A73', $deposit->getChecksumValue());

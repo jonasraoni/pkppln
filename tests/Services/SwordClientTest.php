@@ -21,14 +21,14 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 use org\bovigo\vfs\vfsStream;
 use SimpleXMLElement;
 
 /**
  * Description of PingTest.
  */
-class SwordClientTest extends ControllerBaseCase {
+class SwordClientTest extends BaseControllerTestCase {
     /**
      * @var SwordClient
      */

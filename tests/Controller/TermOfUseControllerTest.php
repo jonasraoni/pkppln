@@ -13,9 +13,9 @@ namespace App\Tests\Controller;
 use App\DataFixtures\TermOfUseFixtures;
 use App\Entity\TermOfUse;
 use Nines\UserBundle\DataFixtures\UserFixtures;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use App\Tests\TestCase\BaseControllerTestCase;
 
-class TermOfUseControllerTest extends ControllerBaseCase {
+class TermOfUseControllerTest extends BaseControllerTestCase {
     protected function fixtures() : array {
         return [
             UserFixtures::class,
@@ -31,14 +31,14 @@ class TermOfUseControllerTest extends ControllerBaseCase {
     }
 
     public function testUserIndex() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/termofuse/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(0, $crawler->selectLink('New')->count());
     }
 
     public function testAdminIndex() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/termofuse/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->selectLink('New')->count());
@@ -53,7 +53,7 @@ class TermOfUseControllerTest extends ControllerBaseCase {
     }
 
     public function testUserShow() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/termofuse/1');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(0, $crawler->selectLink('Edit')->count());
@@ -61,7 +61,7 @@ class TermOfUseControllerTest extends ControllerBaseCase {
     }
 
     public function testAdminShow() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/termofuse/1');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->selectLink('Edit')->count());
@@ -76,13 +76,13 @@ class TermOfUseControllerTest extends ControllerBaseCase {
     }
 
     public function testUserEdit() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/termofuse/1/edit');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminEdit() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/termofuse/1/edit');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
@@ -109,13 +109,13 @@ class TermOfUseControllerTest extends ControllerBaseCase {
     }
 
     public function testUserNew() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/termofuse/new');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminNew() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/termofuse/new');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
@@ -142,22 +142,22 @@ class TermOfUseControllerTest extends ControllerBaseCase {
     }
 
     public function testUserDelete() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/termofuse/1/delete');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminDelete() : void {
-        $preCount = count($this->entityManager->getRepository(TermOfUse::class)->findAll());
-        $this->login('user.admin');
+        $preCount = count($this->em->getRepository(TermOfUse::class)->findAll());
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/termofuse/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($this->client->getResponse()->isRedirect());
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
-        $this->entityManager->clear();
-        $postCount = count($this->entityManager->getRepository(TermOfUse::class)->findAll());
+        $this->em->clear();
+        $postCount = count($this->em->getRepository(TermOfUse::class)->findAll());
         $this->assertSame($preCount - 1, $postCount);
     }
 }
