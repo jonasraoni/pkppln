@@ -4,4 +4,4 @@ nines_editor:
   resource: '@NinesEditorBundle/Controller'
 
 nines_user:
-  resource: '@NinesUserBundle/Resources/config/routes.yaml'
+  resource: '@NinesUserBundle/config/routes.yaml'
