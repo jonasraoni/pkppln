@@ -28,13 +28,12 @@ abstract class AbstractValidator {
     /**
      * Callback for a validation or parsing error.
      *
-     * @param string $n
+     * @param int $n
      * @param string $message
      * @param string $file
-     * @param string $line
-     * @param string $context
+     * @param int $line
      */
-    public function validationError($n, $message, $file, $line, $context) : void {
+    public function validationError($n, $message, $file, $line) : void {
         $lxml = libxml_get_last_error();
 
         if ($lxml) {
