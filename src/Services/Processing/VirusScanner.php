@@ -20,6 +20,7 @@ use RecursiveIteratorIterator;
 use Socket\Raw\Factory;
 use Symfony\Component\Filesystem\Filesystem;
 use Xenolope\Quahog\Client;
+use Xenolope\Quahog\Result;
 
 /**
  * Virus scanning service, via ClamAV.
@@ -98,10 +99,8 @@ class VirusScanner {
 
     /**
      * Scan an embedded file.
-     *
-     * @return array
      */
-    public function scanEmbed(DOMElement $embed, DOMXpath $xp, Client $client) {
+    public function scanEmbed(DOMElement $embed, DOMXpath $xp, Client $client): Result {
         $length = $xp->evaluate('string-length(./text())', $embed);
         // Xpath starts at 1.
         $offset = 1;
@@ -136,11 +135,7 @@ class VirusScanner {
         foreach ($xp->query('//embed') as $embed) {
             $filename = $embed->attributes->getNamedItem('filename')->nodeValue;
             $r = $this->scanEmbed($embed, $xp, $client);
-            if ('OK' === $r['status']) {
-                $results[] = $filename . ' OK';
-            } else {
-                $results[] = $filename . ' ' . $r['status'] . ': ' . $r['reason'];
-            }
+            $results[] = $r->isOk() ? $filename . ' OK' : $filename . ': ' . $r->getReason();
         }
 
         return $results;
@@ -174,11 +169,7 @@ class VirusScanner {
         foreach (new RecursiveIteratorIterator($phar) as $file) {
             $fh = fopen($file->getPathname(), 'rb');
             $r = $client->scanResourceStream($fh);
-            if ('OK' === $r['status']) {
-                $results[] = "{$file->getFileName()} OK";
-            } else {
-                $results[] = "{$file->getFileName()} {$r['status']}: {$r['reason']}";
-            }
+            $results[] = $r->isOk() ? "{$file->getFileName()} OK" : "{$file->getFileName()} {$r->getReason()}";
         }
 
         return $results;
@@ -201,11 +192,7 @@ class VirusScanner {
 
         $baseResult = [];
         $r = $client->scanFile($harvestedPath);
-        if ('OK' === $r['status']) {
-            $baseResult[] = "{$basename} OK";
-        } else {
-            $baseResult[] = "{$basename} {$r['status']}: {$r['reason']}";
-        }
+        $baseResult[] = $r->isOk() ? "{$basename} OK" : "{$basename}: {$r->getReason()}";
         $archiveResult = $this->scanArchiveFiles($phar, $client);
         $embeddedResult = $this->scanEmbededFiles($phar, $client);
         $deposit->addToProcessingLog(implode("\n", array_merge(

@@ -50,7 +50,7 @@
         "twig/twig": "^2.12|^3.0",
         "ubermichael/nines": "dev-4.x-up",
         "whikloj/bagittools": "^1.4",
-        "xenolope/quahog": "^2.1"
+        "xenolope/quahog": "3.0"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.4",

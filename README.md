@@ -75,8 +75,7 @@ $ ./bin/console nines:user:activate
 
 You should be able to login at https://localhost/pkppln/public
 
-Quality Tools
--------------
+## Quality Tools
 
 PHP Unit
 
@@ -91,3 +90,18 @@ Sami
 PHP CS Fixer
 
 `php-cs-fixer fix`
+
+
+## Deployment
+
+- To avoid handling permission requirements from the Symfony framework, it's advised to deploy the files in the home folder of an user.
+- Install the ClamAv antivirus (e.g. `apt-get install clamav clamav-daemon -y`).
+- Setup the path to its UNIX socket at the `.env` file (e.g. `PLN_CLAMD_SOCKET=/var/run/clamav/clamd.ctl`).
+- Create a database and setup the configuration at the `.env` file (`DATABASE_URL=mysql://user:password@localhost:3306/database?serverVersion=8.0`).
+- Setup the `APP_ENV` with `prod`.
+- Setup the `ROUTE_PROTOCOL`, `ROUTE_HOST` and `ROUTE_BASE` based on the host this is going to live on.
+- Setup the `PLN_DATA_DIR` with a valid and writable directory path.
+- Setup the `PLN_SERVICE_URI` with the LOCKSS-O-MATIC service URL.
+- Setup the `PLN_UUID` with the secret ID from the LOCKSS-O-MATIC service.
+- Setup the `MAILER_DSN`, see: https://symfony.com/doc/current/mailer.html#transport-setup.
+- Setup the `APP_SECRET` and `SYMFONY_DECRYPTION_SECRET` with random values (e.g. http://nux.net/secret)
