@@ -30,7 +30,7 @@ security:
                 path: '%router.request_context.base_url%'
                 samesite: strict
                 httponly: true
-                name: DOCEWW_REMEMBER_ME
+                name: PKPPLN_REMEMBER_ME
 
     role_hierarchy:
         ROLE_ADMIN: [ ROLE_USER ]
