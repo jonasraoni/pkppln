@@ -55,6 +55,7 @@ class DepositBuilder {
      * Find and return the deposit with $uuid or create a new deposit.
      */
     protected function findDeposit(string $uuid): Deposit {
+        /** @var Deposit */
         $deposit = $this->em->getRepository(Deposit::class)->findOneBy(['depositUuid' => strtoupper($uuid)]);
         if (!$deposit) {
             return (new Deposit())->setDepositUuid($uuid)
@@ -77,6 +78,7 @@ class DepositBuilder {
             }
         }
         return $deposit->setAction('edit')
+            ->setHarvestAttempts(0)
             ->addToProcessingLog('Deposit edited or reset by journal manager.');
     }
 
