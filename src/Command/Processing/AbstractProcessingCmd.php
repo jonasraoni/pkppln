@@ -13,6 +13,7 @@ namespace App\Command\Processing;
 use App\Entity\Deposit;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,6 +24,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Parent class for all processing commands.
  */
 abstract class AbstractProcessingCmd extends Command {
+    use LoggerAwareTrait;
     private EntityManagerInterface $em;
 
     /**
@@ -55,7 +57,7 @@ abstract class AbstractProcessingCmd extends Command {
     /**
      * Process one deposit return true on success and false on failure.
      */
-    abstract protected function processDeposit(Deposit $deposit): null | bool | string;
+    abstract protected function processDeposit(Deposit $deposit): null|bool|string;
 
     /**
      * Code to run before executing the command.
@@ -109,16 +111,14 @@ abstract class AbstractProcessingCmd extends Command {
     /**
      * Code to run after each successfully deposit is saved to the database.
      */
-    protected function afterSuccess(Deposit $deposit): void
-    {
+    protected function afterSuccess(Deposit $deposit): void {
         // do nothing, let subclasses override if needed.
     }
 
     /**
      * Code to run after each failed deposit is saved to the database.
      */
-    protected function afterFailure(Deposit $deposit): void
-    {
+    protected function afterFailure(Deposit $deposit): void {
         // do nothing, let subclasses override if needed.
     }
 

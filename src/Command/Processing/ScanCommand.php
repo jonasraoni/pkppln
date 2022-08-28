@@ -45,42 +45,42 @@ class ScanCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    protected function processDeposit(Deposit $deposit) {
+    protected function processDeposit(Deposit $deposit): null|bool|string {
         return $this->scanner->processDeposit($deposit);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function errorState() {
+    public function errorState(): string {
         return 'virus-error';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function failureLogMessage() {
+    public function failureLogMessage(): string {
         return 'Virus check failed.';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function nextState() {
+    public function nextState(): string {
         return 'virus-checked';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function processingState() {
+    public function processingState(): string {
         return 'xml-validated';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function successLogMessage() {
+    public function successLogMessage(): string {
         return 'Virus check passed. No infections found.';
     }
 }

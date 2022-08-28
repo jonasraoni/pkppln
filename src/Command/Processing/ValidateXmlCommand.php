@@ -51,42 +51,42 @@ class ValidateXmlCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    protected function processDeposit(Deposit $deposit) {
+    protected function processDeposit(Deposit $deposit): null|bool|string {
         return $this->xmlValidator->processDeposit($deposit);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function nextState() {
+    public function nextState(): string {
         return 'xml-validated';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function processingState() {
+    public function processingState(): string {
         return 'bag-validated';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function failureLogMessage() {
+    public function failureLogMessage(): string {
         return 'XML Validation failed.';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function successLogMessage() {
+    public function successLogMessage(): string {
         return 'XML validation succeeded.';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function errorState() {
+    public function errorState(): string {
         return 'xml-error';
     }
 }

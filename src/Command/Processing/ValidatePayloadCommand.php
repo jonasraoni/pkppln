@@ -45,42 +45,42 @@ class ValidatePayloadCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    protected function processDeposit(Deposit $deposit) {
+    protected function processDeposit(Deposit $deposit): null|bool|string {
         return $this->payloadValidator->processDeposit($deposit);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function nextState() {
+    public function nextState(): string {
         return 'payload-validated';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function processingState() {
+    public function processingState(): string {
         return 'harvested';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function failureLogMessage() {
+    public function failureLogMessage(): string {
         return 'Payload checksum validation failed.';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function successLogMessage() {
+    public function successLogMessage(): string {
         return 'Payload checksum validation succeeded.';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function errorState() {
+    public function errorState(): string {
         return 'payload-error';
     }
 }

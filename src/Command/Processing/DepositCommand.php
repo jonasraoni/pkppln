@@ -45,42 +45,42 @@ class DepositCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    protected function processDeposit(Deposit $deposit) {
+    protected function processDeposit(Deposit $deposit): null|bool|string {
         return $this->depositor->processDeposit($deposit);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function nextState() {
+    public function nextState(): string {
         return 'deposited';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function processingState() {
+    public function processingState(): string {
         return 'reserialized';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function failureLogMessage() {
+    public function failureLogMessage(): string {
         return 'Deposit to Lockssomatic failed.';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function successLogMessage() {
+    public function successLogMessage(): string {
         return 'Deposit to Lockssomatic succeeded.';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function errorState() {
+    public function errorState(): string {
         return 'deposit-error';
     }
 }

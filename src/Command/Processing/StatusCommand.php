@@ -11,19 +11,30 @@ declare(strict_types=1);
 namespace App\Command\Processing;
 
 use App\Entity\Deposit;
+use App\Services\FilePaths;
 use App\Services\SwordClient;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * PlnStatusCommand command.
  */
 class StatusCommand extends AbstractProcessingCmd {
     /**
+     * If true, completed deposits will be removed from disk.
+     */
+    private bool $cleanup;
+    private FilePaths $filePaths;
+
+    /**
      * {@inheritdoc}
      */
-    public function __construct(EntityManagerInterface $em, SwordClient $client) {
+    public function __construct(EntityManagerInterface $em, SwordClient $client, FilePaths $filePaths, bool $cleanup) {
         parent::__construct($em);
         $this->client = $client;
+        $this->filePaths = $filePaths;
+        $this->cleanup = $cleanup;
     }
 
     /**
@@ -38,7 +49,7 @@ class StatusCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    protected function processDeposit(Deposit $deposit) {
+    protected function processDeposit(Deposit $deposit): null|bool|string {
         $statusXml = $this->client->statement($deposit);
         $term = (string) $statusXml->xpath('//atom:category[@label="State"]/@term')[0];
         $deposit->setPlnState($term);
@@ -49,35 +60,61 @@ class StatusCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    public function errorState() {
+    protected function afterSuccess(Deposit $deposit): void {
+        if (!$this->cleanup) {
+            return;
+        }
+
+        $this->logger->notice("Deposit complete. Removing processing files for deposit {$deposit->getId()}.");
+
+        // Clear outdated files
+        $fs = new Filesystem();
+        $paths = [
+            $this->filePaths->getHarvestFile($deposit),
+            $this->filePaths->getProcessingBagPath($deposit),
+            $this->filePaths->getStagingBagPath($deposit)
+        ];
+        foreach ($paths as $path) {
+            try {
+                $fs->remove($path);
+            } catch (Exception $e) {
+                $this->logger->error($e->getMessage());
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function errorState(): string {
         return 'deposited';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function failureLogMessage() {
+    public function failureLogMessage(): string {
         return 'Status check with LOCKSSOMatic failed.';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function nextState() {
+    public function nextState(): string {
         return 'complete';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function processingState() {
+    public function processingState(): string {
         return 'deposited';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function successLogMessage() {
+    public function successLogMessage(): string {
         return 'Status check with LOCKSSOMatic succeeded.';
     }
 }

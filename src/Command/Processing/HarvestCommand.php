@@ -45,42 +45,42 @@ class HarvestCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    protected function processDeposit(Deposit $deposit) {
+    protected function processDeposit(Deposit $deposit): null|bool|string {
         return $this->harvester->processDeposit($deposit);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function nextState() {
+    public function nextState(): string {
         return 'harvested';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function errorState() {
+    public function errorState(): string {
         return 'harvest-error';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function processingState() {
+    public function processingState(): string {
         return 'depositedByJournal';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function failureLogMessage() {
+    public function failureLogMessage(): string {
         return 'Deposit harvest failed.';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function successLogMessage() {
+    public function successLogMessage(): string {
         return 'Deposit harvest succeeded.';
     }
 }
