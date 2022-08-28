@@ -13,8 +13,7 @@ namespace App\Command;
 use App\Entity\Journal;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Internal\Hydration\IterableResult;
-use Monolog\Logger;
-use Psr\Log\LoggerInterface;
+use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -27,6 +26,8 @@ use XMLWriter;
  * @see http://www.editeur.org/127/ONIX-PH/
  */
 class GenerateOnixCommand extends Command {
+    use LoggerAwareTrait;
+
     public const BATCH_SIZE = 50;
 
     /**
@@ -35,16 +36,10 @@ class GenerateOnixCommand extends Command {
     protected $em;
 
     /**
-     * @var Logger
-     */
-    private $logger;
-
-    /**
      * Set the service container, and initialize the command.
      */
-    public function __construct(LoggerInterface $logger, EntityManagerInterface $em) {
+    public function __construct(EntityManagerInterface $em) {
         parent::__construct();
-        $this->logger = $logger;
         $this->em = $em;
     }
 
