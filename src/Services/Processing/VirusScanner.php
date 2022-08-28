@@ -135,7 +135,7 @@ class VirusScanner {
         foreach ($xp->query('//embed') as $embed) {
             $filename = $embed->attributes->getNamedItem('filename')->nodeValue;
             $r = $this->scanEmbed($embed, $xp, $client);
-            $results[] = $r->isOk() ? $filename . ' OK' : $filename . ': ' . $r->getReason();
+            $results[] = $this->getStatusMessage($r, $filename);
         }
 
         return $results;
@@ -169,7 +169,7 @@ class VirusScanner {
         foreach (new RecursiveIteratorIterator($phar) as $file) {
             $fh = fopen($file->getPathname(), 'rb');
             $r = $client->scanResourceStream($fh);
-            $results[] = $r->isOk() ? "{$file->getFileName()} OK" : "{$file->getFileName()} {$r->getReason()}";
+            $results[] = $this->getStatusMessage($r, $file->getFileName());
         }
 
         return $results;
@@ -192,7 +192,7 @@ class VirusScanner {
 
         $baseResult = [];
         $r = $client->scanFile($harvestedPath);
-        $baseResult[] = $r->isOk() ? "{$basename} OK" : "{$basename}: {$r->getReason()}";
+        $baseResult[] = $this->getStatusMessage($r, $basename);
         $archiveResult = $this->scanArchiveFiles($phar, $client);
         $embeddedResult = $this->scanEmbededFiles($phar, $client);
         $deposit->addToProcessingLog(implode("\n", array_merge(
@@ -202,5 +202,14 @@ class VirusScanner {
         )));
 
         return true;
+    }
+
+    /**
+     * Retrieves the status message of a scan
+     */
+    private function getStatusMessage(Result $result, string $filename): string {
+        $status = $result->isOk() ? Client::RESULT_OK : ($result->isFound() ? Client::RESULT_FOUND : Client::RESULT_ERROR);
+        $reason = $result->isOk() ? '' : ": {$result->getReason()}";
+        return "{$filename} {$status}{$reason}";
     }
 }
