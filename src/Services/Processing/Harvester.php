@@ -184,7 +184,7 @@ class Harvester {
         } catch (Exception $e) {
             $deposit->addToProcessingLog($e->getMessage());
 
-            return;
+            return false;
         }
     }
 }

@@ -147,7 +147,7 @@ class UpgradeCommand extends Command {
                 $this->em->persist($entity);
                 $this->em->flush();
                 $this->em->clear();
-                $this->setIdMap(get_class($entity), $row['id'], $entity->getId());
+                $this->setIdMap($entity::class, $row['id'], $entity->getId());
                 $this->em->detach($entity);
             }
             $n++;

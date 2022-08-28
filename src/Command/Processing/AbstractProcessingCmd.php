@@ -23,12 +23,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Parent class for all processing commands.
  */
 abstract class AbstractProcessingCmd extends Command {
-    /**
-     * Database interface.
-     *
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private EntityManagerInterface $em;
 
     /**
      * Build the command.
@@ -59,10 +54,8 @@ abstract class AbstractProcessingCmd extends Command {
 
     /**
      * Process one deposit return true on success and false on failure.
-     *
-     * @return null|bool|string
      */
-    abstract protected function processDeposit(Deposit $deposit);
+    abstract protected function processDeposit(Deposit $deposit): null | bool | string;
 
     /**
      * Code to run before executing the command.
@@ -91,54 +84,59 @@ abstract class AbstractProcessingCmd extends Command {
     /**
      * Deposits in this state will be processed by the commands.
      */
-    abstract public function processingState();
+    abstract public function processingState(): string;
 
     /**
      * Successfully processed deposits will be given this state.
      */
-    abstract public function nextState();
+    abstract public function nextState(): string;
 
     /**
      * Deposits which generate errors will be given this state.
      */
-    abstract public function errorState();
+    abstract public function errorState(): string;
 
     /**
      * Successfully processed deposits will be given this log message.
      */
-    abstract public function successLogMessage();
+    abstract public function successLogMessage(): string;
 
     /**
      * Failed deposits will be given this log message.
      */
-    abstract public function failureLogMessage();
+    abstract public function failureLogMessage(): string;
+
+    /**
+     * Code to run after each successfully deposit is saved to the database.
+     */
+    protected function afterSuccess(Deposit $deposit): void
+    {
+        // do nothing, let subclasses override if needed.
+    }
+
+    /**
+     * Code to run after each failed deposit is saved to the database.
+     */
+    protected function afterFailure(Deposit $deposit): void
+    {
+        // do nothing, let subclasses override if needed.
+    }
 
     /**
      * Get a list of deposits to process.
-     *
-     * @param bool $retry
-     * @param int[] $depositIds
-     * @param int $limit
-     *
+     * 
      * @return Deposit[]
      */
-    public function getDeposits($retry = false, array $depositIds = [], $limit = null) {
-        $repo = $this->em->getRepository(Deposit::class);
-        $qb = $this->em->createQueryBuilder();
-        $qb->select('d')->from(Deposit::class, 'd');
-        $qb->where('d.state = :state');
-        if($retry) {
-            $qb->setParameter('state', $this->errorState());
-        } else {
-            $qb->setParameter('state', $this->processingState());
+    public function getDeposits(bool $retry = false, array $depositIds = [], ?int $limit = null): array {
+        ($qb = $this->em->createQueryBuilder())->select('d')->from(Deposit::class, 'd')
+            ->where('d.state = :state')
+            ->setParameter('state', $retry ? $this->errorState() : $this->processingState());
+
+        if (count($depositIds)) {
+            $qb->andWhere('d.id in (:ids)')->setParameter('ids', $depositIds);
         }
 
-        if (count($depositIds) > 0) {
-            $qb->andWhere('d.id in (:ids)')
-               ->setParameter('ids', $depositIds);
-        }
-
-        $qb->orderBy('d.id', 'ASC');
+        $qb->orderBy(['action' => 'ASC', 'size' => 'ASC']);
         if($limit) {
             $qb->setMaxResults($limit);
         }
@@ -149,18 +147,17 @@ abstract class AbstractProcessingCmd extends Command {
      * Run and process one deposit.
      *
      * If $dryRun is is true results will not be flushed to the database.
-     *
-     * @param bool $dryRun
      */
-    public function runDeposit(Deposit $deposit, OutputInterface $output, $dryRun = false) : void {
+    public function runDeposit(Deposit $deposit, OutputInterface $output, bool $dryRun = false) : void {
         try {
             $result = $this->processDeposit($deposit);
         } catch (Exception $e) {
             $output->writeln($e->getMessage());
             $deposit->setState($this->errorState());
             $deposit->addToProcessingLog($this->failureLogMessage());
-            $deposit->addErrorLog(get_class($e) . $e->getMessage());
+            $deposit->addErrorLog($e::class . $e->getMessage());
             $this->em->flush();
+            $this->afterFailure($deposit);
 
             return;
         }
@@ -182,5 +179,10 @@ abstract class AbstractProcessingCmd extends Command {
             // dunno, do nothing I guess.
         }
         $this->em->flush();
+        if ($result === true) {
+            $this->afterSuccess($deposit);
+        } elseif ($result === false) {
+            $this->afterFailure($deposit);
+        } 
     }
 }
