@@ -15,68 +15,75 @@ use App\Entity\Journal;
 use App\Utilities\Xpath;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use Psr\Log\LoggerAwareTrait;
 use SimpleXMLElement;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Description of DepositBuilder.
  */
 class DepositBuilder {
+    use LoggerAwareTrait;
+
     /**
      * Entity manager.
-     *
-     * @var EntityManagerInterface
      */
-    private $em;
+    private EntityManagerInterface $em;
 
     /**
      * URL generator.
-     *
-     * @var UrlGeneratorInterface
      */
-    private $generator;
+    private UrlGeneratorInterface $generator;
+
+    /**
+     * File paths.
+     */
+    private FilePaths $filePaths;
 
     /**
      * Build the service.
      */
-    public function __construct(EntityManagerInterface $em, UrlGeneratorInterface $generator) {
+    public function __construct(EntityManagerInterface $em, UrlGeneratorInterface $generator, FilePaths $filePaths) {
         $this->em = $em;
         $this->generator = $generator;
+        $this->filePaths = $filePaths;
     }
 
     /**
      * Find and return the deposit with $uuid or create a new deposit.
-     *
-     * @param string $uuid
-     *
-     * @return Deposit
      */
-    protected function findDeposit($uuid) {
-        $deposit = $this->em->getRepository(Deposit::class)->findOneBy([
-            'depositUuid' => strtoupper($uuid),
-        ]);
-        $action = 'edit';
-        if ( ! $deposit) {
-            $action = 'add';
-            $deposit = new Deposit();
-            $deposit->setDepositUuid($uuid);
+    protected function findDeposit(string $uuid): Deposit {
+        $deposit = $this->em->getRepository(Deposit::class)->findOneBy(['depositUuid' => strtoupper($uuid)]);
+        if (!$deposit) {
+            return (new Deposit())->setDepositUuid($uuid)
+                ->setAction('add')
+                ->addToProcessingLog('Deposit received.');
         }
-        if ('add' === $action) {
-            $deposit->addToProcessingLog('Deposit received.');
-        } else {
-            $deposit->addToProcessingLog('Deposit edited or reset by journal manager.');
-        }
-        $deposit->setAction($action);
 
-        return $deposit;
+        // Clear outdated files
+        $fs = new Filesystem();
+        $paths = [
+            $this->filePaths->getHarvestFile($deposit),
+            $this->filePaths->getProcessingBagPath($deposit),
+            $this->filePaths->getStagingBagPath($deposit)
+        ];
+        foreach ($paths as $path) {
+            try {
+                $fs->remove($path);
+            } catch (Exception $e) {
+                $this->logger->error($e->getMessage());
+            }
+        }
+        return $deposit->setAction('edit')
+            ->addToProcessingLog('Deposit edited or reset by journal manager.');
     }
 
     /**
      * Build a deposit from XML.
-     *
-     * @return Deposit
      */
-    public function fromXml(Journal $journal, SimpleXMLElement $xml) {
+    public function fromXml(Journal $journal, SimpleXMLElement $xml): Deposit {
         $id = Xpath::getXmlValue($xml, '//atom:id');
         $deposit = $this->findDeposit(substr($id, 9, 36));
         $deposit->setState('depositedByJournal');

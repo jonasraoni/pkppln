@@ -782,12 +782,12 @@ class Deposit extends AbstractEntity {
 
     /**
      * Append to the processing history.
-     *
-     * @param string $content
      */
-    public function addToProcessingLog($content) : void {
+    public function addToProcessingLog(string $content): static {
         $date = date(DateTime::ATOM);
         $this->processingLog .= "{$date}\n{$content}\n\n";
+
+        return $this;
     }
 
     /**
