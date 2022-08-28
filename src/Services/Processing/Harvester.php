@@ -34,6 +34,8 @@ class Harvester {
             'User-Agent' => 'PkpPlnBot 1.0; http://pkp.sfu.ca',
         ],
         'decode_content' => false,
+        'verify' => false,
+        'connect_timeout' => 15,
     ];
 
     /**

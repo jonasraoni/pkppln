@@ -96,7 +96,7 @@ class FetchContentCommand extends Command {
      */
     public function getHttpClient() {
         if ( ! $this->httpClient) {
-            $this->httpClient = new Client();
+            $this->httpClient = new Client(['verify' => false, 'connect_timeout' => 15]);
         }
 
         return $this->httpClient;

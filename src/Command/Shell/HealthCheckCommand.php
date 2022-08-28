@@ -105,7 +105,7 @@ class HealthCheckCommand extends Command {
      * @return bool
      */
     protected function pingJournal(Journal $journal) {
-        $client = new Client();
+        $client = new Client(['verify' => false, 'connect_timeout' => 15]);
 
         try {
             $response = $client->get($journal->getGatewayUrl());

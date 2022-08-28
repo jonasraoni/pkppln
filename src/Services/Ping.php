@@ -70,7 +70,7 @@ class Ping {
         $this->minOjsVersion = $minOjsVersion;
         $this->em = $em;
         $this->list = $list;
-        $this->client = new Client();
+        $this->client = new Client(['verify' => false, 'connect_timeout' => 15]);
     }
 
     /**
