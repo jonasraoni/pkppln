@@ -14,7 +14,6 @@ use App\Entity\Deposit;
 use App\Services\FilePaths;
 use Exception;
 use GuzzleHttp\Client;
-use GuzzleHttp\Message\Response;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -53,38 +52,30 @@ class Harvester {
 
     /**
      * HTTP Client.
-     *
-     * @var Client
      */
-    private $client;
+    private Client $client;
 
     /**
      * Filesystem interface.
-     *
-     * @var Filesystem
      */
-    private $fs;
+    private Filesystem $fs;
 
     /**
      * Maximum number of harvest attempts before giving up.
-     *
-     * @var int
      */
-    private $maxAttempts;
+    private int $maxAttempts;
 
     /**
      * File path service.
-     *
-     * @var FilePaths
      */
-    private $filePaths;
+    private FilePaths $filePaths;
 
     /**
      * Construct the harvester.
      *
      * @param int $maxHarvestAttempts
      */
-    public function __construct($maxHarvestAttempts, FilePaths $filePaths) {
+    public function __construct(int $maxHarvestAttempts, FilePaths $filePaths) {
         $this->maxAttempts = $maxHarvestAttempts;
         $this->filePaths = $filePaths;
         $this->fs = new Filesystem();
@@ -109,12 +100,8 @@ class Harvester {
      * Write a deposit's data to the filesystem at $path.
      *
      * Returns true on success and false on failure.
-     *
-     * @param string $path
-     *
-     * @return bool
      */
-    public function writeDeposit($path, ResponseInterface $response) {
+    public function writeDeposit(string $path, ResponseInterface $response): bool {
         $body = $response->getBody();
         if (! $body->getSize()) {
             throw new Exception('Response body was empty.');
@@ -122,9 +109,15 @@ class Harvester {
         if ($this->fs->exists($path)) {
             $this->fs->remove($path);
         }
-        // 64k chunks. Can't read/write the entire thing at once.
-        while ($bytes = $body->read(self::BUFFER_SIZE)) {
-            $this->fs->appendToFile($path, $bytes);
+        try {
+            // 64k chunks. Can't read/write the entire thing at once.
+            while ($bytes = $body->read(self::BUFFER_SIZE)) {
+                $this->fs->appendToFile($path, $bytes);
+            }
+        } catch (Exception $ex) {
+            // Removes the partially written file on failure
+            $this->fs->remove($path);
+            throw $ex;
         }
 
         return true;
@@ -135,17 +128,12 @@ class Harvester {
      *
      * @param string $url
      *
-     * @throws Exception
-     *                   If the HTTP status code isn't 200, throw an error.
-     *
-     * @return Response
+     * @throws Exception If the HTTP status code isn't 200, throw an error.
      */
-    public function fetchDeposit($url) {
+    public function fetchDeposit(string $url): ResponseInterface {
         $response = $this->client->get($url);
         if (200 !== $response->getStatusCode()) {
-            throw new Exception('Harvest download error '
-                    . "- {$url} - HTTP {$response->getHttpStatus()} "
-                    . "- {$response->getError()}");
+            throw new Exception("Harvest download error - HTTP {$response->getStatusCode()} - {$response->getReasonPhrase()} - {$url}");
         }
 
         return $response;
@@ -154,28 +142,22 @@ class Harvester {
     /**
      * Do an HTTP HEAD to get the deposit download size.
      *
-     * @throws Exception
-     *                   If the HEAD request status code isn't 200, throw an exception.
+     * @throws Exception If the HEAD request status code isn't 200, throw an exception.
      */
     public function checkSize(Deposit $deposit) : void {
         $response = $this->client->head($deposit->getUrl());
         if (200 !== $response->getStatusCode() || ! $response->hasHeader('Content-Length')) {
-            throw new Exception('HTTP HEAD request cannot check file size: '
-                    . "HTTP {$response->getStatusCode()} - {$response->getReasonPhrase()} "
-                    . "- {$deposit->getUrl()}");
+            throw new Exception("HTTP HEAD request cannot check file size: HTTP {$response->getStatusCode()} - {$response->getReasonPhrase()} - {$deposit->getUrl()}");
         }
         $values = $response->getHeader('Content-Length');
         $reported = (int) $values[0];
         if (0 === $reported) {
-            throw new Exception('HTTP HEAD response does not include file size: '
-                    . "HTTP {$response->getStatusCode()} - {$response->getReasonPhrase()} "
-                    . "- {$deposit->getUrl()}");
+            throw new Exception("HTTP HEAD response does not include file size: HTTP {$response->getStatusCode()} - {$response->getReasonPhrase()} - {$deposit->getUrl()}");
         }
         $expected = $deposit->getSize() * 1000;
         $difference = abs($reported - $expected) / (($reported + $expected) / 2.0);
         if ($difference > self::FILE_SIZE_THRESHOLD) {
-            throw new Exception("Expected file size {$expected} is not close to "
-            . "reported size {$reported}");
+            throw new Exception("Expected file size {$expected} is not close to  reported size {$reported}");
         }
     }
 
@@ -183,10 +165,8 @@ class Harvester {
      * Process one deposit.
      *
      * Fetch the data and write it to the file system.
-     *
-     * @return bool
      */
-    public function processDeposit(Deposit $deposit) {
+    public function processDeposit(Deposit $deposit): bool {
         if ($deposit->getHarvestAttempts() > $this->maxAttempts) {
             $deposit->setState('harvest-error');
 
