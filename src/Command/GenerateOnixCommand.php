@@ -11,9 +11,11 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Entity\Journal;
+use App\Services\FilePaths;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Internal\Hydration\IterableResult;
 use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,17 +32,17 @@ class GenerateOnixCommand extends Command {
 
     public const BATCH_SIZE = 50;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $em;
+    protected EntityManagerInterface $em;
+    private FilePaths $filePaths;
 
     /**
      * Set the service container, and initialize the command.
      */
-    public function __construct(EntityManagerInterface $em) {
+    public function __construct(EntityManagerInterface $em, FilePaths $filePaths, LoggerInterface $logger) {
         parent::__construct();
         $this->em = $em;
+        $this->filePaths = $filePaths;
+        $this->setLogger($logger);
     }
 
     /**
@@ -56,10 +58,8 @@ class GenerateOnixCommand extends Command {
 
     /**
      * Generate a CSV file at $filePath.
-     *
-     * @param string $filePath
      */
-    protected function generateCsv($filePath) : void {
+    protected function generateCsv(string $filePath) : void {
         $handle = fopen($filePath, 'w');
         $iterator = $this->getJournals();
         fputcsv($handle, ['Generated', date('Y-m-d')]);
@@ -137,7 +137,7 @@ class GenerateOnixCommand extends Command {
         foreach ($iterator as $row) {
             $journal = $row[0];
             $deposits = $journal->getSentDeposits();
-            if (0 === count($deposits)) {
+            if (! count($deposits)) {
                 $this->em->detach($journal);
 
                 continue;
@@ -209,8 +209,7 @@ class GenerateOnixCommand extends Command {
 
                 $writer->startElement('PreservationStatus');
                 $writer->writeElement('PreservationStatusCode', '05');
-                $writer->writeElement('DateOfStatus', $deposit->getDepositDate() ? $deposit->getDepositDate()
-                    ->format('Ymd') : date('Ymd'));
+                $writer->writeElement('DateOfStatus', $deposit->getDepositDate() ? $deposit->getDepositDate()->format('Ymd') : date('Ymd'));
                 $writer->endElement(); // PreservationStatus
 
                 $writer->writeElement('VerificationStatus', '01');
@@ -238,10 +237,9 @@ class GenerateOnixCommand extends Command {
         $this->em->getConnection()->getConfiguration()->setSQLLogger(null);
         ini_set('memory_limit', '512M');
         $files = $input->getArgument('file');
-        if ( ! $files || 0 === count($files)) {
-            $fp = $this->getContainer()->get('filepaths');
-            $files[] = $fp->getOnixPath('xml');
-            $files[] = $fp->getOnixPath('csv');
+        if ( ! $files || ! count($files)) {
+            $files[] = $this->filePaths->getOnixPath('xml');
+            $files[] = $this->filePaths->getOnixPath('csv');
         }
 
         foreach ($files as $file) {
