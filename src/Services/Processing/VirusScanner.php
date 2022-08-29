@@ -18,7 +18,6 @@ use DOMXPath;
 use PharData;
 use RecursiveIteratorIterator;
 use Socket\Raw\Factory;
-use Symfony\Component\Filesystem\Filesystem;
 use Xenolope\Quahog\Client;
 use Xenolope\Quahog\Result;
 
@@ -31,45 +30,26 @@ class VirusScanner {
      */
     public const BUFFER_SIZE = 64 * 1024;
 
-    /**
-     * File path service.
-     *
-     * @var FilePaths
-     */
     private $filePaths;
 
     /**
      * Path to the ClamAV socket.
-     *
-     * @var string
      */
-    private $socketPath;
+    private string $socketPath;
 
     /**
      * Socket factory, for use with the Quahog ClamAV interface.
-     *
-     * @var Factory
      */
-    private $factory;
-
-    /**
-     * Filesystem client.
-     *
-     * @var Filesystem
-     */
-    private $fs;
+    private Factory $factory;
 
     /**
      * Construct the virus scanner.
-     *
-     * @param string $socketPath
      */
-    public function __construct($socketPath, FilePaths $filePaths) {
+    public function __construct(string $socketPath, FilePaths $filePaths) {
         $this->filePaths = $filePaths;
         $this->socketPath = $socketPath;
         $this->bufferSize = self::BUFFER_SIZE;
         $this->factory = new Factory();
-        $this->fs = new Filesystem();
     }
 
     /**
@@ -84,12 +64,10 @@ class VirusScanner {
      *
      * The client can't be instantiated in the constructor. If the socket path
      * isn't configured or if the socket isn't set up yet the entire app will
-     * fail. Symfony tries it instantiate all services for each request, and if
+     * fail. Symfony tries to instantiate all services for each request, and if
      * one constructor throws an exception everything gets cranky.
-     *
-     * @return Client
      */
-    public function getClient() {
+    public function getClient(): Client {
         $socket = $this->factory->createClient('unix://' . $this->socketPath);
         $client = new Client($socket, 30, PHP_NORMAL_READ);
         $client->startSession();
@@ -120,15 +98,10 @@ class VirusScanner {
     /**
      * Scan an XML file and it's embedded content.
      *
-     * @param string $pathname
-     * @param XmlParser $parser
-     *
-     * @return array
+     * @return string[]
      */
-    public function scanXmlFile($pathname, Client $client, XmlParser $parser = null) {
-        if ( ! $parser) {
-            $parser = new XmlParser();
-        }
+    public function scanXmlFile(string $pathname, Client $client): array {
+        $parser = new XmlParser();
         $dom = $parser->fromFile($pathname);
         $xp = new DOMXPath($dom);
         $results = [];
@@ -142,34 +115,21 @@ class VirusScanner {
     }
 
     /**
-     * Find all the embedded files in the XML and scan them.
-     *
-     * @return array
-     */
-    public function scanEmbededFiles(PharData $phar, Client $client) {
-        $results = [];
-        $parser = new XmlParser();
-        foreach (new RecursiveIteratorIterator($phar) as $file) {
-            if ('.xml' !== substr($file->getFilename(), -4)) {
-                continue;
-            }
-            $results = array_merge($this->scanXmlFile($file->getPathname(), $client, $parser), $results);
-        }
-
-        return $results;
-    }
-
-    /**
      * Scan an archive.
      *
-     * @return array
+     * @return string[]
      */
-    public function scanArchiveFiles(PharData $phar, Client $client) {
+    public function scanArchiveFiles(PharData $phar, Client $client, Deposit $deposit): array {
+        $depositXML = '/data/' . 'Issue' . $deposit->getDepositUuid() . '.xml';
         $results = [];
         foreach (new RecursiveIteratorIterator($phar) as $file) {
             $fh = fopen($file->getPathname(), 'rb');
             $r = $client->scanResourceStream($fh);
+            fclose($fh);
             $results[] = $this->getStatusMessage($r, $file->getFileName());
+            if ($file->getFileName() === $depositXML) {
+                $results = array_merge($this->scanXmlFile($file->getPathname(), $client), $results);
+            }
         }
 
         return $results;
@@ -177,12 +137,8 @@ class VirusScanner {
 
     /**
      * Process one deposit.
-     *
-     * @param Client $client
-     *
-     * @return bool
      */
-    public function processDeposit(Deposit $deposit, Client $client = null) {
+    public function processDeposit(Deposit $deposit, Client $client = null): bool {
         if (null === $client) {
             $client = $this->getClient();
         }
@@ -190,16 +146,12 @@ class VirusScanner {
         $basename = basename($harvestedPath);
         $phar = new PharData($harvestedPath);
 
-        $baseResult = [];
         $r = $client->scanFile($harvestedPath);
-        $baseResult[] = $this->getStatusMessage($r, $basename);
-        $archiveResult = $this->scanArchiveFiles($phar, $client);
-        $embeddedResult = $this->scanEmbededFiles($phar, $client);
-        $deposit->addToProcessingLog(implode("\n", array_merge(
-            $baseResult,
-            $archiveResult,
-            $embeddedResult
-        )));
+        $messages[] = [
+            $this->getStatusMessage($r, $basename),
+            ...$this->scanArchiveFiles($phar, $client)
+        ];
+        $deposit->addToProcessingLog(implode("\n", $messages));
 
         return true;
     }
