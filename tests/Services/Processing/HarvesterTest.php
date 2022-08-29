@@ -26,7 +26,7 @@ use Symfony\Component\Filesystem\Filesystem;
  * Description of HarvesterTest.
  */
 class HarvesterTest extends BaseControllerTestCase {
-    private $harvester;
+    private Harvester $harvester;
 
     public function testInstance() : void {
         $this->assertInstanceOf(Harvester::class, $this->harvester);

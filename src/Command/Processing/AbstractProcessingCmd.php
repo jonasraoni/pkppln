@@ -136,11 +136,14 @@ abstract class AbstractProcessingCmd extends Command {
             $qb->andWhere('d.id in (:ids)')->setParameter('ids', $depositIds);
         }
 
-        $qb->orderBy(['action' => 'ASC', 'size' => 'ASC']);
         if($limit) {
             $qb->setMaxResults($limit);
         }
-        return $qb->getQuery()->execute();
+
+        return $qb->orderBy('d.action')
+            ->addOrderBy('d.size')
+            ->getQuery()
+            ->execute();
     }
 
     /**

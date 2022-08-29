@@ -22,7 +22,7 @@ use DateTimeInterface;
  * Description of DepositBuilderTest.
  */
 class DepositBuilderTest extends BaseControllerTestCase {
-    private $deposit;
+    private Deposit $deposit;
 
     private function getXml() {
         $data = <<<'ENDXML'

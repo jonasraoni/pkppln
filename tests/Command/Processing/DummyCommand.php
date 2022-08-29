@@ -7,9 +7,9 @@ use App\Entity\Deposit;
 use Doctrine\ORM\EntityManagerInterface;
 
 class DummyCommand extends AbstractProcessingCmd {
-    private ?string $return = null;
+    private null|bool|string $return = null;
 
-    public function __construct(EntityManagerInterface $em, $return) {
+    public function __construct(EntityManagerInterface $em, null|bool|string $return) {
         parent::__construct($em);
         $this->return = $return;
     }

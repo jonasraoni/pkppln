@@ -100,8 +100,8 @@ class VirusScanner {
      *
      * @return string[]
      */
-    public function scanXmlFile(string $pathname, Client $client): array {
-        $parser = new XmlParser();
+    public function scanXmlFile(string $pathname, Client $client, XmlParser $parser = null): array {
+        $parser ??= new XmlParser();
         $dom = $parser->fromFile($pathname);
         $xp = new DOMXPath($dom);
         $results = [];

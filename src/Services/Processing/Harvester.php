@@ -166,7 +166,7 @@ class Harvester {
      *
      * Fetch the data and write it to the file system.
      */
-    public function processDeposit(Deposit $deposit): bool {
+    public function processDeposit(Deposit $deposit): ?bool {
         if ($deposit->getHarvestAttempts() > $this->maxAttempts) {
             $deposit->setState('harvest-error');
 
@@ -184,7 +184,7 @@ class Harvester {
         } catch (Exception $e) {
             $deposit->addToProcessingLog($e->getMessage());
 
-            return false;
+            return null;
         }
     }
 }
