@@ -19,17 +19,8 @@ use Doctrine\ORM\EntityManagerInterface;
  * Validate XML in a deposit.
  */
 class ValidateXmlCommand extends AbstractProcessingCmd {
-    /**
-     * XML validator service.
-     *
-     * @var XmlValidator
-     */
-    private $xmlValidator;
-
-    /**
-     * @var SchemaValidator
-     */
-    private $schemaValidator;
+    private XmlValidator $xmlValidator;
+    private SchemaValidator $schemaValidator;
 
     /**
      * Build the command.

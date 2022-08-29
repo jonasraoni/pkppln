@@ -99,7 +99,7 @@ services:
         arguments:
             $socketPath: '%pln.clamd_socket%'
 
-    App\Services\Processing\StatusChecker:
+    App\Command\Processing\StatusCommand:
         arguments:
             $cleanup: '%pln.remove_completed_deposits%'
 

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Command\Processing;
 
 use App\Entity\Deposit;
+use App\Services\FilePaths;
 use App\Services\Processing\BagValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
