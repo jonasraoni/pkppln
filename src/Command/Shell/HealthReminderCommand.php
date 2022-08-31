@@ -11,39 +11,31 @@ declare(strict_types=1);
 namespace App\Command\Shell;
 
 use DateTime;
+use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use Swift_Message;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\Tests\Logger;
 use Twig\Environment;
 
 /**
  * Send reminders about journals that haven't contacted the PLN in a while.
+ * @todo Probably not working the Swift_Message
  */
 class HealthReminderCommand extends Command {
-    /**
-     * @var Logger
-     */
-    protected $logger;
-    /**
-     * @var TwigEngine
-     */
-    private $templating;
+    use LoggerAwareTrait;
 
-    /**
-     * Set the service container, and initialize the command.
-     *
-     * @param ContainerInterface $container
-     */
-    public function __construct(Environment $environment, LoggerInterface $logger) {
+    private Environment $templating;
+    private ContainerInterface $container;
+
+    public function __construct(Environment $environment, LoggerInterface $logger, ContainerInterface $container) {
         parent::__construct();
         $this->templating = $environment;
         $this->logger = $logger;
+        $this->container = $container;
     }
 
     /**
@@ -64,11 +56,10 @@ class HealthReminderCommand extends Command {
     /**
      * Send the notifications.
      *
-     * @param int $days
      * @param User[] $users
      * @param Journal[] $journals
      */
-    protected function sendReminders($days, $users, $journals) : void {
+    protected function sendReminders(int $days, array $users, array $journals) : void {
         $notification = $this->templating->render('App:HealthCheck:reminder.txt.twig', [
             'journals' => $journals,
             'days' => $days,
@@ -91,8 +82,8 @@ class HealthReminderCommand extends Command {
      * Execute the runall command, which executes all the commands.
      */
     protected function execute(InputInterface $input, OutputInterface $output) : void {
-        $em = $this->getContainer()->get('doctrine')->getManager();
-        $days = $this->getContainer()->getParameter('days_reminder');
+        $em = $this->container->get('doctrine')->getManager();
+        $days = $this->container->getParameter('days_reminder');
         $journals = $em->getRepository('App:Journal')->findOverdue($days);
         $count = count($journals);
         $this->logger->notice("Found {$count} overdue journals.");

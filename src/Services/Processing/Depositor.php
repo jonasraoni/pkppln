@@ -21,34 +21,26 @@ use App\Services\SwordClient;
 class Depositor {
     /**
      * Sword client to talk to LOCKSSOMatic.
-     *
-     * @var SwordClient
      */
-    private $client;
+    private SwordClient $client;
 
     /**
      * Maximum OJS version or null.
-     *
-     * @var null|string
      */
-    private $heldVersions;
+    private ?string $heldVersions;
 
     /**
      * Build the service.
-     *
-     * @param string $heldVersions
      */
-    public function __construct(SwordClient $client, $heldVersions) {
+    public function __construct(SwordClient $client, ?string $heldVersions) {
         $this->client = $client;
         $this->heldVersions = $heldVersions;
     }
 
     /**
      * Process one deposit.
-     *
-     * @return null|bool|string
      */
-    public function processDeposit(Deposit $deposit) {
+    public function processDeposit(Deposit $deposit): null|bool|string {
         if ($this->heldVersions && version_compare($deposit->getJournalVersion(), $this->heldVersions, '>=')) {
             return 'hold';
         }

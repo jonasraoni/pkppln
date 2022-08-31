@@ -23,34 +23,22 @@ use whikloj\BagItTools\Bag;
 class BagReserializer {
     /**
      * File path service.
-     *
-     * @var FilePaths
      */
-    private $filePaths;
+    private FilePaths $filePaths;
 
     /**
      * Bag reader service.
-     *
-     * @var BagReader
      */
-    private $bagReader;
+    private BagReader $bagReader;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /**
-     * @var int
-     */
-    private $maxAuSize;
+    private int $maxAuSize;
 
     /**
      * Construct the reserializer service.
-     *
-     * @param mixed $maxAuSize
      */
-    public function __construct($maxAuSize, FilePaths $fp, BagReader $bagReader, EntityManagerInterface $em) {
+    public function __construct(int $maxAuSize, FilePaths $fp, BagReader $bagReader, EntityManagerInterface $em) {
         $this->maxAuSize = $maxAuSize;
         $this->bagReader = $bagReader;
         $this->filePaths = $fp;
@@ -61,7 +49,6 @@ class BagReserializer {
      * Add the metadata from the database to the bag-info.txt file.
      */
     protected function addMetadata(Bag $bag, Deposit $deposit) : void {
-        // @todo this is very very bad. Once BagItPHP is updated it should be $bag->clearAllBagInfo();
         $bag->addBagInfoTag('External-Identifier', $deposit->getDepositUuid());
         $bag->addBagInfoTag('PKP-PLN-Deposit-UUID', $deposit->getDepositUuid());
         $bag->addBagInfoTag('PKP-PLN-Deposit-Received', $deposit->getReceived()->format('c'));
@@ -90,7 +77,7 @@ class BagReserializer {
         $this->bagReader = $bagReader;
     }
 
-    public function processDeposit(Deposit $deposit) {
+    public function processDeposit(Deposit $deposit): bool {
         $harvestedPath = $this->filePaths->getHarvestFile($deposit);
         $bag = $this->bagReader->readBag($harvestedPath);
         $bag->createFile($deposit->getProcessingLog(), 'data/processing-log.txt');

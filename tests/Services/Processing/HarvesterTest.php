@@ -183,6 +183,7 @@ class HarvesterTest extends BaseControllerTestCase {
 
         $deposit = new Deposit();
         $deposit->setUrl('http://example.com/path');
+        $deposit->setDepositUuid('abc123');
         $deposit->setSize(1);
         $journal = new Journal();
         $journal->setUuid('abc123');

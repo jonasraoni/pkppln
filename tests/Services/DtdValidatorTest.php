@@ -64,7 +64,7 @@ ENDSTR;
     public function testValidate() : void {
         $dom = new DOMDocument();
         $dom->loadXML($this->getValidXml());
-        $this->validator->validate($dom, true);
+        $this->validator->validate($dom, null, true);
         $this->assertFalse($this->validator->hasErrors());
         $this->assertSame(0, $this->validator->countErrors());
     }
@@ -72,7 +72,7 @@ ENDSTR;
     public function testValidateWithErrors() : void {
         $dom = new DOMDocument();
         $dom->loadXML($this->getInvalidXml());
-        $this->validator->validate($dom, true);
+        $this->validator->validate($dom, null, true);
         $this->assertTrue($this->validator->hasErrors());
         $this->assertSame(1, $this->validator->countErrors());
     }

@@ -28,13 +28,8 @@ class DepositRepository extends ServiceEntityRepository {
      * Create a search query and return it.
      *
      * The query isn't executed here.
-     *
-     * @param string $q
-     * @param Journal $journal
-     *
-     * @return Query
      */
-    public function searchQuery($q, Journal $journal = null) {
+    public function searchQuery(string $q, Journal $journal = null): Query {
         $qb = $this->createQueryBuilder('d');
         $qb->where('CONCAT(d.depositUuid, d.url) LIKE :q');
         $qb->setParameter('q', '%' . $q . '%');
@@ -48,10 +43,8 @@ class DepositRepository extends ServiceEntityRepository {
 
     /**
      * Summarize deposits by counting them by state.
-     *
-     * @return array
      */
-    public function stateSummary() {
+    public function stateSummary(): array {
         $qb = $this->createQueryBuilder('e');
         $qb->select('e.state, count(e) as ct')
             ->groupBy('e.state')
@@ -66,11 +59,9 @@ class DepositRepository extends ServiceEntityRepository {
      *
      * @todo this should be called findRecent
      *
-     * @param int $limit
-     *
      * @return Collection|Deposit[]
      */
-    public function findNew($limit = 5) {
+    public function findNew(int $limit = 5): array {
         $qb = $this->createQueryBuilder('d');
         $qb->orderBy('d.id', 'DESC');
         $qb->setMaxResults($limit);

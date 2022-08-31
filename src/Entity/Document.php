@@ -23,34 +23,30 @@ class Document extends AbstractEntity {
     /**
      * Document title.
      *
-     * @var string
      * @ORM\Column(type="string", nullable=false)
      */
-    private $title;
+    private string $title;
 
     /**
      * The URL slug for the document.
      *
-     * @var string
      * @ORM\Column(type="string", nullable=false)
      */
-    private $path;
+    private string $path;
 
     /**
      * A brief summary to display on the list of documents.
      *
-     * @var string
      * @ORM\Column(type="text", nullable=false)
      */
-    private $summary;
+    private string $summary;
 
     /**
      * The content.
      *
-     * @var string
      * @ORM\Column(type="text", nullable=false)
      */
-    private $content;
+    private string $content;
 
     /**
      * Build the document object.
@@ -68,12 +64,8 @@ class Document extends AbstractEntity {
 
     /**
      * Set title.
-     *
-     * @param string $title
-     *
-     * @return Document
      */
-    public function setTitle($title) {
+    public function setTitle(string $title): static {
         $this->title = $title;
 
         return $this;
@@ -81,21 +73,15 @@ class Document extends AbstractEntity {
 
     /**
      * Get title.
-     *
-     * @return string
      */
-    public function getTitle() {
+    public function getTitle(): string {
         return $this->title;
     }
 
     /**
      * Set path.
-     *
-     * @param string $path
-     *
-     * @return Document
      */
-    public function setPath($path) {
+    public function setPath(string $path): static {
         $this->path = $path;
 
         return $this;
@@ -103,21 +89,15 @@ class Document extends AbstractEntity {
 
     /**
      * Get path.
-     *
-     * @return string
      */
-    public function getPath() {
+    public function getPath(): string {
         return $this->path;
     }
 
     /**
      * Set summary.
-     *
-     * @param string $summary
-     *
-     * @return Document
      */
-    public function setSummary($summary) {
+    public function setSummary(string $summary): static {
         $this->summary = $summary;
 
         return $this;
@@ -125,21 +105,15 @@ class Document extends AbstractEntity {
 
     /**
      * Get summary.
-     *
-     * @return string
      */
-    public function getSummary() {
+    public function getSummary(): string {
         return $this->summary;
     }
 
     /**
      * Set content.
-     *
-     * @param string $content
-     *
-     * @return Document
      */
-    public function setContent($content) {
+    public function setContent(string $content): static {
         $this->content = $content;
 
         return $this;
@@ -147,10 +121,8 @@ class Document extends AbstractEntity {
 
     /**
      * Get content.
-     *
-     * @return string
      */
-    public function getContent() {
+    public function getContent(): string {
         return $this->content;
     }
 }

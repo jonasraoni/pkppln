@@ -68,7 +68,7 @@ class PingResultNullResponseTest extends TestCase {
     }
 
     public function testArticleCount() : void {
-        $this->assertSame('', $this->result->getArticleCount());
+        $this->assertSame(null, $this->result->getArticleCount());
     }
 
     public function testArticleTitles() : void {

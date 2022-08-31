@@ -20,10 +20,8 @@ use Doctrine\ORM\EntityManagerInterface;
 class DepositCommand extends AbstractProcessingCmd {
     /**
      * Depositor service.
-     *
-     * @var Depositor
      */
-    private $depositor;
+    private Depositor $depositor;
 
     /**
      * {@inheritdoc}

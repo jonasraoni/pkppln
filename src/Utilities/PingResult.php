@@ -20,39 +20,29 @@ use SimpleXMLElement;
 class PingResult {
     /**
      * HTTP request response.
-     *
-     * @var ResponseInterface
      */
-    private $response;
+    private ?ResponseInterface $response;
 
     /**
      * Content of the response body.
-     *
-     * @var string
      */
-    private $content;
+    private string $content;
 
     /**
      * Parsed XML from the response.
-     *
-     * @var SimpleXMLElement
      */
-    private $xml;
+    private ?SimpleXMLElement $xml = null;
 
     /**
      * Error from parsing the XML response.
-     *
      * @var array|string[]
      */
-    private $errors;
+    private array $errors;
 
     /**
      * Construct a ping result from an HTTP request.
-     *
-     * @param ResponseInterface $response
-     * @param string $errors
      */
-    public function __construct(ResponseInterface $response = null, $errors = null) {
+    public function __construct(ResponseInterface $response = null, string $errors = null) {
         $this->response = $response;
         if ($response) {
             $this->content = $response->getBody()->getContents();
@@ -79,10 +69,8 @@ class PingResult {
 
     /**
      * Get the HTTP response status.
-     *
-     * @return int
      */
-    public function getHttpStatus() {
+    public function getHttpStatus(): int {
         if ($this->response) {
             return $this->response->getStatusCode();
         }
@@ -92,10 +80,8 @@ class PingResult {
 
     /**
      * Return true if the request generated an error.
-     *
-     * @return bool
      */
-    public function hasError() {
+    public function hasError(): bool {
         return count($this->errors) > 0;
     }
 
@@ -105,10 +91,8 @@ class PingResult {
 
     /**
      * Get the XML processing error.
-     *
-     * @return string
      */
-    public function getError() {
+    public function getError(): string {
         return implode("\n", $this->errors);
     }
 
@@ -116,14 +100,10 @@ class PingResult {
      * Get the response body.
      *
      * Optionally strips out the tags.
-     *
-     * @param bool $stripTags
-     *
-     * @return string
      */
-    public function getBody($stripTags = true) {
+    public function getBody(bool $stripTags = true): ?string {
         if ( ! $this->content) {
-            return '';
+            return null;
         }
         if ($stripTags) {
             return strip_tags($this->content);
@@ -134,45 +114,31 @@ class PingResult {
 
     /**
      * Check if the http response was XML.
-     *
-     * @return bool
      */
-    public function hasXml() {
+    public function hasXml(): bool {
         return (bool) $this->xml;
     }
 
     /**
      * Get the response XML.
-     *
-     * @return SimpleXMLElement
      */
-    public function getXml() {
+    public function getXml(): ?SimpleXMLElement {
         return $this->xml;
     }
 
     /**
      * Get an HTTP header.
-     *
-     * @param string $name
-     *
-     * @return string
      */
-    public function getHeader($name) {
-        if ( ! $this->response) {
-            return '';
-        }
-
-        return $this->response->getHeader($name);
+    public function getHeader(string $name): array {
+        return $this->response?->getHeader($name) ?? [];
     }
 
     /**
      * Get the OJS release version.
-     *
-     * @return string
      */
-    public function getOjsRelease() {
+    public function getOjsRelease(): ?string {
         if ( ! $this->xml) {
-            return '';
+            return null;
         }
 
         return Xpath::getXmlValue($this->xml, '//ojsInfo/release', Deposit::DEFAULT_JOURNAL_VERSION);
@@ -180,12 +146,10 @@ class PingResult {
 
     /**
      * Get the plugin release version.
-     *
-     * @return string
      */
-    public function getPluginReleaseVersion() {
+    public function getPluginReleaseVersion(): ?string {
         if ( ! $this->xml) {
-            return '';
+            return null;
         }
 
         return Xpath::getXmlValue($this->xml, '//pluginInfo/release');
@@ -193,12 +157,10 @@ class PingResult {
 
     /**
      * Get the plugin release date.
-     *
-     * @return string
      */
-    public function getPluginReleaseDate() {
+    public function getPluginReleaseDate(): ?string {
         if ( ! $this->xml) {
-            return '';
+            return null;
         }
 
         return Xpath::getXmlValue($this->xml, '//pluginInfo/releaseDate');
@@ -206,12 +168,10 @@ class PingResult {
 
     /**
      * Check if the plugin thinks its current.
-     *
-     * @return string
      */
-    public function isPluginCurrent() {
+    public function isPluginCurrent(): ?string {
         if ( ! $this->xml) {
-            return '';
+            return null;
         }
 
         return Xpath::getXmlValue($this->xml, '//pluginInfo/current');
@@ -219,12 +179,10 @@ class PingResult {
 
     /**
      * Check if the terms of use have been accepted.
-     *
-     * @return string
      */
-    public function areTermsAccepted() {
+    public function areTermsAccepted(): ?string {
         if ( ! $this->xml) {
-            return '';
+            return null;
         }
 
         return Xpath::getXmlValue($this->xml, '//terms/@termsAccepted');
@@ -232,14 +190,10 @@ class PingResult {
 
     /**
      * Get the journal title from the response.
-     *
-     * @param null|mixed $default
-     *
-     * @return string
      */
-    public function getJournalTitle($default = null) {
+    public function getJournalTitle(?string $default = null): ?string {
         if ( ! $this->xml) {
-            return '';
+            return null;
         }
 
         return Xpath::getXmlValue($this->xml, '//journalInfo/title', $default);
@@ -247,15 +201,13 @@ class PingResult {
 
     /**
      * Get the number of articles the journal has published.
-     *
-     * @return int
      */
-    public function getArticleCount() {
+    public function getArticleCount(): ?int {
         if ( ! $this->xml) {
-            return '';
+            return null;
         }
 
-        return Xpath::getXmlValue($this->xml, '//articles/@count');
+        return (int) Xpath::getXmlValue($this->xml, '//articles/@count');
     }
 
     /**
@@ -264,7 +216,7 @@ class PingResult {
      * @return array[]
      *                 Array of associative array data.
      */
-    public function getArticleTitles() {
+    public function getArticleTitles(): array {
         if ( ! $this->xml) {
             return [];
         }

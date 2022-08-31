@@ -23,36 +23,23 @@ class TermOfUse extends AbstractEntity {
     /**
      * The "weight" of the term. Heavier terms are sorted lower.
      *
-     * @var int
-     *
      * @ORM\Column(type="integer")
      */
-    private $weight;
+    private int $weight;
 
     /**
      * A term key code, something unique to all versions and translations of a term.
      *
-     * @var string
-     *
      * @ORM\Column(type="string")
      */
-    private $keyCode;
+    private string $keyCode;
 
     /**
      * The content of the term, in the language in $langCode.
      *
-     * @var string
-     *
      * @ORM\Column(type="text")
      */
-    private $content;
-
-    /**
-     * Construct the term of use.
-     */
-    public function __construct() {
-        parent::__construct();
-    }
+    private string $content;
 
     /**
      * Return the term's content.
@@ -63,12 +50,8 @@ class TermOfUse extends AbstractEntity {
 
     /**
      * Set weight.
-     *
-     * @param int $weight
-     *
-     * @return TermOfUse
      */
-    public function setWeight($weight) {
+    public function setWeight(int $weight): static {
         $this->weight = $weight;
 
         return $this;
@@ -76,21 +59,15 @@ class TermOfUse extends AbstractEntity {
 
     /**
      * Get weight.
-     *
-     * @return int
      */
-    public function getWeight() {
+    public function getWeight(): int {
         return $this->weight;
     }
 
     /**
      * Set keyCode.
-     *
-     * @param string $keyCode
-     *
-     * @return TermOfUse
      */
-    public function setKeyCode($keyCode) {
+    public function setKeyCode(string $keyCode): static {
         $this->keyCode = $keyCode;
 
         return $this;
@@ -98,21 +75,15 @@ class TermOfUse extends AbstractEntity {
 
     /**
      * Get keyCode.
-     *
-     * @return string
      */
-    public function getKeyCode() {
+    public function getKeyCode(): string {
         return $this->keyCode;
     }
 
     /**
      * Set content.
-     *
-     * @param string $content
-     *
-     * @return TermOfUse
      */
-    public function setContent($content) {
+    public function setContent(string $content): static {
         $this->content = $content;
 
         return $this;
@@ -120,10 +91,8 @@ class TermOfUse extends AbstractEntity {
 
     /**
      * Get content.
-     *
-     * @return string
      */
-    public function getContent() {
+    public function getContent(): string {
         return $this->content;
     }
 }

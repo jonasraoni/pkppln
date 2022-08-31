@@ -19,44 +19,34 @@ use SimpleXMLElement;
 class ServiceDocument {
     /**
      * XML from the document.
-     *
-     * @var SimpleXMLElement
      */
-    private $xml;
+    private SimpleXMLElement $xml;
 
     /**
      * Construct the object.
-     *
-     * @param string $data
      */
-    public function __construct($data) {
+    public function __construct(string $data) {
         $this->xml = new SimpleXMLElement($data);
         Namespaces::registerNamespaces($this->xml);
     }
 
     /**
      * Return the XML for the document.
-     *
-     * @return string
      */
-    public function __toString() {
+    public function __toString(): string {
         return $this->xml->asXML();
     }
 
     /**
      * Get a single value from the document based on the XPath query $xpath.
      *
-     * @param string $xpath
-     *
      * @throws Exception
      *                   If the query results in multiple values.
-     *
-     * @return null|string
      */
-    public function getXpathValue($xpath) {
+    public function getXpathValue(string $xpath): ?string {
         $result = $this->xml->xpath($xpath);
         if (0 === count($result)) {
-            return;
+            return null;
         }
         if (count($result) > 1) {
             throw new Exception('Too many values returned by xpath query.');
@@ -67,28 +57,22 @@ class ServiceDocument {
 
     /**
      * Get the maximum upload size.
-     *
-     * @return string
      */
-    public function getMaxUpload() {
+    public function getMaxUpload(): string {
         return $this->getXpathValue('sword:maxUploadSize');
     }
 
     /**
      * Get the upload checksum type.
-     *
-     * @return string
      */
-    public function getUploadChecksum() {
+    public function getUploadChecksum(): string {
         return $this->getXpathValue('lom:uploadChecksumType');
     }
 
     /**
      * Get the collection URI from the service document.
-     *
-     * @return string
      */
-    public function getCollectionUri() {
+    public function getCollectionUri(): string {
         return $this->getXpathValue('.//app:collection/@href');
     }
 }

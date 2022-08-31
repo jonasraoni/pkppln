@@ -20,10 +20,8 @@ use Doctrine\ORM\EntityManagerInterface;
 class ScanCommand extends AbstractProcessingCmd {
     /**
      * Virus scanning service.
-     *
-     * @var VirusScanner
      */
-    private $scanner;
+    private VirusScanner $scanner;
 
     /**
      * Build the command.

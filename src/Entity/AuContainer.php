@@ -27,18 +27,17 @@ class AuContainer extends AbstractEntity {
     /**
      * List of deposits in one AU.
      *
-     * @var ArrayCollection|Deposit[]
+     * @var Collection|Deposit[]
      * @ORM\OneToMany(targetEntity="Deposit", mappedBy="auContainer", fetch="EXTRA_LAZY")
      */
-    private $deposits;
+    private Collection $deposits;
 
     /**
      * True if the container can accept more deposits.
      *
-     * @var bool
      * @ORM\Column(type="boolean")
      */
-    private $open;
+    private bool $open;
 
     /**
      * Constructor.
@@ -57,10 +56,8 @@ class AuContainer extends AbstractEntity {
 
     /**
      * Add deposits.
-     *
-     * @return AuContainer
      */
-    public function addDeposit(Deposit $deposit) {
+    public function addDeposit(Deposit $deposit): static {
         $this->deposits[] = $deposit;
 
         return $this;
@@ -75,22 +72,15 @@ class AuContainer extends AbstractEntity {
 
     /**
      * Get deposits.
-     *
-     * @return Collection
      */
-    public function getDeposits() {
+    public function getDeposits(): Collection {
         return $this->deposits;
     }
 
     /**
-     * Set open. An open container can be made closed, but a closed container
-     * cannot be reopened.
-     *
-     * @param bool $open
-     *
-     * @return AuContainer
+     * Set open. An open container can be made closed, but a closed container cannot be reopened.
      */
-    public function setOpen($open) {
+    public function setOpen(bool $open): static {
         if ($this->open) {
             // Only change an open container to closed.
             $this->open = $open;
@@ -101,19 +91,15 @@ class AuContainer extends AbstractEntity {
 
     /**
      * Get open.
-     *
-     * @return bool
      */
-    public function isOpen() {
+    public function isOpen(): bool {
         return $this->open;
     }
 
     /**
      * Get the size of the container in bytes.
-     *
-     * @return int
      */
-    public function getSize() {
+    public function getSize(): int {
         $size = 0;
         foreach ($this->deposits as $deposit) {
             $size += $deposit->getPackageSize();
@@ -124,10 +110,8 @@ class AuContainer extends AbstractEntity {
 
     /**
      * Count the deposits in the container.
-     *
-     * @return int
      */
-    public function countDeposits() {
+    public function countDeposits(): int {
         return $this->deposits->count();
     }
 }

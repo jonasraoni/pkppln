@@ -15,6 +15,7 @@ use App\Services\FilePaths;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManagerInterface;
 use Monolog\Logger;
+use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -27,19 +28,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Clean completed deposits from the file system.
  */
 class CleanupCommand extends Command {
-    /**
-     * @var Logger
-     */
-    protected $logger;
+    use LoggerAwareTrait;
 
-    /**
-     * @var Registry
-     */
-    protected $em;
-
-    /**
-     * @var FilePaths
-     */
+    protected EntityManagerInterface $em;
     protected $filePaths;
 
     /**
@@ -54,11 +45,8 @@ class CleanupCommand extends Command {
 
     /**
      * Remove a directory and its contents recursively. Use with caution.
-     *
-     * @param mixed $path
-     * @param mixed $force
      */
-    private function delFileTree($path, $force = false) : void {
+    private function delFileTree(string $path, bool $force = false) : void {
         if ( ! file_exists($path)) {
             return;
         }
@@ -99,10 +87,8 @@ class CleanupCommand extends Command {
 
     /**
      * Process one deposit.
-     *
-     * @param mixed $force
      */
-    protected function processDeposit(Deposit $deposit, $force = false) : void {
+    protected function processDeposit(Deposit $deposit, bool $force = false) : void {
         if ('agreement' === $deposit->getPlnState()) {
             $this->delFileTree($this->filePaths->getHarvestFile($deposit), $force);
             $this->delFileTree($this->filePaths->getProcessingBagPath($deposit), $force);

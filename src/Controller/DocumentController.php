@@ -17,6 +17,7 @@ use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -32,13 +33,11 @@ class DocumentController extends AbstractController implements PaginatorAwareInt
     /**
      * Lists all Document entities.
      *
-     * @return array
-     *
      * @Route("/", name="document_index", methods={"GET"})
      *
      * @Template()
      */
-    public function indexAction(Request $request) {
+    public function indexAction(Request $request): array {
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Document::class, 'e')->orderBy('e.id', 'ASC');
@@ -54,15 +53,12 @@ class DocumentController extends AbstractController implements PaginatorAwareInt
     /**
      * Creates a new Document entity.
      *
-     * @return array|RedirectResponse
-     *                                Array data for the template processor or a redirect to the Document.
-     *
      * @Security("is_granted('ROLE_ADMIN')")
      * @Route("/new", name="document_new", methods={"GET","POST"})
      *
      * @Template()
      */
-    public function newAction(Request $request) {
+    public function newAction(Request $request): array|RedirectResponse {
         $document = new Document();
         $form = $this->createForm(DocumentType::class, $document);
         $form->handleRequest($request);
@@ -86,13 +82,11 @@ class DocumentController extends AbstractController implements PaginatorAwareInt
     /**
      * Finds and displays a Document entity.
      *
-     * @return array
-     *
      * @Route("/{id}", name="document_show", methods={"GET"})
      *
      * @Template()
      */
-    public function showAction(Document $document) {
+    public function showAction(Document $document): array {
         return [
             'document' => $document,
         ];
@@ -101,15 +95,12 @@ class DocumentController extends AbstractController implements PaginatorAwareInt
     /**
      * Displays a form to edit an existing Document entity.
      *
-     * @return array|RedirectResponse
-     *                                Array data for the template processor or a redirect to the Document.
-     *
      * @Security("is_granted('ROLE_ADMIN')")
      * @Route("/{id}/edit", name="document_edit", methods={"GET","POST"})
      *
      * @Template()
      */
-    public function editAction(Request $request, Document $document) {
+    public function editAction(Request $request, Document $document): array|RedirectResponse {
         $editForm = $this->createForm(DocumentType::class, $document);
         $editForm->handleRequest($request);
 
@@ -130,13 +121,10 @@ class DocumentController extends AbstractController implements PaginatorAwareInt
     /**
      * Deletes a Document entity.
      *
-     * @return array|RedirectResponse
-     *                                A redirect to the document_index.
-     *
      * @Security("is_granted('ROLE_ADMIN')")
      * @Route("/{id}/delete", name="document_delete", methods={"GET"})
      */
-    public function deleteAction(Request $request, Document $document) {
+    public function deleteAction(Request $request, Document $document): array|RedirectResponse {
         $em = $this->getDoctrine()->getManager();
         $em->remove($document);
         $em->flush();

@@ -43,61 +43,43 @@ class SwordClient {
 
     /**
      * File system utility.
-     *
-     * @var Filesystem
      */
-    private $fs;
+    private Filesystem $fs;
 
     /**
      * File path service.
-     *
-     * @var FilePaths
      */
-    private $fp;
+    private FilePaths $fp;
 
     /**
      * Twig template engine service.
-     *
-     * @var Environment
      */
-    private $templating;
+    private Environment $templating;
 
     /**
      * Guzzle HTTP client,.
-     *
-     * @var Client
      */
-    private $client;
+    private Client $client;
 
     /**
      * URL for the service document.
-     *
-     * @var string
      */
-    private $serviceUri;
+    private string $serviceUri;
 
     /**
      * If true, save the deposit XML at /path/to/deposit.zip.xml.
-     *
-     * @var bool
      */
-    private $saveXml;
+    private bool $saveXml;
 
     /**
      * Staging server UUID.
-     *
-     * @var string
      */
-    private $uuid;
+    private string $uuid;
 
     /**
      * Construct the sword client.
-     *
-     * @param string $serviceUri
-     * @param string $uuid
-     * @param bool $saveXml
      */
-    public function __construct($serviceUri, $uuid, $saveXml, FilePaths $filePaths, Environment $templating) {
+    public function __construct(string $serviceUri, string $uuid, bool $saveXml, FilePaths $filePaths, Environment $templating) {
         $this->serviceUri = $serviceUri;
         $this->uuid = $uuid;
         $this->saveXml = $saveXml;
@@ -130,35 +112,24 @@ class SwordClient {
 
     /**
      * Set or override the service document URI.
-     *
-     * @param string $serviceUri
      */
-    public function setServiceUri($serviceUri) : void {
+    public function setServiceUri(string $serviceUri) : void {
         $this->serviceUri = $serviceUri;
     }
 
     /**
      * Set or override the UUID.
-     *
-     * @param string $uuid
      */
-    public function setUuid($uuid) : void {
+    public function setUuid(string $uuid) : void {
         $this->uuid = $uuid;
     }
 
     /**
      * Make a SWORD request.
      *
-     * @param string $method
-     * @param string $url
-     * @param mixed $xml
-     * @param Deposit $deposit
-     *
      * @throws Exception
-     *
-     * @return Response
      */
-    public function request($method, $url, array $headers = [], $xml = null, Deposit $deposit = null, array $options = []) {
+    public function request(string $method, string $url, array $headers = [], string $xml = null, Deposit $deposit = null, array $options = []): Response {
         try {
             $request = new Request($method, $url, $headers, $xml);
 
@@ -188,10 +159,8 @@ class SwordClient {
      * Fetch the service document.
      *
      * @throws Exception
-     *
-     * @return ServiceDocument
      */
-    public function serviceDocument() {
+    public function serviceDocument(): ServiceDocument {
         $response = $this->request('GET', $this->serviceUri, [
             'On-Behalf-Of' => $this->uuid,
         ]);
@@ -203,10 +172,8 @@ class SwordClient {
      * Create a deposit in LOCKSSOMatic.
      *
      * @throws Exception
-     *
-     * @return bool
      */
-    public function createDeposit(Deposit $deposit) {
+    public function createDeposit(Deposit $deposit): bool {
         $sd = $this->serviceDocument();
         $xml = $this->templating->render('sword/deposit.xml.twig', [
             'deposit' => $deposit,
@@ -229,12 +196,10 @@ class SwordClient {
      * Fetch the deposit receipt for $deposit.
      *
      * @throws Exception
-     *
-     * @return SimpleXMLElement|void
      */
-    public function receipt(Deposit $deposit) {
+    public function receipt(Deposit $deposit): ?SimpleXMLElement {
         if ( ! $deposit->getDepositReceipt()) {
-            return;
+            return null;
         }
         $response = $this->request('GET', $deposit->getDepositReceipt(), [], null, $deposit);
         $xml = new SimpleXMLElement($response->getBody()->getContents());
@@ -247,10 +212,8 @@ class SwordClient {
      * Fetch the sword statement for $deposit.
      *
      * @throws Exception
-     *
-     * @return SimpleXMLElement
      */
-    public function statement(Deposit $deposit) {
+    public function statement(Deposit $deposit): SimpleXMLElement {
         $receiptXml = $this->receipt($deposit);
         $statementUrl = (string) $receiptXml->xpath('atom:link[@rel="http://purl.org/net/sword/terms/statement"]/@href')[0];
         $response = $this->request('GET', $statementUrl, [], null, $deposit);
@@ -265,10 +228,8 @@ class SwordClient {
      * Saves the file to disk and returns the full path to the file.
      *
      * @throws Exception
-     *
-     * @return string
      */
-    public function fetch(Deposit $deposit) {
+    public function fetch(Deposit $deposit): string {
         $statement = $this->statement($deposit);
         $original = (string) $statement->xpath('//sword:originalDeposit/@href')[0];
         $filepath = $this->fp->getRestoreFile($deposit);

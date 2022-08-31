@@ -25,12 +25,8 @@ class BlacklistRepository extends ServiceEntityRepository {
 
     /**
      * Build a query to search for blacklist entries.
-     *
-     * @param string $q
-     *
-     * @return Query
      */
-    public function searchQuery($q) {
+    public function searchQuery(string $q): Query {
         $qb = $this->createQueryBuilder('b');
         $qb->where('CONCAT(b.uuid, \' \', b.comment) LIKE :q');
         $qb->setParameter('q', '%' . $q . '%');

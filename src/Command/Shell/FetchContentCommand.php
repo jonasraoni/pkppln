@@ -14,12 +14,11 @@ use App\Entity\Deposit;
 use App\Entity\Journal;
 use App\Services\FilePaths;
 use App\Services\SwordClient;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use GuzzleHttp\Client;
-use Monolog\Logger;
+use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -31,34 +30,13 @@ use Symfony\Component\Filesystem\Filesystem;
  * Fetch all the content of one or more journals from LOCKSS via LOCKSSOMatic.
  */
 class FetchContentCommand extends Command {
-    /**
-     * @var Registry
-     */
-    protected $em;
+    use LoggerAwareTrait;
 
-    /**
-     * @var Filesystem
-     */
-    protected $fs;
-
-    /**
-     * @var FilePaths
-     */
-    protected $filePaths;
-    /**
-     * @var Logger
-     */
-    private $logger;
-
-    /**
-     * @var SwordClient
-     */
-    private $swordClient;
-
-    /**
-     * @var HttpClient
-     */
-    private $httpClient;
+    protected EntityManagerInterface $em;
+    protected Filesystem $fs;
+    protected FilePaths $filePaths;
+    private SwordClient $swordClient;
+    private HttpClient $httpClient;
 
     /**
      * Initialize the command.
@@ -91,10 +69,8 @@ class FetchContentCommand extends Command {
     /**
      * Build and configure and return an HTTP client. Uses the client set
      * from setHttpClient() if available.
-     *
-     * @return Client
      */
-    public function getHttpClient() {
+    public function getHttpClient(): Client {
         if ( ! $this->httpClient) {
             $this->httpClient = new Client(['verify' => false, 'connect_timeout' => 15]);
         }
@@ -104,10 +80,8 @@ class FetchContentCommand extends Command {
 
     /**
      * Fetch one deposit from LOCKSSOMatic.
-     *
-     * @param string $href
      */
-    public function fetch(Deposit $deposit, $href) : void {
+    public function fetch(Deposit $deposit, string $href) : void {
         $client = $this->getHttpClient();
         $filepath = $this->filePaths->getRestoreDir($deposit->getJournal()) . '/' . basename($href);
         $this->logger->notice("Saving {$deposit->getJournal()->getTitle()} vol. {$deposit->getVolume()} no. {$deposit->getIssue()} to {$filepath}");
@@ -147,11 +121,11 @@ class FetchContentCommand extends Command {
     /**
      * Get a list of journals to download.
      *
-     * @param array $journalIds
+     * @param int[] $journalIds
      *
      * @return Collection|Journal[]
      */
-    public function getJournals($journalIds) {
+    public function getJournals(array $journalIds): array {
         return $this->em->getRepository('App:Journal')->findBy(['id' => $journalIds]);
     }
 

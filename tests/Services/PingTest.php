@@ -89,7 +89,7 @@ ENDXML;
 
     public function testProcessFail() : void {
         $result = $this->createMock(PingResult::class);
-        $result->method('getHttpstatus')->willReturn(404);
+        $result->method('getHttpStatus')->willReturn(404);
         $journal = $this->getReference('journal.1');
         $this->ping->process($journal, $result);
         $this->assertSame('ping-error', $journal->getStatus());
@@ -97,8 +97,8 @@ ENDXML;
 
     public function testProcessMissingRelease() : void {
         $result = $this->createMock(PingResult::class);
-        $result->method('getHttpstatus')->willReturn(200);
-        $result->method('getOjsRelease')->willReturn(false);
+        $result->method('getHttpStatus')->willReturn(200);
+        $result->method('getOjsRelease')->willReturn(null);
         $journal = $this->getReference('journal.1');
         $this->ping->process($journal, $result);
         $this->assertSame('ping-error', $journal->getStatus());
@@ -106,7 +106,7 @@ ENDXML;
 
     public function testProcessOldVersion() : void {
         $result = $this->createMock(PingResult::class);
-        $result->method('getHttpstatus')->willReturn(200);
+        $result->method('getHttpStatus')->willReturn(200);
         $result->method('getOjsRelease')->willReturn('2.4.0');
         $result->method('getJournalTitle')->willReturn('Yes Minister');
         $result->method('areTermsAccepted')->willReturn('Yes');
@@ -120,7 +120,7 @@ ENDXML;
 
     public function testProcessListed() : void {
         $result = $this->createMock(PingResult::class);
-        $result->method('getHttpstatus')->willReturn(200);
+        $result->method('getHttpStatus')->willReturn(200);
         $result->method('getOjsRelease')->willReturn('2.4.9');
         $result->method('getJournalTitle')->willReturn('Yes Minister');
         $result->method('areTermsAccepted')->willReturn('Yes');
@@ -139,7 +139,7 @@ ENDXML;
 
     public function testProcessSuccess() : void {
         $result = $this->createMock(PingResult::class);
-        $result->method('getHttpstatus')->willReturn(200);
+        $result->method('getHttpStatus')->willReturn(200);
         $result->method('getOjsRelease')->willReturn('2.4.9');
         $result->method('getJournalTitle')->willReturn('Yes Minister');
         $result->method('areTermsAccepted')->willReturn('Yes');

@@ -34,13 +34,11 @@ class JournalController extends AbstractController implements PaginatorAwareInte
     /**
      * Lists all Journal entities.
      *
-     * @return array
-     *
      * @Route("/", name="journal_index", methods={"GET"})
      *
      * @Template()
      */
-    public function indexAction(Request $request) {
+    public function indexAction(Request $request): array {
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Journal::class, 'e')->orderBy('e.id', 'ASC');
@@ -85,13 +83,11 @@ class JournalController extends AbstractController implements PaginatorAwareInte
     /**
      * Finds and displays a Journal entity.
      *
-     * @return array
-     *
      * @Route("/{id}", name="journal_show", methods={"GET"})
      *
      * @Template()
      */
-    public function showAction(Journal $journal, BlackWhiteList $list) {
+    public function showAction(Journal $journal, BlackWhiteList $list): array {
         return [
             'journal' => $journal,
             'list' => $list,
@@ -101,13 +97,11 @@ class JournalController extends AbstractController implements PaginatorAwareInte
     /**
      * Pings a journal and displays the result.
      *
-     * @return array
-     *
      * @Route("/{id}/ping", name="journal_ping", methods={"GET"})
      *
      * @Template()
      */
-    public function pingAction(Journal $journal, Ping $ping, EntityManagerInterface $em) {
+    public function pingAction(Journal $journal, Ping $ping, EntityManagerInterface $em): array {
         $result = $ping->ping($journal);
         $em->flush();
 

@@ -96,7 +96,7 @@ class DepositBuilder {
         $deposit->setVolume(Xpath::getXmlValue($xml, 'pkp:content/@volume'));
         $deposit->setPubDate(new DateTime(Xpath::getXmlValue($xml, 'pkp:content/@pubdate')));
         $deposit->setJournal($journal);
-        $deposit->setSize(Xpath::getXmlValue($xml, 'pkp:content/@size'));
+        $deposit->setSize((int) Xpath::getXmlValue($xml, 'pkp:content/@size'));
         $deposit->setUrl(html_entity_decode(Xpath::getXmlValue($xml, 'pkp:content')));
 
         $deposit->setJournalVersion(Xpath::getXmlValue($xml, 'pkp:content/@ojsVersion', Deposit::DEFAULT_JOURNAL_VERSION));

@@ -29,26 +29,17 @@ class Whitelist extends AbstractEntity {
      * This cannot be part of a relationship - a journal may be listed before
      * we have a record of it.
      *
-     * @var string
      * @Assert\Uuid(strict=false)
      * @ORM\Column(type="string", length=36, nullable=false)
      */
-    private $uuid;
+    private string $uuid;
 
     /**
      * Short message describing why the journal was listed.
      *
-     * @var mixed
      * @ORM\Column(type="text")
      */
-    private $comment;
-
-    /**
-     * Construct the object.
-     */
-    public function __construct() {
-        parent::__construct();
-    }
+    private string $comment;
 
     /**
      * Return the UUID.
@@ -59,12 +50,8 @@ class Whitelist extends AbstractEntity {
 
     /**
      * Set uuid.
-     *
-     * @param string $uuid
-     *
-     * @return Whitelist
      */
-    public function setUuid($uuid) {
+    public function setUuid(string $uuid): static {
         $this->uuid = strtoupper($uuid);
 
         return $this;
@@ -72,21 +59,15 @@ class Whitelist extends AbstractEntity {
 
     /**
      * Get uuid.
-     *
-     * @return string
      */
-    public function getUuid() {
+    public function getUuid(): string {
         return $this->uuid;
     }
 
     /**
      * Set comment.
-     *
-     * @param string $comment
-     *
-     * @return Whitelist
      */
-    public function setComment($comment) {
+    public function setComment(string $comment): static {
         $this->comment = $comment;
 
         return $this;
@@ -94,10 +75,8 @@ class Whitelist extends AbstractEntity {
 
     /**
      * Get comment.
-     *
-     * @return string
      */
-    public function getComment() {
+    public function getComment(): string {
         return $this->comment;
     }
 }

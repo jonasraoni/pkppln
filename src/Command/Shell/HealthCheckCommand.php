@@ -12,48 +12,41 @@ namespace App\Command\Shell;
 
 use App\Entity\Journal;
 use App\Services\Ping;
-use AppUserBundle\Entity\User;
 use DateTime;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\XmlParseException;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use Swift_Message;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\HttpKernel\Tests\Logger;
 use Twig\Environment;
 
 /**
  * Ping all the journals that haven't contacted the PLN in a while, and send
  * notifications to interested users.
+ * @todo Probably not working the Swift_Message
  */
 class HealthCheckCommand extends Command {
-    /**
-     * @var Logger
-     */
-    protected $logger;
+    use LoggerAwareTrait;
 
-    /**
-     * @var Ping
-     */
-    protected $ping;
-    /**
-     * @var TwigEngine
-     */
-    private $templating;
+    protected Ping $ping;
+    private Environment $templating;
+    private ContainerInterface $container;
 
     /**
      * Set the service container, and initialize the command.
      */
-    public function __construct(LoggerInterface $logger, Ping $ping, Environment $environment) {
+    public function __construct(LoggerInterface $logger, Ping $ping, Environment $environment, ContainerInterface $container) {
         parent::__construct();
         $this->templating = $environment;
         $this->logger = $logger;
         $this->ping = $ping;
+        $this->container = $container;
     }
 
     /**
@@ -69,21 +62,17 @@ class HealthCheckCommand extends Command {
     /**
      * Send the notifications.
      *
-     * @param int $days
-     * @param User[] $users
-     * @param Journal[] $journals
-     *
      * @throws \Twig\Error\Error
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    protected function sendNotifications($days, $users, $journals) : void {
+    protected function sendNotifications(int $days, array $users, array $journals) : void {
         $notification = $this->templating->render('App:HealthCheck:notification.txt.twig', [
             'journals' => $journals,
             'days' => $days,
         ]);
-        $mailer = $this->getContainer()->get('mailer');
+        $mailer = $this->container->get('mailer');
         foreach ($users as $user) {
             $message = Swift_Message::newInstance(
                 'Automated notification from the PKP PLN',
@@ -101,10 +90,8 @@ class HealthCheckCommand extends Command {
      * Request a ping from a journal.
      *
      * @todo Use the Ping service
-     *
-     * @return bool
      */
-    protected function pingJournal(Journal $journal) {
+    protected function pingJournal(Journal $journal): bool {
         $client = new Client(['verify' => false, 'connect_timeout' => 15]);
 
         try {

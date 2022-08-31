@@ -129,7 +129,7 @@ ENDXML;
     }
 
     public function testArticleCount() : void {
-        $this->assertSame('12', $this->result->getArticleCount());
+        $this->assertSame(12, $this->result->getArticleCount());
     }
 
     public function testArticleTitles() : void {

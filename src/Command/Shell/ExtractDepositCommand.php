@@ -15,17 +15,12 @@ use DOMDocument;
 use DOMNamedNodeMap;
 use DOMXPath;
 use Exception;
-use Monolog\Registry;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\Tests\Logger;
-use Twig\Environment;
 
 /**
  * Extract the content of a deposit, including the embedded and encoded
@@ -34,24 +29,10 @@ use Twig\Environment;
  * @author mjoyce
  */
 class ExtractDepositCommand extends Command {
-    /**
-     * @var Registry
-     */
-    protected $em;
-    /**
-     * @var Logger
-     */
-    private $logger;
+    protected EntityManagerInterface $em;
 
-    /**
-     * Set the service container, and initialize the command.
-     *
-     * @param ContainerInterface $container
-     */
-    public function __construct(Environment $templating, LoggerInterface $logger, EntityManagerInterface $em) {
+    public function __construct(EntityManagerInterface $em) {
         parent::__construct();
-        $this->templating = $templating;
-        $this->logger = $logger;
         $this->em = $em;
     }
 
@@ -93,7 +74,7 @@ class ExtractDepositCommand extends Command {
         $xp = new DOMXPath($dom);
         gc_enable();
         foreach ($xp->query('//embed') as $embedded) {
-            // @var DOMNamedNodeMap
+            /** @var DOMNamedNodeMap */
             $attrs = $embedded->attributes;
             if ( ! $attrs) {
                 $output->writeln('Embedded element has no attributes. Skipping.');

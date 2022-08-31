@@ -27,10 +27,8 @@ class AuContainerRepository extends ServiceEntityRepository {
      * Find the open container with the lowest database ID. There should only
      * ever be one open container, but finding the one with lowest database ID
      * guarantees it.
-     *
-     * @return AuContainer|object
      */
-    public function getOpenContainer() {
+    public function getOpenContainer(): AuContainer {
         return $this->findOneBy(
             ['open' => true],
             ['id' => 'ASC']

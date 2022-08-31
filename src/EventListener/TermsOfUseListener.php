@@ -22,10 +22,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class TermsOfUseListener {
     /**
      * Token store to get the user making changes.
-     *
-     * @var TokenStorageInterface
      */
-    private $tokenStorage;
+    private TokenStorageInterface $tokenStorage;
 
     /**
      * Construct the listener.
@@ -36,12 +34,8 @@ class TermsOfUseListener {
 
     /**
      * Get an array describing the changes.
-     *
-     * @param string $action
-     *
-     * @return array
      */
-    protected function getChangeSet(UnitOfWork $unitOfWork, TermOfUse $entity, $action) {
+    protected function getChangeSet(UnitOfWork $unitOfWork, TermOfUse $entity, string $action): array {
         switch ($action) {
             case 'create':
                 return [
@@ -69,10 +63,8 @@ class TermsOfUseListener {
 
     /**
      * Save a history event for a term of use.
-     *
-     * @param string $action
      */
-    protected function saveHistory(LifecycleEventArgs $args, $action) : void {
+    protected function saveHistory(LifecycleEventArgs $args, string $action) : void {
         $entity = $args->getEntity();
         if ( ! $entity instanceof TermOfUse) {
             return;

@@ -25,17 +25,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 class PingCommand extends Command {
     /**
      * Fully configured ping service.
-     *
-     * @var Ping
      */
-    private $ping;
+    private Ping $ping;
 
     /**
      * Database interface.
-     *
-     * @var EntityManagerInterface
      */
-    private $em;
+    private EntityManagerInterface $em;
 
     /**
      * Build the command.
@@ -72,10 +68,8 @@ class PingCommand extends Command {
 
     /**
      * Find the journals that need to be binged.
-     *
-     * @param bool $all
      */
-    public function findJournals($all) {
+    public function findJournals(bool $all) {
         $repo = $this->em->getRepository(Journal::class);
         if ($all) {
             return $repo->findAll();

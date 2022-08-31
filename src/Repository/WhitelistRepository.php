@@ -12,6 +12,7 @@ namespace App\Repository;
 
 use App\Entity\Whitelist;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -24,12 +25,8 @@ class WhitelistRepository extends ServiceEntityRepository {
 
     /**
      * Build a query to search for whitelist entries.
-     *
-     * @param string $q
-     *
-     * @return Query
      */
-    public function searchQuery($q) {
+    public function searchQuery(string $q): Query {
         $qb = $this->createQueryBuilder('b');
         $qb->where('CONCAT(b.uuid, \' \', b.comment) LIKE :q');
         $qb->setParameter('q', '%' . $q . '%');

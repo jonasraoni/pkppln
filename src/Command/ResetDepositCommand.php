@@ -30,10 +30,8 @@ class ResetDepositCommand extends Command {
 
     /**
      * Database interface.
-     *
-     * @var EntityManagerInterface
      */
-    private $em;
+    private EntityManagerInterface $em;
 
     /**
      * Build the command.
@@ -59,7 +57,6 @@ class ResetDepositCommand extends Command {
         $i = 0;
         foreach ($iterator as $row) {
             $i++;
-            /** @var Deposit $deposit */
             $deposit = $row[0];
             $deposit->setState($state);
             if ($clear) {
@@ -96,10 +93,10 @@ class ResetDepositCommand extends Command {
      * @param int[] $ids
      *                   Optional list of deposit database ids.
      *
-     * @return Deposit[]|IterableResult
+     * @return Deposit[][]|IterableResult
      *                                  Iterator for all the deposits to reset.
      */
-    public function getDepositIterator(array $ids = null) {
+    public function getDepositIterator(array $ids = null): IterableResult {
         $qb = $this->em->createQueryBuilder();
         $qb->select('d')->from('App:Deposit', 'd');
         if ($ids && count($ids)) {

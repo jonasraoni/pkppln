@@ -14,6 +14,7 @@ use App\Entity\Blacklist;
 use App\Entity\Journal;
 use App\Entity\Whitelist;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -30,7 +31,7 @@ class JournalRepository extends ServiceEntityRepository {
      * @return Collection|Journal[]
      *                              List of journals.
      */
-    public function getJournalsToPing() {
+    public function getJournalsToPing(): array {
         $blacklist = $this->getEntityManager()->getRepository(Blacklist::class)
             ->createQueryBuilder('bl')
             ->select('bl.uuid')
@@ -55,12 +56,8 @@ class JournalRepository extends ServiceEntityRepository {
      *
      * Search is based on uuid, title, issn, url, email, publisher name, and
      * publisher url.
-     *
-     * @param string $q
-     *
-     * @return Query
      */
-    public function searchQuery($q) {
+    public function searchQuery(string $q): Query {
         $qb = $this->createQueryBuilder('j');
         $qb->where('CONCAT(j.uuid, j.title, j.issn, j.url, j.email, j.publisherName, j.publisherUrl) LIKE :q');
         $qb->setParameter('q', '%' . $q . '%');
@@ -70,10 +67,8 @@ class JournalRepository extends ServiceEntityRepository {
 
     /**
      * Summarize the journal statuses, counting them by status.
-     *
-     * @return array
      */
-    public function statusSummary() {
+    public function statusSummary(): array {
         $qb = $this->createQueryBuilder('e');
         $qb->select('e.status, count(e) as ct')
             ->groupBy('e.status')
@@ -86,11 +81,9 @@ class JournalRepository extends ServiceEntityRepository {
     /**
      * Find journals that haven't contacted the PLN in $days.
      *
-     * @param int $days
-     *
      * @return Collection|Journal[]
      */
-    public function findSilent($days) {
+    public function findSilent(int $days): array {
         $dt = new DateTime("-{$days} day");
 
         $qb = $this->createQueryBuilder('e');
@@ -105,11 +98,9 @@ class JournalRepository extends ServiceEntityRepository {
      *
      * Excludes journals wehre notifications have been sent.
      *
-     * @param int $days
-     *
      * @return Collection|Journal[]
      */
-    public function findOverdue($days) {
+    public function findOverdue(int $days): array {
         $dt = new DateTime("-{$days} day");
         $qb = $this->createQueryBuilder('e');
         $qb->Where('e.notified < :dt');
@@ -124,11 +115,9 @@ class JournalRepository extends ServiceEntityRepository {
      * @todo This method should be called findRecent(). It does not find
      * journals with status=new
      *
-     * @param type $limit
-     *
      * @return Collection|Journal[]
      */
-    public function findNew($limit = 5) {
+    public function findNew(int $limit = 5): array {
         $qb = $this->createQueryBuilder('e');
         $qb->orderBy('e.id', 'DESC');
         $qb->setMaxResults($limit);

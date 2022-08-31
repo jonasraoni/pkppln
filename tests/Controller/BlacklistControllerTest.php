@@ -100,7 +100,6 @@ class BlacklistControllerTest extends BaseControllerTestCase {
     }
 
     public function testAnonEdit() : void {
-
         $crawler = $this->client->request('GET', '/blacklist/1/edit');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($this->client->getResponse()->isRedirect());

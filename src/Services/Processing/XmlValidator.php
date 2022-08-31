@@ -35,36 +35,25 @@ class XmlValidator {
 
     /**
      * Calculate file path locations.
-     *
-     * @var FilePaths
      */
-    private $filePaths;
+    private FilePaths $filePaths;
 
     /**
      * Validator service.
-     *
-     * @var DtdValidator
      */
-    private $dtdValidator;
+    private DtdValidator $dtdValidator;
 
     /**
      * Parser for XML files.
-     *
-     * @var XmlParser
      */
-    private $xmlParser;
+    private XmlParser $xmlParser;
 
     /**
      * Bag Reader.
-     *
-     * @var BagReader
      */
-    private $bagReader;
+    private BagReader $bagReader;
 
-    /**
-     * @var SchemaValidator
-     */
-    private $schemaValidator;
+    private SchemaValidator $schemaValidator;
 
     /**
      * Build the validator.
@@ -93,16 +82,14 @@ class XmlValidator {
 
     /**
      * Add any errors to the report.
-     *
-     * @param string $report
      */
-    public function reportErrors(array $errors, &$report) : void {
+    public function reportErrors(array $errors, string &$report) : void {
         foreach ($errors as $error) {
             $report .= "On line {$error['line']}: {$error['message']}\n";
         }
     }
 
-    public function processDeposit(Deposit $deposit) {
+    public function processDeposit(Deposit $deposit): bool {
         $harvestedPath = $this->filePaths->getHarvestFile($deposit);
         $bag = $bag = $this->bagReader->readBag($harvestedPath);
         $report = '';

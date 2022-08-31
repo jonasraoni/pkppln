@@ -34,11 +34,9 @@ class DefaultController extends AbstractController implements PaginatorAwareInte
     /**
      * Home page action.
      *
-     * @return Response
-     *
      * @Route("/", name="homepage", methods={"GET"})
      */
-    public function indexAction(EntityManagerInterface $em) {
+    public function indexAction(EntityManagerInterface $em): Response {
         $user = $this->getUser();
 
         if ( ! $user || ! $user->hasRole('ROLE_USER')) {
@@ -59,12 +57,10 @@ class DefaultController extends AbstractController implements PaginatorAwareInte
     /**
      * Browse deposits across all jouurnals by state.
      *
-     * @param string $state
-     *
      * @Route("/browse/{state}", name="deposit_browse", methods={"GET"})
      * @Template()
      */
-    public function browseAction(Request $request, EntityManagerInterface $em, $state) {
+    public function browseAction(Request $request, EntityManagerInterface $em, string $state) {
         $repo = $em->getRepository(Deposit::class);
         $qb = $repo->createQueryBuilder('d');
         $qb->where('d.state = :state');
@@ -88,14 +84,12 @@ class DefaultController extends AbstractController implements PaginatorAwareInte
      * deposit controller works with deposits from a single
      * journal. This search works across all deposits.
      *
-     * @return array
-     *
      * @Route("/deposit_search", name="all_deposit_search", methods={"GET"})
      *
      * @Security("is_granted('ROLE_USER')")
      * @Template()
      */
-    public function depositSearchAction(Request $request) {
+    public function depositSearchAction(Request $request): array {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Deposit::class);
         $q = $request->query->get('q');

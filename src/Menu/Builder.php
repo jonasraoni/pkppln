@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Menu;
 
 use Knp\Menu\FactoryInterface;
+use Knp\Menu\ItemInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -29,24 +30,18 @@ class Builder implements ContainerAwareInterface {
 
     /**
      * Item factory.
-     *
-     * @var FactoryInterface
      */
-    private $factory;
+    private FactoryInterface $factory;
 
     /**
      * Authorization checker for getting user roles.
-     *
-     * @var AuthorizationCheckerInterface
      */
-    private $authChecker;
+    private AuthorizationCheckerInterface $authChecker;
 
     /**
      * Login token storage.
-     *
-     * @var TokenStorageInterface
      */
-    private $tokenStorage;
+    private TokenStorageInterface $tokenStorage;
 
     /**
      * Build the menu builder.
@@ -59,12 +54,8 @@ class Builder implements ContainerAwareInterface {
 
     /**
      * Check if the currently logged in user has a given role.
-     *
-     * @param string $role
-     *
-     * @return bool
      */
-    private function hasRole($role) {
+    private function hasRole(string $role): bool {
         if ( ! $this->tokenStorage->getToken()) {
             return false;
         }
@@ -74,10 +65,8 @@ class Builder implements ContainerAwareInterface {
 
     /**
      * Build the app's main navigation menu.
-     *
-     * @return ItemInterface
      */
-    public function mainMenu(array $options) {
+    public function mainMenu(array $options): ItemInterface {
         $menu = $this->factory->createItem('root');
         $menu->setChildrenAttributes([
             'class' => 'nav navbar-nav',

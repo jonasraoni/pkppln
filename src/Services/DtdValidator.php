@@ -18,11 +18,8 @@ use DOMDocument;
 class DtdValidator extends AbstractValidator {
     /**
      * Validate a DOM document.
-     *
-     * @param null $path
-     * @param bool $clearErrors
      */
-    public function validate(DOMDocument $dom, $path = null, $clearErrors = true) : void {
+    public function validate(DOMDocument $dom, ?string $path = null, bool $clearErrors = true) : void {
         if ($clearErrors) {
             $this->clearErrors();
         }

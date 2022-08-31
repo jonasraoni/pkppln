@@ -27,15 +27,12 @@ class Namespaces {
 
     /**
      * Get the FQDN for the prefix, in a case-insensitive fashion.
-     *
-     * @param string $prefix
-     *
-     * @return string
      */
-    public static function getNamespace($prefix) {
+    public static function getNamespace(string $prefix): ?string {
         if (array_key_exists($prefix, self::NS)) {
             return self::NS[$prefix];
         }
+        return null;
     }
 
     /**

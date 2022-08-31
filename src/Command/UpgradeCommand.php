@@ -34,34 +34,26 @@ use Symfony\Component\Console\Output\OutputInterface;
 class UpgradeCommand extends Command {
     /**
      * Doctrine connection to the old database.
-     *
-     * @var Connection
      */
-    private $source;
+     private Connection $source;
 
     /**
      * Entity manager for the new database.
-     *
-     * @var EntityManagerInterface
      */
-    private $em;
+    private EntityManagerInterface $em;
 
     /**
      * Mapping of old IDs to new IDs based on class names.
      *
      * Something like this if the old user ID was three and the new one was 5.
      * $idMapping[User::class][3] = 5
-     *
-     * @var array
      */
-    private $idMapping;
+    private array $idMapping;
 
     /**
      * If true the changes will be flushed to the new database.
-     *
-     * @var bool
      */
-    private $force;
+    private bool $force;
 
     /**
      * Construct the command instance.
@@ -87,25 +79,15 @@ class UpgradeCommand extends Command {
 
     /**
      * Map an old database ID to a new one.
-     *
-     * @param string $class
-     * @param int $old
-     * @param int $new
      */
-    protected function setIdMap($class, $old, $new) : void {
+    protected function setIdMap(string $class, int $old, int $new) : void {
         $this->idMapping[$class][$old] = $new;
     }
 
     /**
      * Get the new database ID for a $class.
-     *
-     * @param string $class
-     * @param int $old
-     * @param int $default
-     *
-     * @return null|int
      */
-    protected function getIdMap($class, $old, $default = null) {
+    protected function getIdMap(string $class, int $old, ?int $default = null): ?int {
         if (isset($this->idMapping[$class][$old])) {
             return $this->idMapping[$class][$old];
         }
@@ -128,10 +110,8 @@ class UpgradeCommand extends Command {
      * Processes each row of the table with $callback. If $callback returns an
      * object it is persisted and flushed, and the old ID is mapped to the
      * new one.
-     *
-     * @param string $table
      */
-    public function upgradeTable($table, callable $callback) : void {
+    public function upgradeTable(string $table, callable $callback) : void {
         $countQuery = $this->source->query("SELECT count(*) c FROM {$table}");
         $countQuery->execute();
         $countRow = $countQuery->fetch();

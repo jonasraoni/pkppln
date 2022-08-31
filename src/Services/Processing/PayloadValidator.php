@@ -25,10 +25,8 @@ class PayloadValidator {
 
     /**
      * File path service.
-     *
-     * @var FilePaths
      */
-    private $fp;
+    private FilePaths $fp;
 
     /**
      * Construct the validator.
@@ -47,15 +45,10 @@ class PayloadValidator {
     /**
      * Hash a file.
      *
-     * @param string $algorithm
-     * @param string $filepath
-     *
      * @throws Exception
      *                   If the algorithm is unknown.
-     *
-     * @return string
      */
-    public function hashFile($algorithm, $filepath) {
+    public function hashFile(string $algorithm, string $filepath): string {
         $handle = fopen($filepath, 'r');
         $context = null;
         switch (strtolower($algorithm)) {
@@ -82,10 +75,8 @@ class PayloadValidator {
 
     /**
      * Process one deposit.
-     *
-     * @return bool
      */
-    public function processDeposit(Deposit $deposit) {
+    public function processDeposit(Deposit $deposit): bool {
         try {
             $depositPath = $this->fp->getHarvestFile($deposit);
             $checksumValue = $this->hashFile($deposit->getChecksumType(), $depositPath);

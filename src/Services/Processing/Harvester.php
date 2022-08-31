@@ -72,8 +72,6 @@ class Harvester {
 
     /**
      * Construct the harvester.
-     *
-     * @param int $maxHarvestAttempts
      */
     public function __construct(int $maxHarvestAttempts, FilePaths $filePaths) {
         $this->maxAttempts = $maxHarvestAttempts;
@@ -125,8 +123,6 @@ class Harvester {
 
     /**
      * Fetch a deposit URL with Guzzle.
-     *
-     * @param string $url
      *
      * @throws Exception If the HTTP status code isn't 200, throw an error.
      */

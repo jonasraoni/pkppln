@@ -35,38 +35,28 @@ class Ping {
 
     /**
      * Minimum expected OJS version.
-     *
-     * @var string
      */
-    private $minOjsVersion;
+    private string $minOjsVersion;
 
     /**
      * Doctrine instance.
-     *
-     * @var EntityManagerInterface
      */
-    private $em;
+    private EntityManagerInterface $em;
 
     /**
      * Black and white service.
-     *
-     * @var BlackWhiteList
      */
-    private $list;
+    private BlackWhiteList $list;
 
     /**
      * Guzzle http client.
-     *
-     * @var Client
      */
-    private $client;
+    private Client $client;
 
     /**
      * Construct the ping service.
-     *
-     * @param type $minOjsVersion
      */
-    public function __construct($minOjsVersion, EntityManagerInterface $em, BlackWhiteList $list) {
+    public function __construct(string $minOjsVersion, EntityManagerInterface $em, BlackWhiteList $list) {
         $this->minOjsVersion = $minOjsVersion;
         $this->em = $em;
         $this->list = $list;
@@ -76,14 +66,14 @@ class Ping {
     /**
      * Set the HTTP client.
      */
-    public function setClient(Client $client) : void {
+    public function setClient(Client $client): void {
         $this->client = $client;
     }
 
     /**
      * Process a ping response.
      */
-    public function process(Journal $journal, PingResult $result) : void {
+    public function process(Journal $journal, PingResult $result): void {
         if ( ! $result->getOjsRelease()) {
             $journal->setStatus('ping-error');
             $result->addError('Journal version information missing in ping result.');
@@ -110,10 +100,8 @@ class Ping {
 
     /**
      * Ping $journal and return the result.
-     *
-     * @return PingResult
      */
-    public function ping(Journal $journal) {
+    public function ping(Journal $journal): PingResult {
         try {
             $response = $this->client->get($journal->getGatewayUrl(), self::CONF);
             $result = new PingResult($response);

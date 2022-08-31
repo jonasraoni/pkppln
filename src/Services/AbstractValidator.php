@@ -13,10 +13,7 @@ namespace App\Services;
 use DOMDocument;
 
 abstract class AbstractValidator {
-    /**
-     * @var array
-     */
-    protected $errors;
+    protected array $errors;
 
     /**
      * Construct a validator.
@@ -27,13 +24,8 @@ abstract class AbstractValidator {
 
     /**
      * Callback for a validation or parsing error.
-     *
-     * @param int $n
-     * @param string $message
-     * @param string $file
-     * @param int $line
      */
-    public function validationError($n, $message, $file, $line) : void {
+    public function validationError(int $n, string $message, string $file, int $line) : void {
         $lxml = libxml_get_last_error();
 
         if ($lxml) {
@@ -51,32 +43,26 @@ abstract class AbstractValidator {
         }
     }
 
-    abstract public function validate(DOMDocument $dom, $path, $clearErrors = true);
+    abstract public function validate(DOMDocument $dom, string $path, bool $clearErrors = true): void;
 
     /**
      * Return true if the document had errors.
-     *
-     * @return bool
      */
-    public function hasErrors() {
+    public function hasErrors(): bool {
         return count($this->errors) > 0;
     }
 
     /**
      * Count the errors in validation.
-     *
-     * @return int
      */
-    public function countErrors() {
+    public function countErrors(): int {
         return count($this->errors);
     }
 
     /**
      * Get a list of the errors.
-     *
-     * @return array
      */
-    public function getErrors() {
+    public function getErrors(): array {
         return $this->errors;
     }
 

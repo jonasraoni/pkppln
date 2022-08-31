@@ -20,10 +20,8 @@ use Doctrine\ORM\EntityManagerInterface;
 class HarvestCommand extends AbstractProcessingCmd {
     /**
      * Harvester service.
-     *
-     * @var Harvester
      */
-    private $harvester;
+    private Harvester $harvester;
 
     /**
      * Build the command.

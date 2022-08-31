@@ -48,9 +48,9 @@ class GenerateOnixCommand extends Command {
     /**
      * Get the journals to process.
      *
-     * @return IterableResult|Journal[]
+     * @return IterableResult|Journal[][]
      */
-    protected function getJournals() {
+    protected function getJournals(): IterableResult {
         $query = $this->em->createQuery('SELECT j FROM App:Journal j');
 
         return $query->iterate();
@@ -75,7 +75,6 @@ class GenerateOnixCommand extends Command {
         ]);
         $i = 0;
         foreach ($iterator as $row) {
-            /** @var Journal $journal */
             $journal = $row[0];
             $deposits = $journal->getSentDeposits();
             if (0 === $deposits->count()) {
@@ -106,10 +105,8 @@ class GenerateOnixCommand extends Command {
 
     /**
      * Generate an XML file at $filePath.
-     *
-     * @param string $filePath
      */
-    protected function generateXml($filePath) : void {
+    protected function generateXml(string $filePath) : void {
         $iterator = $this->getJournals();
 
         $writer = new XMLWriter();

@@ -23,31 +23,25 @@ class TermOfUseHistory extends AbstractEntity {
     /**
      * A term ID, similar to the OJS translation keys.
      *
-     * @var int
-     *
      * @todo This is probably wrong. It shouldn't be an integer.
      *
      * @ORM\Column(type="integer")
      */
-    private $termId;
+    private int $termId;
 
     /**
      * The history action: add, updated, remove.
      *
-     * @var string
-     *
      * @ORM\Column(type="string")
      */
-    private $action;
+    private string $action;
 
     /**
      * The change set, as computed by Doctrine.
      *
-     * @var string
-     *
      * @ORM\Column(type="array")
      */
-    private $changeSet;
+    private array $changeSet;
 
     /**
      * The user who added/edited/deleted the term of use.
@@ -55,18 +49,9 @@ class TermOfUseHistory extends AbstractEntity {
      * This cannot be a foreign key, as the user may be deleted by the history
      * persists.
      *
-     * @var string
-     *
      * @ORM\Column(type="string")
      */
-    private $user;
-
-    /**
-     * Construct the history object.
-     */
-    public function __construct() {
-        parent::__construct();
-    }
+    private string $user;
 
     /**
      * Return the action.
@@ -77,12 +62,8 @@ class TermOfUseHistory extends AbstractEntity {
 
     /**
      * Set termId.
-     *
-     * @param int $termId
-     *
-     * @return TermOfUseHistory
      */
-    public function setTermId($termId) {
+    public function setTermId(int $termId): TermOfUseHistory {
         $this->termId = $termId;
 
         return $this;
@@ -90,21 +71,15 @@ class TermOfUseHistory extends AbstractEntity {
 
     /**
      * Get termId.
-     *
-     * @return int
      */
-    public function getTermId() {
+    public function getTermId(): int {
         return $this->termId;
     }
 
     /**
      * Set action.
-     *
-     * @param string $action
-     *
-     * @return TermOfUseHistory
      */
-    public function setAction($action) {
+    public function setAction(string $action): TermOfUseHistory {
         $this->action = $action;
 
         return $this;
@@ -112,19 +87,15 @@ class TermOfUseHistory extends AbstractEntity {
 
     /**
      * Get action.
-     *
-     * @return string
      */
-    public function getAction() {
+    public function getAction(): string {
         return $this->action;
     }
 
     /**
      * Set changeSet.
-     *
-     * @return TermOfUseHistory
      */
-    public function setChangeSet(array $changeSet) {
+    public function setChangeSet(array $changeSet): TermOfUseHistory {
         $this->changeSet = $changeSet;
 
         return $this;
@@ -132,21 +103,15 @@ class TermOfUseHistory extends AbstractEntity {
 
     /**
      * Get changeSet.
-     *
-     * @return array
      */
-    public function getChangeSet() {
+    public function getChangeSet(): array {
         return $this->changeSet;
     }
 
     /**
      * Set user.
-     *
-     * @param string $user
-     *
-     * @return TermOfUseHistory
      */
-    public function setUser($user) {
+    public function setUser(string $user): TermOfUseHistory {
         $this->user = $user;
 
         return $this;
@@ -154,10 +119,8 @@ class TermOfUseHistory extends AbstractEntity {
 
     /**
      * Get user.
-     *
-     * @return string
      */
-    public function getUser() {
+    public function getUser(): string {
         return $this->user;
     }
 }

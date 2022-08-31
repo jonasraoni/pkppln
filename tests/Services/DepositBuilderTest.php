@@ -98,7 +98,7 @@ ENDXML;
             ['sha-1', 'getChecksumType'],
             ['25B0BD51BB05C145672617FCED484C9E71EC553B', 'getChecksumValue'],
             ['http://example.com//00FD6D96-0155-43A4-97F7-2C6EE8EBFF09', 'getUrl'],
-            ['3613', 'getSize'],
+            [3613, 'getSize'],
             ['depositedByJournal', 'getState'],
             [[], 'getErrorLog'],
             [null, 'getPlnState'],

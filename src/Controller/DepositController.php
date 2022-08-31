@@ -34,13 +34,11 @@ class DepositController extends AbstractController implements PaginatorAwareInte
     /**
      * Lists all Deposit entities.
      *
-     * @return array
-     *
      * @Route("/", name="deposit_index", methods={"GET"})
      *
      * @Template()
      */
-    public function indexAction(Request $request, Journal $journal) {
+    public function indexAction(Request $request, Journal $journal): array {
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Deposit::class, 'e')->where('e.journal = :journal')->orderBy('e.id', 'ASC')->setParameter('journal', $journal);
@@ -88,13 +86,11 @@ class DepositController extends AbstractController implements PaginatorAwareInte
     /**
      * Finds and displays a Deposit entity.
      *
-     * @return array
-     *
      * @Route("/{id}", name="deposit_show", methods={"GET"})
      *
      * @Template()
      */
-    public function showAction(Journal $journal, Deposit $deposit) {
+    public function showAction(Journal $journal, Deposit $deposit): array {
         return [
             'journal' => $journal,
             'deposit' => $deposit,

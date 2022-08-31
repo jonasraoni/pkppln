@@ -29,10 +29,8 @@ class XmlParser {
 
     /**
      * List of errors in parsing.
-     *
-     * @var array
      */
-    private $errors;
+    private array $errors;
 
     /**
      * Build the parser.
@@ -43,22 +41,15 @@ class XmlParser {
 
     /**
      * Check if the parse generated errors.
-     *
-     * @return bool
      */
-    public function hasErrors() {
+    public function hasErrors(): bool {
         return count($this->errors) > 0;
     }
 
     /**
      * Filter out any invalid UTF-8 data in $from and write the result to $to.
-     *
-     * @param string $from
-     * @param string $to
-     *
-     * @return int
      */
-    public function filter($from, $to) {
+    public function filter(string $from, string $to): int {
         $fromHandle = fopen($from, 'rb');
         $toHandle = fopen($to, 'wb');
         $changes = 0;
@@ -80,13 +71,9 @@ class XmlParser {
      * try to load the XML again.
      * Other errors in the XML, beyond the bad UTF-8, will not be tolerated.
      *
-     * @param string $filename
-     *
      * @throws Exception
-     *
-     * @return DOMDocument
      */
-    public function fromFile($filename) {
+    public function fromFile(string $filename): DOMDocument {
         $dom = new DOMDocument('1.0', 'UTF-8');
         libxml_use_internal_errors(true);
         $originalResult = $dom->load($filename, self::LIBXML_OPTS);

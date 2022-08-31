@@ -18,11 +18,8 @@ use DOMDocument;
 class SchemaValidator extends AbstractValidator {
     /**
      * Validate a DOM document.
-     *
-     * @param bool $clearErrors
-     * @param mixed $path
      */
-    public function validate(DOMDocument $dom, $path, $clearErrors = true) : void {
+    public function validate(DOMDocument $dom, string $path, bool $clearErrors = true) : void {
         if ($clearErrors) {
             $this->clearErrors();
         }

@@ -20,17 +20,13 @@ use App\Utilities\BagReader;
 class BagValidator {
     /**
      * File path service.
-     *
-     * @var FilePaths
      */
-    private $filePaths;
+    private FilePaths $filePaths;
 
     /**
      * Bag reader service.
-     *
-     * @var BagReader
      */
-    private $bagReader;
+    private BagReader $bagReader;
 
     /**
      * Build the validator.
@@ -47,7 +43,7 @@ class BagValidator {
         $this->bagReader = $bagReader;
     }
 
-    public function processDeposit(Deposit $deposit) {
+    public function processDeposit(Deposit $deposit): bool {
         $harvestedPath = $this->filePaths->getHarvestFile($deposit);
         $bag = $this->bagReader->readBag($harvestedPath);
         if ( ! $bag->validate()) {

@@ -20,56 +20,40 @@ use Symfony\Component\Filesystem\Filesystem;
 class FilePaths {
     /**
      * Base directory where the files are stored.
-     *
-     * @var string
      */
-    private $root;
+    private string $root;
 
     /**
      * Symfony filesystem object.
-     *
-     * @var FileSystem
      */
-    private $fs;
+    private FileSystem $fs;
 
     /**
      * Build the service.
      *
      * If $root is a relative directory, the service will construct paths
      * relative to the symfony install director, inside $root.
-     *
-     * @param string $root
-     * @param string $projectDir
-     * @param FileSystem $fs
      */
-    public function __construct($root, $projectDir, FileSystem $fs = null) {
+    public function __construct(string $root, string $projectDir, FileSystem $fs = null) {
         if ($root && '/' !== $root[0]) {
             $this->root = $projectDir . '/' . $root;
         } else {
             $this->root = $root;
         }
-        if ($fs) {
-            $this->fs = $fs;
-        } else {
-            $this->fs = new Filesystem();
-        }
+        $this->fs = $fs ?? new Filesystem();
     }
 
     /**
      * Get the root file system path.
-     *
-     * @return string
      */
-    public function getRootPath() {
+    public function getRootPath(): string {
         return $this->root;
     }
 
     /**
      * Get the directory where a journal's deposits should be saved from LOCKSS.
-     *
-     * @return string
      */
-    public function getRestoreDir(Journal $journal) {
+    public function getRestoreDir(Journal $journal): string {
         $path = implode('/', [
             $this->getRootPath(),
             'restore',
@@ -84,10 +68,8 @@ class FilePaths {
 
     /**
      * Get the path to save a deposit from LOCKSS.
-     *
-     * @return string
      */
-    public function getRestoreFile(Deposit $deposit) {
+    public function getRestoreFile(Deposit $deposit): string {
         return implode('/', [
             $this->getRestoreDir($deposit->getJournal()),
             $deposit->getDepositUuid() . '.zip',
@@ -96,10 +78,8 @@ class FilePaths {
 
     /**
      * Get the harvest directory.
-     *
-     * @return string
      */
-    public function getHarvestDir(Journal $journal) {
+    public function getHarvestDir(Journal $journal): string {
         $path = implode('/', [
             $this->getRootPath(),
             'harvest',
@@ -114,10 +94,8 @@ class FilePaths {
 
     /**
      * Get the path to a harvested deposit.
-     *
-     * @return mixed
      */
-    public function getHarvestFile(Deposit $deposit) {
+    public function getHarvestFile(Deposit $deposit): string {
         return implode('/', [
             $this->getHarvestDir($deposit->getJournal()),
             $deposit->getDepositUuid() . '.zip',
@@ -126,10 +104,8 @@ class FilePaths {
 
     /**
      * Get the processing directory.
-     *
-     * @return string
      */
-    public function getProcessingDir(Journal $journal) {
+    public function getProcessingDir(Journal $journal): string {
         $path = implode('/', [
             $this->getRootPath(),
             'processing',
@@ -144,10 +120,8 @@ class FilePaths {
 
     /**
      * Get the path to a deposit bag being processed.
-     *
-     * @return mixed
      */
-    public function getProcessingBagPath(Deposit $deposit) {
+    public function getProcessingBagPath(Deposit $deposit): string {
         $path = implode('/', [
             $this->getProcessingDir($deposit->getJournal()),
             $deposit->getDepositUuid(),
@@ -161,10 +135,8 @@ class FilePaths {
 
     /**
      * Get the staging directory for processed deposits.
-     *
-     * @return string
      */
-    public function getStagingDir(Journal $journal) {
+    public function getStagingDir(Journal $journal): string {
         $path = implode('/', [
             $this->getRootPath(),
             'staged',
@@ -179,10 +151,8 @@ class FilePaths {
 
     /**
      * Get the path to a processed, staged, bag.
-     *
-     * @return mixed
      */
-    public function getStagingBagPath(Deposit $deposit) {
+    public function getStagingBagPath(Deposit $deposit): string {
         $path = $this->getStagingDir($deposit->getJournal());
 
         return $path . '/' . $deposit->getDepositUuid() . '.zip';
@@ -190,10 +160,8 @@ class FilePaths {
 
     /**
      * Get the path to the onix feed file.
-     *
-     * @return string
      */
-    public function getOnixPath() {
+    public function getOnixPath(): string {
         return $this->root . '/onix.xml';
     }
 }

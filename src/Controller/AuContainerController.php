@@ -31,10 +31,8 @@ class AuContainerController extends AbstractController implements PaginatorAware
      *
      * @Route("/", name="aucontainer", methods={"GET"})
      * @Template()
-     *
-     * @return array
      */
-    public function indexAction(Request $request) {
+    public function indexAction(Request $request): array {
         $em = $this->getDoctrine()->getManager();
         $dql = 'SELECT e FROM App:AuContainer e ORDER BY e.id';
         $query = $em->createQuery($dql);
@@ -60,12 +58,8 @@ class AuContainerController extends AbstractController implements PaginatorAware
      *
      * @Route("/{id}", name="aucontainer_show", methods={"GET"})
      * @Template()
-     *
-     * @param string $id
-     *
-     * @return array
      */
-    public function showAction($id) {
+    public function showAction(string $id): array {
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('App:AuContainer')->find($id);

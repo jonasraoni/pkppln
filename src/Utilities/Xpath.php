@@ -20,15 +20,10 @@ class Xpath {
     /**
      * Get a single XML value as a string.
      *
-     * @param string $xpath
-     * @param string $default
-     *
      * @throws Exception
      *                   If there are more than one result.
-     *
-     * @return string
      */
-    public static function getXmlValue(SimpleXMLElement $xml, $xpath, $default = null) {
+    public static function getXmlValue(SimpleXMLElement $xml, string $xpath, string $default = null): string {
         $data = $xml->xpath($xpath);
         if (1 === count($data)) {
             return trim((string) $data[0]);
@@ -42,12 +37,8 @@ class Xpath {
 
     /**
      * Query an XML document.
-     *
-     * @param string $xpath
-     *
-     * @return array
      */
-    public static function query(SimpleXMLElement $xml, $xpath) {
+    public static function query(SimpleXMLElement $xml, string $xpath): array {
         return $xml->xpath($xpath);
     }
 }
