@@ -31,7 +31,7 @@ class PingResultNullResponseTest extends TestCase {
     }
 
     public function testGetBody() : void {
-        $this->assertSame('', $this->result->getBody());
+        $this->assertSame(null, $this->result->getBody());
     }
 
     public function testHasXml() : void {
@@ -40,31 +40,31 @@ class PingResultNullResponseTest extends TestCase {
     }
 
     public function testGetHeader() : void {
-        $this->assertSame('', $this->result->getHeader('foo'));
+        $this->assertSame([], $this->result->getHeader('foo'));
     }
 
     public function testGetOjsRelease() : void {
-        $this->assertSame('', $this->result->getOjsRelease());
+        $this->assertSame(null, $this->result->getOjsRelease());
     }
 
     public function testGetPluginReleaseVersion() : void {
-        $this->assertSame('', $this->result->getPluginReleaseVersion());
+        $this->assertSame(null, $this->result->getPluginReleaseVersion());
     }
 
     public function testPluginReleaseDate() : void {
-        $this->assertSame('', $this->result->getPluginReleaseDate());
+        $this->assertSame(null, $this->result->getPluginReleaseDate());
     }
 
     public function testPluginCurrent() : void {
-        $this->assertSame('', $this->result->isPluginCurrent());
+        $this->assertSame(null, $this->result->isPluginCurrent());
     }
 
     public function testTermsAccepted() : void {
-        $this->assertSame('', $this->result->areTermsAccepted());
+        $this->assertSame(null, $this->result->areTermsAccepted());
     }
 
     public function testJournalTitle() : void {
-        $this->assertSame('', $this->result->getJournalTitle());
+        $this->assertSame(null, $this->result->getJournalTitle());
     }
 
     public function testArticleCount() : void {
