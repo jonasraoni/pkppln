@@ -99,6 +99,18 @@
     "egulias/email-validator": {
         "version": "2.1.18"
     },
+    "friendsofphp/php-cs-fixer": {
+        "version": "2.19",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.19",
+            "ref": "34d1a22f840953909c581b8f993093b14cc9491b"
+        },
+        "files": [
+            ".php-cs-fixer.dist.php"
+        ]
+    },
     "guzzlehttp/guzzle": {
         "version": "6.5.5"
     },

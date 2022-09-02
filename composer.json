@@ -54,6 +54,7 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.4",
+        "friendsofphp/php-cs-fixer": "^2",
         "liip/test-fixtures-bundle": "^1.0",
         "mikey179/vfsstream": "^1.6",
         "phpunit/phpunit": "^9.5",
@@ -111,7 +112,9 @@
         "post-update-cmd": [
             "@auto-scripts",
             "Fuz\\Symfony\\Collection\\ScriptHandler::postUpdate"
-        ]
+        ],
+        "lint": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --diff --dry-run",
+		"lint-fix": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix"
     },
     "conflict": {
         "symfony/symfony": "*",
