@@ -95,9 +95,9 @@ class BagReserializer
             unlink($path);
         }
 
-        $bag->package($path, 'zip');
+        $bag->package($path);
         // Bytes to kb.
-        $deposit->setPackageSize(ceil(filesize($path) / 1000));
+        $deposit->setPackageSize((int) ceil(filesize($path) / 1000));
         $deposit->setPackageChecksumType('sha1');
         $deposit->setPackageChecksumValue(hash_file('sha1', $path));
 

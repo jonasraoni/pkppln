@@ -12,9 +12,7 @@ namespace App\Command\Shell;
 
 use App\Entity\Deposit;
 use App\Services\FilePaths;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManagerInterface;
-use Monolog\Logger;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use RecursiveDirectoryIterator;

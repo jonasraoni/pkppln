@@ -37,7 +37,7 @@ class FetchContentCommand extends Command
     protected Filesystem $fs;
     protected FilePaths $filePaths;
     private SwordClient $swordClient;
-    private HttpClient $httpClient;
+    private Client $httpClient;
 
     /**
      * Initialize the command.

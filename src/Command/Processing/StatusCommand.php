@@ -27,6 +27,7 @@ class StatusCommand extends AbstractProcessingCmd
      */
     private bool $cleanup;
     private FilePaths $filePaths;
+    private SwordClient $client;
 
     /**
      * {@inheritdoc}

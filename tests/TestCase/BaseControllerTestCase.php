@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace App\Tests\TestCase;
 
+use Doctrine\Common\DataFixtures\ReferenceRepository;
+use Doctrine\ORM\EntityManager;
 use Exception;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Nines\UtilBundle\TestCase\ControllerTestCase;
@@ -24,15 +26,8 @@ class BaseControllerTestCase extends ControllerTestCase
 {
     use FixturesTrait;
 
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-
-    /**
-     * @var ReferenceRepository
-     */
-    protected $references;
+    protected EntityManager $entityManager;
+    protected ReferenceRepository $references;
 
     /**
      * @var array|SplFileInfo[]|string[]

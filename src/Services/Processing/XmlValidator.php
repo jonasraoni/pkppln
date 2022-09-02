@@ -19,8 +19,6 @@ use App\Utilities\XmlParser;
 
 /**
  * Validate the OJS XML export.
- *
- * @todo Rewrite this to use XmlParser.
  */
 class XmlValidator
 {

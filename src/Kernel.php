@@ -23,10 +23,23 @@ class Kernel extends BaseKernel
 
     private const CONFIG_EXTS = '.{php,xml,yaml,yml}';
 
+    private static Kernel $instance;
+
+    public function __construct(string $environment, bool $debug)
+    {
+        parent::__construct($environment, $debug);
+        self::$instance = $this;
+    }
+
+    public static function getInstance(): static
+    {
+        return self::$instance;
+    }
+
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
         $container->addResource(new FileResource($this->getProjectDir() . '/config/bundles.php'));
-        $container->setParameter('container.dumper.inline_class_loader', \PHP_VERSION_ID < 70400 || $this->debug);
+        $container->setParameter('container.dumper.inline_class_loader', (bool) $this->debug);
         $container->setParameter('container.dumper.inline_factories', true);
         $confDir = $this->getProjectDir() . '/config';
 

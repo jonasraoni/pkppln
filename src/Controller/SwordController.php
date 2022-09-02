@@ -206,7 +206,7 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
     {
         $accepting = $this->checkAccess($journal->getUuid());
         if (! $journal->getTermsAccepted()) {
-            $this->accepting = false;
+            $accepting = false;
         }
         $this->logger->notice("{$request->getClientIp()} - create deposit - {$journal->getUuid()} - accepting: " . ($accepting ? 'yes' : 'no'));
 

@@ -13,6 +13,7 @@ namespace App\Repository;
 use App\Entity\Blacklist;
 use App\Entity\Journal;
 use App\Entity\Whitelist;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
@@ -118,9 +119,6 @@ class JournalRepository extends ServiceEntityRepository
 
     /**
      * Find the $limit most recent journals to contact the PLN for the first time.
-     *
-     * @todo This method should be called findRecent(). It does not find
-     * journals with status=new
      *
      * @return Collection|Journal[]
      */

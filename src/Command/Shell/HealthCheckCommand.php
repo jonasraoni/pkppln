@@ -11,25 +11,27 @@ declare(strict_types=1);
 namespace App\Command\Shell;
 
 use App\Entity\Journal;
+use App\Repository\JournalRepository;
 use App\Services\Ping;
 use DateTime;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Exception\XmlParseException;
+use Doctrine\ORM\EntityManagerInterface;
+use Nines\UserBundle\Entity\User;
+use Nines\UserBundle\Repository\UserRepository;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
-use Swift_Message;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 use Twig\Environment;
 
 /**
  * Ping all the journals that haven't contacted the PLN in a while, and send
  * notifications to interested users.
- * @todo Probably not working the Swift_Message
  */
 class HealthCheckCommand extends Command
 {
@@ -38,17 +40,21 @@ class HealthCheckCommand extends Command
     protected Ping $ping;
     private Environment $templating;
     private ContainerInterface $container;
+    private EntityManagerInterface $em;
+    private MailerInterface $mailer;
 
     /**
      * Set the service container, and initialize the command.
      */
-    public function __construct(LoggerInterface $logger, Ping $ping, Environment $environment, ContainerInterface $container)
+    public function __construct(LoggerInterface $logger, Ping $ping, Environment $environment, ContainerInterface $container, EntityManagerInterface $em, MailerInterface $mailer, )
     {
         parent::__construct();
         $this->templating = $environment;
         $this->logger = $logger;
         $this->ping = $ping;
         $this->container = $container;
+        $this->em = $em;
+        $this->mailer = $mailer;
     }
 
     /**
@@ -76,17 +82,14 @@ class HealthCheckCommand extends Command
             'journals' => $journals,
             'days' => $days,
         ]);
-        $mailer = $this->container->get('mailer');
         foreach ($users as $user) {
-            $message = Swift_Message::newInstance(
-                'Automated notification from the PKP PLN',
-                $notification,
-                'text/plain',
-                'utf-8'
-            );
-            $message->setFrom('noreplies@pkp-pln.lib.sfu.ca');
-            $message->setTo($user->getEmail(), $user->getFullname());
-            $mailer->send($message);
+            $email = (new Email())
+                ->from('noreplies@pkp-pln.lib.sfu.ca')
+                ->to(new Address($user->getEmail(), $user->getFullname()))
+                ->subject('Automated notification from the PKP PLN')
+                ->text($notification);
+
+            $this->mailer->send($email);
         }
     }
 
@@ -97,28 +100,11 @@ class HealthCheckCommand extends Command
      */
     protected function pingJournal(Journal $journal): bool
     {
-        $client = new Client(['verify' => false, 'connect_timeout' => 15]);
-
-        try {
-            $response = $client->get($journal->getGatewayUrl());
-            if (200 !== $response->getStatusCode()) {
-                return false;
-            }
-            $xml = $response->xml();
-            $element = $xml->xpath('//terms')[0];
-            if ($element && isset($element['termsAccepted']) && 'yes' === ((string) $element['termsAccepted'])) {
-                return true;
-            }
-        } catch (RequestException $e) {
-            $this->logger->error("Cannot ping {$journal->getUrl()}: {$e->getMessage()}");
-            if ($e->hasResponse()) {
-                $this->logger->error($e->getResponse()->getStatusCode() . ' ' . $this->logger->error($e->getResponse()->getReasonPhrase()));
-            }
-        } catch (XmlParseException $e) {
-            $this->logger->error("Cannot parse journal ping response {$journal->getUrl()}: {$e->getMessage()}");
+        $result = $this->ping->ping($journal);
+        if ($result->hasError()) {
+            $this->logger->error($result->getError());
         }
-
-        return false;
+        return $result->areTermsAccepted() === 'yes';
     }
 
     /**
@@ -129,16 +115,19 @@ class HealthCheckCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
-        $em = $this->getContainer()->get('doctrine')->getManager();
-        $days = $this->getContainer()->getParameter('days_silent');
-        $journals = $em->getRepository('App:Journal')->findSilent($days);
+        $days = $this->container->get('days_silent');
+        /** @var JournalRepository */
+        $journalRepository = $this->em->getRepository(Journal::class);
+        $journals = $journalRepository->findSilent($days);
         $count = \count($journals);
         $this->logger->notice("Found {$count} silent journals.");
         if (0 === \count($journals)) {
             return;
         }
 
-        $users = $em->getRepository('AppUserBundle:User')->findUserToNotify();
+        /** @var UserRepository */
+        $userRepository = $this->em->getRepository(User::class);
+        $users = $userRepository->findUserToNotify();
         if (0 === \count($users)) {
             $this->logger->error('No users to notify.');
 
@@ -158,7 +147,7 @@ class HealthCheckCommand extends Command
         }
 
         if (! $input->getOption('dry-run')) {
-            $em->flush();
+            $this->em->flush();
         }
     }
 }

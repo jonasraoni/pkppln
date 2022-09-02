@@ -14,6 +14,7 @@ use App\Entity\TermOfUse;
 use App\Entity\TermOfUseHistory;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\UnitOfWork;
+use InvalidArgumentException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -39,29 +40,26 @@ class TermsOfUseListener
      */
     protected function getChangeSet(UnitOfWork $unitOfWork, TermOfUse $entity, string $action): array
     {
-        switch ($action) {
-            case 'create':
-                return [
-                    'id' => [null, $entity->getId()],
-                    'weight' => [null, $entity->getWeight()],
-                    'keyCode' => [null, $entity->getKeyCode()],
-                    'content' => [null, $entity->getContent()],
-                    'created' => [null, $entity->getCreated()],
-                    'updated' => [null, $entity->getUpdated()],
-                ];
-
-            case 'update':
-                return $unitOfWork->getEntityChangeSet($entity);
-            case 'delete':
-                return [
-                    'id' => [$entity->getId(), null],
-                    'weight' => [$entity->getWeight(), null],
-                    'keyCode' => [$entity->getKeyCode(), null],
-                    'content' => [$entity->getContent(), null],
-                    'created' => [$entity->getCreated(), null],
-                    'updated' => [$entity->getUpdated(), null],
-                ];
-        }
+        return match ($action) {
+            'create' => [
+                'id' => [null, $entity->getId()],
+                'weight' => [null, $entity->getWeight()],
+                'keyCode' => [null, $entity->getKeyCode()],
+                'content' => [null, $entity->getContent()],
+                'created' => [null, $entity->getCreated()],
+                'updated' => [null, $entity->getUpdated()],
+            ],
+            'update' => $unitOfWork->getEntityChangeSet($entity),
+            'delete' => [
+                'id' => [$entity->getId(), null],
+                'weight' => [$entity->getWeight(), null],
+                'keyCode' => [$entity->getKeyCode(), null],
+                'content' => [$entity->getContent(), null],
+                'created' => [$entity->getCreated(), null],
+                'updated' => [$entity->getUpdated(), null],
+            ],
+            default => throw new InvalidArgumentException("Invalid action argument \"$action\"")
+        };
     }
 
     /**

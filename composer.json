@@ -57,6 +57,7 @@
         "friendsofphp/php-cs-fixer": "^2",
         "liip/test-fixtures-bundle": "^1.0",
         "mikey179/vfsstream": "^1.6",
+        "phpstan/phpstan": "^1.8",
         "phpunit/phpunit": "^9.5",
         "symfony/browser-kit": "4.4.*",
         "symfony/css-selector": "4.4.*",
@@ -114,7 +115,8 @@
             "Fuz\\Symfony\\Collection\\ScriptHandler::postUpdate"
         ],
         "lint": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --diff --dry-run",
-		"lint-fix": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix"
+		"lint-fix": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix",
+        "phpstan": "phpstan analyse -l 2 --memory-limit=-1 src migrations"
     },
     "conflict": {
         "symfony/symfony": "*",

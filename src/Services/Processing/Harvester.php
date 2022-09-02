@@ -180,7 +180,7 @@ class Harvester
         try {
             $deposit->setHarvestAttempts($deposit->getHarvestAttempts() + 1);
             $this->checkSize($deposit);
-            $response = $this->fetchDeposit($deposit->getUrl(), $deposit->getSize());
+            $response = $this->fetchDeposit($deposit->getUrl());
             $deposit->setFileType($response->getHeaderLine('Content-Type'));
             $filePath = $this->filePaths->getHarvestFile($deposit);
 

@@ -31,7 +31,8 @@ class VirusScanner
      */
     public const BUFFER_SIZE = 64 * 1024;
 
-    private $filePaths;
+    private FilePaths $filePaths;
+    private int $bufferSize;
 
     /**
      * Path to the ClamAV socket.
@@ -157,7 +158,7 @@ class VirusScanner
         $r = $client->scanFile($harvestedPath);
         $messages[] = [
             $this->getStatusMessage($r, $basename),
-            ...$this->scanArchiveFiles($phar, $client)
+            ...$this->scanArchiveFiles($phar, $client, $deposit)
         ];
         $deposit->addToProcessingLog(implode("\n", $messages));
 

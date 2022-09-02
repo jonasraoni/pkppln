@@ -22,10 +22,8 @@ use DateTimeInterface;
  */
 class JournalBuilderTest extends BaseControllerTestCase
 {
-    /**
-     * @var JournalBuilder
-     */
-    private $builder;
+    private JournalBuilder $builder;
+    private Journal $journal;
 
     public function fixtures(): array
     {
@@ -38,29 +36,27 @@ class JournalBuilderTest extends BaseControllerTestCase
     {
         $data = <<<'ENDXML'
 <?xml version="1.0" encoding="utf-8"?>
-<entry xmlns="http://www.w3.org/2005/Atom"
-       xmlns:dcterms="http://purl.org/dc/terms/"
-       xmlns:pkp="http://pkp.sfu.ca/SWORD">
-	<email>user@example.com</email>
-	<title>Intl J Test</title>
-	<pkp:journal_url>http://example.com/ijt</pkp:journal_url>
-	<pkp:publisherName>Publisher institution</pkp:publisherName>
-	<pkp:publisherUrl>http://publisher.example.com</pkp:publisherUrl>
-	<pkp:issn>0000-0000</pkp:issn>
-	<id>urn:uuid:00FD6D96-0155-43A4-97F7-2C6EE8EBFF09</id>
-	<updated>1996-12-31T16:00:00Z</updated>
-	<pkp:content size="3613" volume="44" issue="4" pubdate="2015-07-14"
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:pkp="http://pkp.sfu.ca/SWORD">
+    <email>user@example.com</email>
+    <title>Intl J Test</title>
+    <pkp:journal_url>http://example.com/ijt</pkp:journal_url>
+    <pkp:publisherName>Publisher institution</pkp:publisherName>
+    <pkp:publisherUrl>http://publisher.example.com</pkp:publisherUrl>
+    <pkp:issn>0000-0000</pkp:issn>
+    <id>urn:uuid:00FD6D96-0155-43A4-97F7-2C6EE8EBFF09</id>
+    <updated>1996-12-31T16:00:00Z</updated>
+    <pkp:content size="3613" volume="44" issue="4" pubdate="2015-07-14"
             checksumType="SHA-1" checksumValue="25b0bd51bb05c145672617fced484c9e71ec553b">
             http://ojs.dv/index.php/ijt/pln/deposits/00FD6D96-0155-43A4-97F7-2C6EE8EBFF09
         </pkp:content>
-	<pkp:license>
+    <pkp:license>
             <pkp:openAccessPolicy>Yes.</pkp:openAccessPolicy>
             <pkp:licenseURL>http://creativecommons.org/licenses/by-nc-sa/4.0</pkp:licenseURL>
             <pkp:publishingMode mode="0">Open</pkp:publishingMode>
             <pkp:copyrightNotice>This is a copyright notice.</pkp:copyrightNotice>
             <pkp:copyrightBasis>article</pkp:copyrightBasis>
             <pkp:copyrightHolder>author</pkp:copyrightHolder>
-	</pkp:license>
+    </pkp:license>
 </entry>
 ENDXML;
         $xml = simplexml_load_string($data);

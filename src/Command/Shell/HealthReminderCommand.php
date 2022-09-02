@@ -13,17 +13,18 @@ namespace App\Command\Shell;
 use DateTime;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
-use Swift_Message;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 use Twig\Environment;
 
 /**
  * Send reminders about journals that haven't contacted the PLN in a while.
- * @todo Probably not working the Swift_Message
  */
 class HealthReminderCommand extends Command
 {
@@ -31,13 +32,15 @@ class HealthReminderCommand extends Command
 
     private Environment $templating;
     private ContainerInterface $container;
+    private MailerInterface $mailer;
 
-    public function __construct(Environment $environment, LoggerInterface $logger, ContainerInterface $container)
+    public function __construct(Environment $environment, LoggerInterface $logger, ContainerInterface $container, MailerInterface $mailer)
     {
         parent::__construct();
         $this->templating = $environment;
         $this->logger = $logger;
         $this->container = $container;
+        $this->mailer = $mailer;
     }
 
     /**
@@ -68,17 +71,13 @@ class HealthReminderCommand extends Command
             'journals' => $journals,
             'days' => $days,
         ]);
-        $mailer = $this->getContainer()->get('mailer');
         foreach ($users as $user) {
-            $message = Swift_Message::newInstance(
-                'Automated reminder from the PKP PLN',
-                $notification,
-                'text/plain',
-                'utf-8'
-            );
-            $message->setFrom('noreplies@pkp-pln.lib.sfu.ca');
-            $message->setTo($user->getEmail(), $user->getFullname());
-            $mailer->send($message);
+            $email = (new Email())
+                ->from('noreplies@pkp-pln.lib.sfu.ca')
+                ->to(new Address($user->getEmail(), $user->getFullname()))
+                ->subject('Automated notification from the PKP PLN')
+                ->text($notification);
+            $this->mailer->send($email);
         }
     }
 
