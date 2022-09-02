@@ -38,8 +38,8 @@ class DepositFixtures extends Fixture implements DependentFixtureInterface {
             $fixture->setFileType('application/zip');
             $fixture->setDepositUuid(self::UUIDS[$i]);
             $fixture->setAction('add');
-            $fixture->setVolume(1);
-            $fixture->setIssue($i + 1);
+            $fixture->setVolume('1');
+            $fixture->setIssue((string) ($i + 1));
             $fixture->setPubDate(new DateTime("2016-{$i}-{$i}T12:00:00"));
             $fixture->setChecksumType('sha1');
             $fixture->setChecksumValue(sha1(self::UUIDS[$i]));
