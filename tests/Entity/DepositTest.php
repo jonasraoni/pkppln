@@ -16,39 +16,47 @@ use App\Tests\TestCase\BaseControllerTestCase;
 /**
  * Description of DepositTest.
  */
-class DepositTest extends BaseControllerTestCase {
+class DepositTest extends BaseControllerTestCase
+{
     private $deposit;
 
-    public function testInstance() : void {
+    public function testInstance(): void
+    {
         $this->assertInstanceOf(Deposit::class, $this->deposit);
     }
 
-    public function testSetUuid() : void {
+    public function testSetUuid(): void
+    {
         $this->deposit->setDepositUuid('abc123');
         $this->assertSame('ABC123', $this->deposit->getDepositUuid());
     }
 
-    public function testToString() : void {
+    public function testToString(): void
+    {
         $this->deposit->setDepositUuid('abc123');
         $this->assertSame('ABC123', (string) $this->deposit);
     }
 
-    public function testSetChecksumType() : void {
+    public function testSetChecksumType(): void
+    {
         $this->deposit->setChecksumType('ABC123');
         $this->assertSame('abc123', $this->deposit->getChecksumType());
     }
 
-    public function testSetChecksumValue() : void {
+    public function testSetChecksumValue(): void
+    {
         $this->deposit->setChecksumValue('abc123');
         $this->assertSame('ABC123', $this->deposit->getChecksumValue());
     }
 
-    public function testAddErrorLog() : void {
+    public function testAddErrorLog(): void
+    {
         $this->deposit->addErrorLog('foo');
         $this->assertSame(['foo'], $this->deposit->getErrorLog());
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $this->deposit = new Deposit();
     }

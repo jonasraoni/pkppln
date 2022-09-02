@@ -23,16 +23,18 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/aucontainer")
  */
-class AuContainerController extends AbstractController implements PaginatorAwareInterface {
+class AuContainerController extends AbstractController implements PaginatorAwareInterface
+{
     use PaginatorTrait;
 
     /**
      * Lists all AuContainer entities.
      *
      * @Route("/", name="aucontainer", methods={"GET"})
-     * @Template()
+     * @Template
      */
-    public function indexAction(Request $request): array {
+    public function indexAction(Request $request): array
+    {
         $em = $this->getDoctrine()->getManager();
         $dql = 'SELECT e FROM App:AuContainer e ORDER BY e.id';
         $query = $em->createQuery($dql);
@@ -57,15 +59,16 @@ class AuContainerController extends AbstractController implements PaginatorAware
      * Finds and displays a AuContainer entity.
      *
      * @Route("/{id}", name="aucontainer_show", methods={"GET"})
-     * @Template()
+     * @Template
      */
-    public function showAction(string $id): array {
+    public function showAction(string $id): array
+    {
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('App:AuContainer')->find($id);
         $openContainer = $em->getRepository('App:AuContainer')->getOpenContainer();
 
-        if ( ! $entity) {
+        if (! $entity) {
             throw $this->createNotFoundException('Unable to find AuContainer entity.');
         }
 

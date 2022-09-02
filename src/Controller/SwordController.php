@@ -38,9 +38,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  *
  * @Route("/api/sword/2.0")
  */
-class SwordController extends AbstractController implements PaginatorAwareInterface {
-    use PaginatorTrait;
+class SwordController extends AbstractController implements PaginatorAwareInterface
+{
     use LoggerAwareTrait;
+    use PaginatorTrait;
 
     /**
      * Black and white list service.
@@ -55,7 +56,8 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
     /**
      * Build the controller.
      */
-    public function __construct(BlackWhiteList $blackwhitelist, EntityManagerInterface $em) {
+    public function __construct(BlackWhiteList $blackwhitelist, EntityManagerInterface $em)
+    {
         $this->blackwhitelist = $blackwhitelist;
         $this->em = $em;
     }
@@ -72,7 +74,8 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
      *
      * @throws BadRequestException
      */
-    private function fetchHeader(Request $request, string $key, bool $required = false): ?string {
+    private function fetchHeader(Request $request, string $key, bool $required = false): ?string
+    {
         if ($request->headers->has($key)) {
             return $request->headers->get($key);
         }
@@ -95,8 +98,9 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
      * If the journal uuid is blacklisted, return false
      * Return the pln_accepting parameter from parameters.yml
      */
-    private function checkAccess(string $uuid): bool {
-        if( ! $uuid) {
+    private function checkAccess(string $uuid): bool
+    {
+        if (! $uuid) {
             return false;
         }
         if ($this->blackwhitelist->isWhitelisted($uuid)) {
@@ -112,7 +116,8 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
     /**
      * Figure out which message to return for the network status widget in OJS.
      */
-    private function getNetworkMessage(Journal $journal): string {
+    private function getNetworkMessage(Journal $journal): string
+    {
         if (null === $journal->getOjsVersion()) {
             return $this->getParameter('pln.network_default');
         }
@@ -128,9 +133,10 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
      *
      * @throws BadRequestHttpException
      */
-    private function getXml(Request $request): SimpleXMLElement {
+    private function getXml(Request $request): SimpleXMLElement
+    {
         $content = $request->getContent();
-        if ( ! $content || ! is_string($content)) {
+        if (! $content || ! \is_string($content)) {
             throw new BadRequestHttpException('Expected request body. Found none.', null, Response::HTTP_BAD_REQUEST);
         }
 
@@ -149,27 +155,28 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
      *
      * Requires On-Behalf-Of and Journal-Url HTTP headers.
      *
-     * @Template()
+     * @Template
      * @Route("/sd-iri.{_format}", methods={"GET"},
-     *  name="sword_service_document",
-     *  defaults={"_format": "xml"},
-     *  requirements={"_format": "xml"}
+     *     name="sword_service_document",
+     *     defaults={"_format": "xml"},
+     *     requirements={"_format": "xml"}
      * )
      */
-    public function serviceDocumentAction(Request $request, JournalBuilder $builder): array {
+    public function serviceDocumentAction(Request $request, JournalBuilder $builder): array
+    {
         $obh = strtoupper($this->fetchHeader($request, 'On-Behalf-Of'));
         $journalUrl = $this->fetchHeader($request, 'Journal-Url');
         $accepting = $this->checkAccess($obh);
         $this->logger->notice("{$request->getClientIp()} - service document - {$obh} - {$journalUrl} - accepting: " . ($accepting ? 'yes' : 'no'));
-        if ( ! $obh) {
+        if (! $obh) {
             throw new BadRequestHttpException('Missing On-Behalf-Of header.', null, 400);
         }
-        if ( ! $journalUrl) {
+        if (! $journalUrl) {
             throw new BadRequestHttpException('Missing Journal-Url header.', null, 400);
         }
 
         $journal = $builder->fromRequest($obh, $journalUrl);
-        if ( ! $journal->getTermsAccepted()) {
+        if (! $journal->getTermsAccepted()) {
             $accepting = false;
         }
         $this->em->flush();
@@ -191,18 +198,19 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
      * Create a deposit.
      *
      * @Route("/col-iri/{uuid}", methods={"POST"}, name="sword_create_deposit", requirements={
-     *      "uuid": ".{36}",
+     *     "uuid": ".{36}",
      * })
-     * @ParamConverter("journal", options={"mapping": {"uuid"="uuid"}})
+     * @ParamConverter("journal", options={"mapping": {"uuid": "uuid"}})
      */
-    public function createDepositAction(Request $request, Journal $journal, JournalBuilder $journalBuilder, DepositBuilder $depositBuilder): Response {
+    public function createDepositAction(Request $request, Journal $journal, JournalBuilder $journalBuilder, DepositBuilder $depositBuilder): Response
+    {
         $accepting = $this->checkAccess($journal->getUuid());
-        if ( ! $journal->getTermsAccepted()) {
+        if (! $journal->getTermsAccepted()) {
             $this->accepting = false;
         }
         $this->logger->notice("{$request->getClientIp()} - create deposit - {$journal->getUuid()} - accepting: " . ($accepting ? 'yes' : 'no'));
 
-        if ( ! $accepting) {
+        if (! $accepting) {
             throw new BadRequestHttpException('Not authorized to create deposits.', null, 400);
         }
 
@@ -227,16 +235,17 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
      * Check that status of a deposit by fetching the sword statemt.
      *
      * @Route("/cont-iri/{journal_uuid}/{deposit_uuid}/state", methods={"GET"}, name="sword_statement", requirements={
-     *      "journal_uuid": ".{36}",
-     *      "deposit_uuid": ".{36}"
+     *     "journal_uuid": ".{36}",
+     *     "deposit_uuid": ".{36}"
      * })
-     * @ParamConverter("journal", options={"mapping": {"journal_uuid"="uuid"}})
-     * @ParamConverter("deposit", options={"mapping": {"deposit_uuid"="depositUuid"}})
+     * @ParamConverter("journal", options={"mapping": {"journal_uuid": "uuid"}})
+     * @ParamConverter("deposit", options={"mapping": {"deposit_uuid": "depositUuid"}})
      */
-    public function statementAction(Request $request, Journal $journal, Deposit $deposit): Response {
+    public function statementAction(Request $request, Journal $journal, Deposit $deposit): Response
+    {
         $accepting = $this->checkAccess($journal->getUuid());
         $this->logger->notice("{$request->getClientIp()} - statement - {$journal->getUuid()} - {$deposit->getDepositUuid()} - accepting: " . ($accepting ? 'yes' : 'no'));
-        if ( ! $accepting && ! $this->isGranted('ROLE_USER')) {
+        if (! $accepting && ! $this->isGranted('ROLE_USER')) {
             throw new BadRequestHttpException('Not authorized to request statements.', null, 400);
         }
         if ($journal !== $deposit->getJournal()) {
@@ -257,16 +266,17 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
      * Edit a deposit with an HTTP PUT.
      *
      * @Route("/cont-iri/{journal_uuid}/{deposit_uuid}/edit", methods={"PUT"}, name="sword_edit", requirements={
-     *      "journal_uuid": ".{36}",
-     *      "deposit_uuid": ".{36}"
+     *     "journal_uuid": ".{36}",
+     *     "deposit_uuid": ".{36}"
      * })
-     * @ParamConverter("journal", options={"mapping": {"journal_uuid"="uuid"}})
-     * @ParamConverter("deposit", options={"mapping": {"deposit_uuid"="depositUuid"}})
+     * @ParamConverter("journal", options={"mapping": {"journal_uuid": "uuid"}})
+     * @ParamConverter("deposit", options={"mapping": {"deposit_uuid": "depositUuid"}})
      */
-    public function editAction(Request $request, Journal $journal, Deposit $deposit, DepositBuilder $builder): Response {
+    public function editAction(Request $request, Journal $journal, Deposit $deposit, DepositBuilder $builder): Response
+    {
         $accepting = $this->checkAccess($journal->getUuid());
         $this->logger->notice("{$request->getClientIp()} - edit deposit - {$journal->getUuid()} - {$deposit->getDepositUuid()} - accepting: " . ($accepting ? 'yes' : 'no'));
-        if ( ! $accepting) {
+        if (! $accepting) {
             throw new BadRequestHttpException('Not authorized to create deposits.', null, 400);
         }
         if ($journal !== $deposit->getJournal()) {

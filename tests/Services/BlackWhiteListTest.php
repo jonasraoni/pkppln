@@ -15,24 +15,28 @@ use App\DataFixtures\WhitelistFixtures;
 use App\Services\BlackWhiteList;
 use App\Tests\TestCase\BaseControllerTestCase;
 
-class BlackWhiteListTest extends BaseControllerTestCase {
+class BlackWhiteListTest extends BaseControllerTestCase
+{
     /**
      * @var BlackWhiteList
      */
     protected $list;
 
-    public function fixtures() : array {
+    public function fixtures(): array
+    {
         return [
             BlacklistFixtures::class,
             WhitelistFixtures::class,
         ];
     }
 
-    public function testInstance() : void {
+    public function testInstance(): void
+    {
         $this->assertInstanceOf(BlackWhiteList::class, $this->list);
     }
 
-    public function testIsWhitelisted() : void {
+    public function testIsWhitelisted(): void
+    {
         $this->assertTrue($this->list->isWhitelisted(WhitelistFixtures::UUIDS[0]));
         $this->assertTrue($this->list->isWhitelisted(strtolower(WhitelistFixtures::UUIDS[0])));
 
@@ -40,7 +44,8 @@ class BlackWhiteListTest extends BaseControllerTestCase {
         $this->assertFalse($this->list->isWhitelisted(strtolower(BlacklistFixtures::UUIDS[0])));
     }
 
-    public function testIsBlacklisted() : void {
+    public function testIsBlacklisted(): void
+    {
         $this->assertTrue($this->list->isBlacklisted(BlacklistFixtures::UUIDS[0]));
         $this->assertTrue($this->list->isBlacklisted(strtolower(BlacklistFixtures::UUIDS[0])));
 
@@ -48,7 +53,8 @@ class BlackWhiteListTest extends BaseControllerTestCase {
         $this->assertFalse($this->list->isBlacklisted(strtolower(WhitelistFixtures::UUIDS[0])));
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $this->list = self::$container->get(BlackWhiteList::class);
     }

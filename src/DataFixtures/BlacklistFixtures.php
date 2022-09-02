@@ -17,7 +17,8 @@ use Doctrine\Persistence\ObjectManager;
 /**
  * LoadBlacklist form.
  */
-class BlacklistFixtures extends Fixture {
+class BlacklistFixtures extends Fixture
+{
     public const UUIDS = [
         'AC54ED1A-9795-4EED-94FD-D80CB62E0C84',
         'B156FACD-5210-4111-B4C2-D5C0C348D93A',
@@ -28,7 +29,8 @@ class BlacklistFixtures extends Fixture {
     /**
      * {@inheritdoc}
      */
-    public function load(ObjectManager $em) : void {
+    public function load(ObjectManager $em): void
+    {
         for ($i = 0; $i < 4; $i++) {
             $fixture = new Blacklist();
             $fixture->setUuid(self::UUIDS[$i]);

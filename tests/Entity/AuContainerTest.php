@@ -12,35 +12,41 @@ namespace App\Entity;
 
 use App\Tests\TestCase\BaseControllerTestCase;
 
-class AuContainerTest extends BaseControllerTestCase {
+class AuContainerTest extends BaseControllerTestCase
+{
     /**
      * @var AuContainer
      */
     protected $auContainer;
 
-    public function setOpenClosed() : void {
+    public function setOpenClosed(): void
+    {
         $this->auContainer->setOpen(false);
-        $this->assertSame(false, $this->auContainer->isOpen());
+        $this->assertFalse($this->auContainer->isOpen());
     }
 
-    public function setClosedOpen() : void {
+    public function setClosedOpen(): void
+    {
         $this->auContainer->setOpen(false);
         $this->auContainer->setOpen(true);
-        $this->assertSame(false, $this->auContainer->isOpen());
+        $this->assertFalse($this->auContainer->isOpen());
     }
 
-    public function testGetSizeEmpty() : void {
+    public function testGetSizeEmpty(): void
+    {
         $this->assertSame(0, $this->auContainer->getSize());
     }
 
-    public function testGetSizeSingle() : void {
+    public function testGetSizeSingle(): void
+    {
         $deposit = new Deposit();
         $deposit->setPackageSize(1234);
         $this->auContainer->addDeposit($deposit);
         $this->assertSame(1234, $this->auContainer->getSize());
     }
 
-    public function testGetSizeMultiple() : void {
+    public function testGetSizeMultiple(): void
+    {
         $d1 = new Deposit();
         $d1->setPackageSize(1234);
         $this->auContainer->addDeposit($d1);
@@ -50,17 +56,20 @@ class AuContainerTest extends BaseControllerTestCase {
         $this->assertSame(5555, $this->auContainer->getSize());
     }
 
-    public function testCountDepositsEmpty() : void {
+    public function testCountDepositsEmpty(): void
+    {
         $this->assertSame(0, $this->auContainer->countDeposits());
     }
 
-    public function testCountDepositsSingle() : void {
+    public function testCountDepositsSingle(): void
+    {
         $deposit = new Deposit();
         $this->auContainer->addDeposit($deposit);
         $this->assertSame(1, $this->auContainer->countDeposits());
     }
 
-    public function testCountDepositsMultiple() : void {
+    public function testCountDepositsMultiple(): void
+    {
         $d1 = new Deposit();
         $this->auContainer->addDeposit($d1);
         $d2 = new Deposit();
@@ -68,7 +77,8 @@ class AuContainerTest extends BaseControllerTestCase {
         $this->assertSame(2, $this->auContainer->countDeposits());
     }
 
-    public function setUp() : void {
+    protected function setUp(): void
+    {
         $this->auContainer = new AuContainer();
     }
 }

@@ -20,8 +20,10 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * Custom journal queries for doctrine.
  */
-class JournalRepository extends ServiceEntityRepository {
-    public function __construct(ManagerRegistry $registry) {
+class JournalRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
         parent::__construct($registry, Journal::class);
     }
 
@@ -31,7 +33,8 @@ class JournalRepository extends ServiceEntityRepository {
      * @return Collection|Journal[]
      *                              List of journals.
      */
-    public function getJournalsToPing(): array {
+    public function getJournalsToPing(): array
+    {
         $blacklist = $this->getEntityManager()->getRepository(Blacklist::class)
             ->createQueryBuilder('bl')
             ->select('bl.uuid')
@@ -57,7 +60,8 @@ class JournalRepository extends ServiceEntityRepository {
      * Search is based on uuid, title, issn, url, email, publisher name, and
      * publisher url.
      */
-    public function searchQuery(string $q): Query {
+    public function searchQuery(string $q): Query
+    {
         $qb = $this->createQueryBuilder('j');
         $qb->where('CONCAT(j.uuid, j.title, j.issn, j.url, j.email, j.publisherName, j.publisherUrl) LIKE :q');
         $qb->setParameter('q', '%' . $q . '%');
@@ -68,7 +72,8 @@ class JournalRepository extends ServiceEntityRepository {
     /**
      * Summarize the journal statuses, counting them by status.
      */
-    public function statusSummary(): array {
+    public function statusSummary(): array
+    {
         $qb = $this->createQueryBuilder('e');
         $qb->select('e.status, count(e) as ct')
             ->groupBy('e.status')
@@ -83,7 +88,8 @@ class JournalRepository extends ServiceEntityRepository {
      *
      * @return Collection|Journal[]
      */
-    public function findSilent(int $days): array {
+    public function findSilent(int $days): array
+    {
         $dt = new DateTime("-{$days} day");
 
         $qb = $this->createQueryBuilder('e');
@@ -100,7 +106,8 @@ class JournalRepository extends ServiceEntityRepository {
      *
      * @return Collection|Journal[]
      */
-    public function findOverdue(int $days): array {
+    public function findOverdue(int $days): array
+    {
         $dt = new DateTime("-{$days} day");
         $qb = $this->createQueryBuilder('e');
         $qb->Where('e.notified < :dt');
@@ -117,7 +124,8 @@ class JournalRepository extends ServiceEntityRepository {
      *
      * @return Collection|Journal[]
      */
-    public function findNew(int $limit = 5): array {
+    public function findNew(int $limit = 5): array
+    {
         $qb = $this->createQueryBuilder('e');
         $qb->orderBy('e.id', 'DESC');
         $qb->setMaxResults($limit);

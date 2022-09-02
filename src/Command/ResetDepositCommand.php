@@ -22,7 +22,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Reset the processing status on one or more deposits.
  */
-class ResetDepositCommand extends Command {
+class ResetDepositCommand extends Command
+{
     /**
      * Number of deposits to process in one batch.
      */
@@ -36,7 +37,8 @@ class ResetDepositCommand extends Command {
     /**
      * Build the command.
      */
-    public function __construct(EntityManagerInterface $em) {
+    public function __construct(EntityManagerInterface $em)
+    {
         parent::__construct();
         $this->em = $em;
     }
@@ -44,10 +46,11 @@ class ResetDepositCommand extends Command {
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output) : void {
+    protected function execute(InputInterface $input, OutputInterface $output): void
+    {
         $ids = $input->getArgument('deposit-id');
         $clear = $input->getOption('clear');
-        if (0 === count($ids) && ! $input->getOption('all')) {
+        if (0 === \count($ids) && ! $input->getOption('all')) {
             $output->writeln('Either --all or one or more deposit UUIDs are required.');
 
             return;
@@ -78,7 +81,8 @@ class ResetDepositCommand extends Command {
     /**
      * {@inheritdoc}
      */
-    public function configure() : void {
+    public function configure(): void
+    {
         $this->setName('pln:reset');
         $this->setDescription('Reset the processing status on one or more deposits.');
         $this->addOption('all', null, InputOption::VALUE_NONE, 'Update all deposits. Use with caution.');
@@ -96,10 +100,11 @@ class ResetDepositCommand extends Command {
      * @return Deposit[][]|IterableResult
      *                                  Iterator for all the deposits to reset.
      */
-    public function getDepositIterator(array $ids = null): IterableResult {
+    public function getDepositIterator(array $ids = null): IterableResult
+    {
         $qb = $this->em->createQueryBuilder();
         $qb->select('d')->from('App:Deposit', 'd');
-        if ($ids && count($ids)) {
+        if ($ids && \count($ids)) {
             $qb->andWhere('d.depositUuid IN (:ids)');
             $qb->setParameter('ids', $ids);
         }

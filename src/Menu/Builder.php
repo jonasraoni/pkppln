@@ -20,7 +20,8 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 /**
  * Application menu builder.
  */
-class Builder implements ContainerAwareInterface {
+class Builder implements ContainerAwareInterface
+{
     use ContainerAwareTrait;
 
     /**
@@ -46,7 +47,8 @@ class Builder implements ContainerAwareInterface {
     /**
      * Build the menu builder.
      */
-    public function __construct(FactoryInterface $factory, AuthorizationCheckerInterface $authChecker, TokenStorageInterface $tokenStorage) {
+    public function __construct(FactoryInterface $factory, AuthorizationCheckerInterface $authChecker, TokenStorageInterface $tokenStorage)
+    {
         $this->factory = $factory;
         $this->authChecker = $authChecker;
         $this->tokenStorage = $tokenStorage;
@@ -55,8 +57,9 @@ class Builder implements ContainerAwareInterface {
     /**
      * Check if the currently logged in user has a given role.
      */
-    private function hasRole(string $role): bool {
-        if ( ! $this->tokenStorage->getToken()) {
+    private function hasRole(string $role): bool
+    {
+        if (! $this->tokenStorage->getToken()) {
             return false;
         }
 
@@ -66,7 +69,8 @@ class Builder implements ContainerAwareInterface {
     /**
      * Build the app's main navigation menu.
      */
-    public function mainMenu(array $options): ItemInterface {
+    public function mainMenu(array $options): ItemInterface
+    {
         $menu = $this->factory->createItem('root');
         $menu->setChildrenAttributes([
             'class' => 'nav navbar-nav',
@@ -77,7 +81,7 @@ class Builder implements ContainerAwareInterface {
             'route' => 'homepage',
         ]);
 
-        if ( ! $this->hasRole('ROLE_USER')) {
+        if (! $this->hasRole('ROLE_USER')) {
             return $menu;
         }
 

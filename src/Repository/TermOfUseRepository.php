@@ -18,8 +18,10 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * Custom doctrine queries for terms of use.
  */
-class TermOfUseRepository extends ServiceEntityRepository {
-    public function __construct(ManagerRegistry $registry) {
+class TermOfUseRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
         parent::__construct($registry, TermOfUse::class);
     }
 
@@ -29,7 +31,8 @@ class TermOfUseRepository extends ServiceEntityRepository {
      * @return Collection|TermOfUse[]
      *                                The terms of use.
      */
-    public function getTerms(): array {
+    public function getTerms(): array
+    {
         return $this->findBy([], [
             'weight' => 'ASC',
         ]);
@@ -38,7 +41,8 @@ class TermOfUseRepository extends ServiceEntityRepository {
     /**
      * Get the date of the most recent update to the terms of use.
      */
-    public function getLastUpdated(): string {
+    public function getLastUpdated(): string
+    {
         $qb = $this->createQueryBuilder('t');
         $qb->select('MAX(t.updated)');
 

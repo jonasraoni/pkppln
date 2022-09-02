@@ -24,7 +24,8 @@ use Twig\Error\SyntaxError;
 /**
  * Description of SwordExceptionListener.
  */
-class SwordExceptionListener {
+class SwordExceptionListener
+{
     /**
      * Controller that threw the exception.
      */
@@ -43,7 +44,8 @@ class SwordExceptionListener {
     /**
      * Construct the listener.
      */
-    public function __construct(string $env, Environment $templating) {
+    public function __construct(string $env, Environment $templating)
+    {
         $this->templating = $templating;
         $this->env = $env;
     }
@@ -53,7 +55,8 @@ class SwordExceptionListener {
      *
      * Grab a reference to the active controller.
      */
-    public function onKernelController(ControllerEvent $event) : void {
+    public function onKernelController(ControllerEvent $event): void
+    {
         $this->controller = $event->getController();
     }
 
@@ -64,8 +67,9 @@ class SwordExceptionListener {
      * @throws RuntimeError
      * @throws SyntaxError
      */
-    public function onKernelException(ExceptionEvent $event) : void {
-        if ( ! ($this->controller[0] ?? null) instanceof SwordController) {
+    public function onKernelException(ExceptionEvent $event): void
+    {
+        if (! ($this->controller[0] ?? null) instanceof SwordController) {
             return;
         }
 

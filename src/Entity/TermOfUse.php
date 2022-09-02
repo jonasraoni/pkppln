@@ -19,7 +19,8 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * @ORM\Table(name="term_of_use")
  * @ORM\Entity(repositoryClass="App\Repository\TermOfUseRepository")
  */
-class TermOfUse extends AbstractEntity {
+class TermOfUse extends AbstractEntity
+{
     /**
      * The "weight" of the term. Heavier terms are sorted lower.
      *
@@ -44,14 +45,16 @@ class TermOfUse extends AbstractEntity {
     /**
      * Return the term's content.
      */
-    public function __toString() : string {
+    public function __toString(): string
+    {
         return $this->content;
     }
 
     /**
      * Set weight.
      */
-    public function setWeight(int $weight): static {
+    public function setWeight(int $weight): static
+    {
         $this->weight = $weight;
 
         return $this;
@@ -60,14 +63,16 @@ class TermOfUse extends AbstractEntity {
     /**
      * Get weight.
      */
-    public function getWeight(): int {
+    public function getWeight(): int
+    {
         return $this->weight;
     }
 
     /**
      * Set keyCode.
      */
-    public function setKeyCode(string $keyCode): static {
+    public function setKeyCode(string $keyCode): static
+    {
         $this->keyCode = $keyCode;
 
         return $this;
@@ -76,14 +81,16 @@ class TermOfUse extends AbstractEntity {
     /**
      * Get keyCode.
      */
-    public function getKeyCode(): string {
+    public function getKeyCode(): string
+    {
         return $this->keyCode;
     }
 
     /**
      * Set content.
      */
-    public function setContent(string $content): static {
+    public function setContent(string $content): static
+    {
         $this->content = $content;
 
         return $this;
@@ -92,7 +99,8 @@ class TermOfUse extends AbstractEntity {
     /**
      * Get content.
      */
-    public function getContent(): string {
+    public function getContent(): string
+    {
         return $this->content;
     }
 }

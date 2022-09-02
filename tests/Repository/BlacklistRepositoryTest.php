@@ -18,25 +18,29 @@ use App\Tests\TestCase\BaseControllerTestCase;
 /**
  * Description of BlacklistRepositoryTest.
  */
-class BlacklistRepositoryTest extends BaseControllerTestCase {
+class BlacklistRepositoryTest extends BaseControllerTestCase
+{
     /**
      * @return BlacklistRepository
      */
     private $repo;
 
-    protected function fixtures() : array {
+    protected function fixtures(): array
+    {
         return [
             BlacklistFixtures::class,
         ];
     }
 
-    public function testSearchQuery() : void {
+    public function testSearchQuery(): void
+    {
         $query = $this->repo->searchQuery('B156FACD');
         $result = $query->execute();
-        $this->assertSame(1, count($result));
+        $this->assertCount(1, $result);
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $this->repo = $this->em->getRepository(Blacklist::class);
     }

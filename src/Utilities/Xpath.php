@@ -16,19 +16,21 @@ use SimpleXMLElement;
 /**
  * Wrapper around some XPath functions.
  */
-class Xpath {
+class Xpath
+{
     /**
      * Get a single XML value as a string.
      *
      * @throws Exception
      *                   If there are more than one result.
      */
-    public static function getXmlValue(SimpleXMLElement $xml, string $xpath, string $default = null): string {
+    public static function getXmlValue(SimpleXMLElement $xml, string $xpath, string $default = null): string
+    {
         $data = $xml->xpath($xpath);
-        if (1 === count($data)) {
+        if (1 === \count($data)) {
             return trim((string) $data[0]);
         }
-        if (0 === count($data)) {
+        if (0 === \count($data)) {
             return $default;
         }
 
@@ -38,7 +40,8 @@ class Xpath {
     /**
      * Query an XML document.
      */
-    public static function query(SimpleXMLElement $xml, string $xpath): array {
+    public static function query(SimpleXMLElement $xml, string $xpath): array
+    {
         return $xml->xpath($xpath);
     }
 }

@@ -19,14 +19,16 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * Reserialize the bags and add some metadata.
  */
-class ReserializeCommand extends AbstractProcessingCmd {
+class ReserializeCommand extends AbstractProcessingCmd
+{
     private BagReserializer $bagReserializer;
     private FilePaths $filePaths;
 
     /**
      * Build the command.
      */
-    public function __construct(EntityManagerInterface $em, BagReserializer $bagReserializer, FilePaths $filePaths) {
+    public function __construct(EntityManagerInterface $em, BagReserializer $bagReserializer, FilePaths $filePaths)
+    {
         parent::__construct($em);
         $this->bagReserializer = $bagReserializer;
         $this->filePaths = $filePaths;
@@ -35,7 +37,8 @@ class ReserializeCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    protected function configure() : void {
+    protected function configure(): void
+    {
         $this->setName('pln:reserialize');
         $this->setDescription('Reserialize the deposit bag.');
         parent::configure();
@@ -44,14 +47,16 @@ class ReserializeCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    protected function processDeposit(Deposit $deposit): null|bool|string {
+    protected function processDeposit(Deposit $deposit): null|bool|string
+    {
         return $this->bagReserializer->processDeposit($deposit);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function afterSuccess(Deposit $deposit): void {
+    protected function afterSuccess(Deposit $deposit): void
+    {
         $extractedPath = $this->filePaths->getProcessingBagPath($deposit);
         $fs = new Filesystem();
         if ($fs->exists($extractedPath)) {
@@ -63,35 +68,40 @@ class ReserializeCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    public function failureLogMessage(): string {
+    public function failureLogMessage(): string
+    {
         return 'Bag Reserialize failed.';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function nextState(): string {
+    public function nextState(): string
+    {
         return 'reserialized';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function processingState(): string {
+    public function processingState(): string
+    {
         return 'virus-checked';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function successLogMessage(): string {
+    public function successLogMessage(): string
+    {
         return 'Bag Reserialize succeeded.';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function errorState(): string {
+    public function errorState(): string
+    {
         return 'reserialize-error';
     }
 }

@@ -18,7 +18,8 @@ use Doctrine\Persistence\ObjectManager;
 /**
  * LoadJournal form.
  */
-class JournalFixtures extends Fixture {
+class JournalFixtures extends Fixture
+{
     public const UUIDS = [
         '44428B12-CDC4-453E-8157-319004CD8CE6',
         '04F2C06E-35B8-43C1-B60C-1934271B0B7E',
@@ -29,7 +30,8 @@ class JournalFixtures extends Fixture {
     /**
      * {@inheritdoc}
      */
-    public function load(ObjectManager $em) : void {
+    public function load(ObjectManager $em): void
+    {
         for ($i = 0; $i < 4; $i++) {
             $fixture = new Journal();
             $fixture->setUuid(self::UUIDS[$i]);

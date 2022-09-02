@@ -27,7 +27,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Clean completed deposits from the file system.
  */
-class CleanupCommand extends Command {
+class CleanupCommand extends Command
+{
     use LoggerAwareTrait;
 
     protected EntityManagerInterface $em;
@@ -36,7 +37,8 @@ class CleanupCommand extends Command {
     /**
      * {@inheritdoc}
      */
-    public function __construct(LoggerInterface $logger, EntityManagerInterface $em, FilePaths $filePaths) {
+    public function __construct(LoggerInterface $logger, EntityManagerInterface $em, FilePaths $filePaths)
+    {
         parent::__construct();
         $this->logger = $logger;
         $this->em = $em;
@@ -46,12 +48,13 @@ class CleanupCommand extends Command {
     /**
      * Remove a directory and its contents recursively. Use with caution.
      */
-    private function delFileTree(string $path, bool $force = false) : void {
-        if ( ! file_exists($path)) {
+    private function delFileTree(string $path, bool $force = false): void
+    {
+        if (! file_exists($path)) {
             return;
         }
         $this->logger->notice("Cleaning {$path}");
-        if ( ! is_dir($path)) {
+        if (! is_dir($path)) {
             if (file_exists($path) && true === $force) {
                 unlink($path);
             }
@@ -79,7 +82,8 @@ class CleanupCommand extends Command {
     /**
      * {@inheritdoc}
      */
-    protected function configure() : void {
+    protected function configure(): void
+    {
         $this->setName('pln:clean');
         $this->setDescription('Clean processed deposits from the data directory.');
         $this->addOption('force', '-f', InputOption::VALUE_NONE, 'Delete files.');
@@ -88,7 +92,8 @@ class CleanupCommand extends Command {
     /**
      * Process one deposit.
      */
-    protected function processDeposit(Deposit $deposit, bool $force = false) : void {
+    protected function processDeposit(Deposit $deposit, bool $force = false): void
+    {
         if ('agreement' === $deposit->getPlnState()) {
             $this->delFileTree($this->filePaths->getHarvestFile($deposit), $force);
             $this->delFileTree($this->filePaths->getProcessingBagPath($deposit), $force);
@@ -99,7 +104,8 @@ class CleanupCommand extends Command {
     /**
      * Execute the command.
      */
-    final protected function execute(InputInterface $input, OutputInterface $output) : void {
+    final protected function execute(InputInterface $input, OutputInterface $output): void
+    {
         $force = $input->getOption('force');
         $this->em->getConnection()->getConfiguration()->setSQLLogger(null);
         $q = $this->em->createQuery('SELECT d FROM App\Entity\Deposit d where d.plnState = :state');

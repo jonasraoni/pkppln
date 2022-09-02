@@ -17,11 +17,13 @@ use Doctrine\Persistence\ObjectManager;
 /**
  * Load a deposit for testing.
  */
-class AuContainerFixtures extends Fixture {
+class AuContainerFixtures extends Fixture
+{
     /**
      * {@inheritdoc}
      */
-    public function load(ObjectManager $manager) : void {
+    public function load(ObjectManager $manager): void
+    {
         $c1 = new AuContainer();
         $c1->setOpen(false);
         $this->setReference('aucontainer', $c1);

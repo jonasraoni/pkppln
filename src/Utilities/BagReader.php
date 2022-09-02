@@ -16,13 +16,15 @@ use whikloj\BagItTools\BagItException;
 /**
  * Wrapper around BagIt.
  */
-class BagReader {
+class BagReader
+{
     /**
      * Read a bag from the file system.
      *
      * @throws BagItException
      */
-    public function readBag(string $path): Bag {
+    public function readBag(string $path): Bag
+    {
         return Bag::load($path);
     }
 }

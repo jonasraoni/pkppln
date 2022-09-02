@@ -20,7 +20,8 @@ use whikloj\BagItTools\Bag;
 /**
  * Take a processed bag and reserialize it.
  */
-class BagReserializer {
+class BagReserializer
+{
     /**
      * File path service.
      */
@@ -38,7 +39,8 @@ class BagReserializer {
     /**
      * Construct the reserializer service.
      */
-    public function __construct(int $maxAuSize, FilePaths $fp, BagReader $bagReader, EntityManagerInterface $em) {
+    public function __construct(int $maxAuSize, FilePaths $fp, BagReader $bagReader, EntityManagerInterface $em)
+    {
         $this->maxAuSize = $maxAuSize;
         $this->bagReader = $bagReader;
         $this->filePaths = $fp;
@@ -48,7 +50,8 @@ class BagReserializer {
     /**
      * Add the metadata from the database to the bag-info.txt file.
      */
-    protected function addMetadata(Bag $bag, Deposit $deposit) : void {
+    protected function addMetadata(Bag $bag, Deposit $deposit): void
+    {
         $bag->addBagInfoTag('External-Identifier', $deposit->getDepositUuid());
         $bag->addBagInfoTag('PKP-PLN-Deposit-UUID', $deposit->getDepositUuid());
         $bag->addBagInfoTag('PKP-PLN-Deposit-Received', $deposit->getReceived()->format('c'));
@@ -73,11 +76,13 @@ class BagReserializer {
     /**
      * Override the default bag reader.
      */
-    public function setBagReader(BagReader $bagReader) : void {
+    public function setBagReader(BagReader $bagReader): void
+    {
         $this->bagReader = $bagReader;
     }
 
-    public function processDeposit(Deposit $deposit): bool {
+    public function processDeposit(Deposit $deposit): bool
+    {
         $harvestedPath = $this->filePaths->getHarvestFile($deposit);
         $bag = $this->bagReader->readBag($harvestedPath);
         $bag->createFile($deposit->getProcessingLog(), 'data/processing-log.txt');

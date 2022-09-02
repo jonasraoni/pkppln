@@ -17,11 +17,13 @@ use Doctrine\Persistence\ObjectManager;
 /**
  * LoadDocument form.
  */
-class DocumentFixtures extends Fixture {
+class DocumentFixtures extends Fixture
+{
     /**
      * {@inheritdoc}
      */
-    public function load(ObjectManager $em) : void {
+    public function load(ObjectManager $em): void
+    {
         for ($i = 0; $i < 4; $i++) {
             $fixture = new Document();
             $fixture->setTitle('Title ' . $i);

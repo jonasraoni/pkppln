@@ -17,8 +17,10 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * Document queries for doctrine.
  */
-class DocumentRepository extends ServiceEntityRepository {
-    public function __construct(ManagerRegistry $registry) {
+class DocumentRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
         parent::__construct($registry, Document::class);
     }
 }

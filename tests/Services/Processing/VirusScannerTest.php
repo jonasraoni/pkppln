@@ -25,17 +25,20 @@ use Xenolope\Quahog\Result;
  * This test makes use of the EICAR test signature found here:
  * http://www.eicar.org/86-0-Intended-use.html.
  */
-class VirusScannerTest extends BaseControllerTestCase {
+class VirusScannerTest extends BaseControllerTestCase
+{
     /**
      * @var VirusScanner
      */
     private $scanner;
 
-    public function testInstance() : void {
+    public function testInstance(): void
+    {
         $this->assertInstanceOf(VirusScanner::class, $this->scanner);
     }
 
-    public function testGetClient() : void {
+    public function testGetClient(): void
+    {
         $factory = $this->createMock(Factory::class);
         $socket = $this->createMock(Socket::class);
         $socket->method('send')->willReturn(null);
@@ -45,7 +48,8 @@ class VirusScannerTest extends BaseControllerTestCase {
         $this->assertInstanceOf(Client::class, $client);
     }
 
-    public function testScanEmbed() : void {
+    public function testScanEmbed(): void
+    {
         $embed = new DOMElement('unused');
         $xp = $this->createMock(DOMXPath::class);
         $xp->method('evaluate')->will($this->onConsecutiveCalls(10, base64_encode("We're fine. We're all fine here, now, thank you. How are you?")));
@@ -53,11 +57,12 @@ class VirusScannerTest extends BaseControllerTestCase {
         $client->method('scanResourceStream')->willReturn(new Result(Client::RESULT_OK, 'stream', null, null));
         $result = $this->scanner->scanEmbed($embed, $xp, $client);
         $this->assertSame('stream', $result->getFilename());
-        $this->assertSame(null, $result->getReason());
+        $this->assertNull($result->getReason());
         $this->assertTrue($result->isOk());
     }
 
-    public function testScanEmbedEicar() : void {
+    public function testScanEmbedEicar(): void
+    {
         $embed = new DOMElement('unused');
         $xp = $this->createMock(DOMXPath::class);
         $xp->method('evaluate')->will($this->onConsecutiveCalls(10, base64_encode('X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*')));
@@ -72,7 +77,8 @@ class VirusScannerTest extends BaseControllerTestCase {
     /**
      * @group virusscanner
      */
-    public function testLiveScanEmbed() : void {
+    public function testLiveScanEmbed(): void
+    {
         $embed = new DOMElement('unused');
         $xp = $this->createMock(DOMXPath::class);
         $xp->method('evaluate')->will($this->onConsecutiveCalls(10, base64_encode("We're fine. We're all fine here, now, thank you. How are you?")));
@@ -80,14 +86,15 @@ class VirusScannerTest extends BaseControllerTestCase {
         $result = $this->scanner->scanEmbed($embed, $xp, $this->scanner->getClient());
         $this->assertSame('1', $result->getId());
         $this->assertSame('stream', $result->getFilename());
-        $this->assertSame(null, $result->getReason());
+        $this->assertNull($result->getReason());
         $this->assertTrue($result->isOk());
     }
 
     /**
      * @group virusscanner
      */
-    public function testLiveScanEmbedEicar() : void {
+    public function testLiveScanEmbedEicar(): void
+    {
         $embed = new DOMElement('unused');
         $xp = $this->createMock(DOMXPath::class);
         $xp->method('evaluate')->will($this->onConsecutiveCalls(10, base64_encode('X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*')));
@@ -98,7 +105,8 @@ class VirusScannerTest extends BaseControllerTestCase {
         $this->assertTrue($result->isFound());
     }
 
-    public function testScanCleanXmlFile() : void {
+    public function testScanCleanXmlFile(): void
+    {
         $dom = new DOMDocument();
         $dom->loadXML($this->getCleanXml());
         $parser = $this->createMock(XmlParser::class);
@@ -109,7 +117,8 @@ class VirusScannerTest extends BaseControllerTestCase {
         $this->assertSame(['file1 OK', 'file2 OK'], $result);
     }
 
-    public function testScanDirtyXmlFile() : void {
+    public function testScanDirtyXmlFile(): void
+    {
         $dom = new DOMDocument();
         $dom->loadXML($this->getDirtyXml());
         $parser = $this->createMock(XmlParser::class);
@@ -117,7 +126,7 @@ class VirusScannerTest extends BaseControllerTestCase {
         $client = $this->createMock(Client::class);
         $client->method('scanResourceStream')->will($this->onConsecutiveCalls(
             new Result(Client::RESULT_OK, 'stream', null, null),
-            new Result(Client::RESULT_FOUND,  'stream', 'Eicar', null, null)
+            new Result(Client::RESULT_FOUND, 'stream', 'Eicar', null, null)
         ));
         $result = $this->scanner->scanXmlFile('foo', $client, $parser);
         $this->assertSame(['file1 OK', 'file2 FOUND: Eicar'], $result);
@@ -126,7 +135,8 @@ class VirusScannerTest extends BaseControllerTestCase {
     /**
      * @group virusscanner
      */
-    public function testLiveScanCleanXmlFile() : void {
+    public function testLiveScanCleanXmlFile(): void
+    {
         $dom = new DOMDocument();
         $dom->loadXML($this->getCleanXml());
         $parser = $this->createMock(XmlParser::class);
@@ -139,7 +149,8 @@ class VirusScannerTest extends BaseControllerTestCase {
     /**
      * @group virusscanner
      */
-    public function testLiveScanDirtyXmlFile() : void {
+    public function testLiveScanDirtyXmlFile(): void
+    {
         $dom = new DOMDocument();
         $dom->loadXML($this->getDirtyXml());
         $parser = $this->createMock(XmlParser::class);
@@ -149,29 +160,32 @@ class VirusScannerTest extends BaseControllerTestCase {
         $this->assertSame(['file1 OK', 'file2 FOUND: Eicar-Test-Signature'], $result);
     }
 
-    public function getCleanXml() {
+    public function getCleanXml()
+    {
         return <<<'ENDXML'
 <root>
     <!-- All good. -->
     <embed filename='file1'>QWxsIGdvb2QuCg==</embed>
     <!-- Ooh, an EICAR test signature -->
     <embed filename='file2'>Y2hlZXNlIGlzIHRoZSBiZXN0Cg==</embed>
-</root>                
+</root>
 ENDXML;
     }
 
-    public function getDirtyXml() {
+    public function getDirtyXml()
+    {
         return <<<'ENDXML'
 <root>
     <!-- All good. -->
     <embed filename='file1'>QWxsIGdvb2QuCg==</embed>
     <!-- Ooh, an EICAR test signature -->
     <embed filename='file2'>WDVPIVAlQEFQWzRcUFpYNTQoUF4pN0NDKTd9JEVJQ0FSLVNUQU5EQVJELUFOVElWSVJVUy1URVNULUZJTEUhJEgrSCo=</embed>
-</root>                
+</root>
 ENDXML;
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $this->scanner = self::$container->get(VirusScanner::class);
     }

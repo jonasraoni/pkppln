@@ -23,11 +23,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Journal.
  *
  * @ORM\Table(name="journal", indexes={
- * @ORM\Index(columns={"uuid", "title", "issn", "url", "email", "publisher_name", "publisher_url"}, flags={"fulltext"})
+ *     @ORM\Index(columns={"uuid", "title", "issn", "url", "email", "publisher_name", "publisher_url"}, flags={"fulltext"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\JournalRepository")
  */
-class Journal extends AbstractEntity {
+class Journal extends AbstractEntity
+{
     /**
      * List of states where a deposit has been sent to LOCKSSOMatic.
      */
@@ -144,7 +145,8 @@ class Journal extends AbstractEntity {
     /**
      * Construct a journal.
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->status = 'healthy';
         $this->contacted = new DateTime();
@@ -155,14 +157,16 @@ class Journal extends AbstractEntity {
     /**
      * Return the journal's title or UUID if the title is unknown.
      */
-    public function __toString() : string {
+    public function __toString(): string
+    {
         return $this->title ?: $this->uuid;
     }
 
     /**
      * Set uuid.
      */
-    public function setUuid(string $uuid): static {
+    public function setUuid(string $uuid): static
+    {
         $this->uuid = strtoupper($uuid);
 
         return $this;
@@ -171,14 +175,16 @@ class Journal extends AbstractEntity {
     /**
      * Get uuid.
      */
-    public function getUuid(): string {
+    public function getUuid(): string
+    {
         return $this->uuid;
     }
 
     /**
      * Set contacted.
      */
-    public function setContacted(DateTimeInterface $contacted): static {
+    public function setContacted(DateTimeInterface $contacted): static
+    {
         $this->contacted = $contacted;
 
         return $this;
@@ -187,14 +193,16 @@ class Journal extends AbstractEntity {
     /**
      * Get contacted.
      */
-    public function getContacted(): DateTimeInterface {
+    public function getContacted(): DateTimeInterface
+    {
         return $this->contacted;
     }
 
     /**
      * Set ojsVersion.
      */
-    public function setOjsVersion(?string $ojsVersion): static {
+    public function setOjsVersion(?string $ojsVersion): static
+    {
         $this->ojsVersion = $ojsVersion;
 
         return $this;
@@ -203,14 +211,16 @@ class Journal extends AbstractEntity {
     /**
      * Get ojsVersion.
      */
-    public function getOjsVersion(): ?string {
+    public function getOjsVersion(): ?string
+    {
         return $this->ojsVersion;
     }
 
     /**
      * Set notified.
      */
-    public function setNotified(?DateTimeInterface $notified): static {
+    public function setNotified(?DateTimeInterface $notified): static
+    {
         $this->notified = $notified;
 
         return $this;
@@ -219,14 +229,16 @@ class Journal extends AbstractEntity {
     /**
      * Get notified.
      */
-    public function getNotified(): ?DateTimeInterface {
+    public function getNotified(): ?DateTimeInterface
+    {
         return $this->notified;
     }
 
     /**
      * Set title.
      */
-    public function setTitle(?string $title): static {
+    public function setTitle(?string $title): static
+    {
         $this->title = $title;
 
         return $this;
@@ -235,14 +247,16 @@ class Journal extends AbstractEntity {
     /**
      * Get title.
      */
-    public function getTitle(): ?string {
+    public function getTitle(): ?string
+    {
         return $this->title;
     }
 
     /**
      * Set issn.
      */
-    public function setIssn(?string $issn): static {
+    public function setIssn(?string $issn): static
+    {
         $this->issn = $issn;
 
         return $this;
@@ -251,14 +265,16 @@ class Journal extends AbstractEntity {
     /**
      * Get issn.
      */
-    public function getIssn(): ?string {
+    public function getIssn(): ?string
+    {
         return $this->issn;
     }
 
     /**
      * Set url.
      */
-    public function setUrl(string $url): static {
+    public function setUrl(string $url): static
+    {
         $this->url = $url;
 
         return $this;
@@ -267,21 +283,24 @@ class Journal extends AbstractEntity {
     /**
      * Get url.
      */
-    public function getUrl(): string {
+    public function getUrl(): string
+    {
         return $this->url;
     }
 
     /**
      * Return the ping gateway url.
      */
-    public function getGatewayUrl(): string {
+    public function getGatewayUrl(): string
+    {
         return $this->url . self::GATEWAY_URL_SUFFIX;
     }
 
     /**
      * Set status.
      */
-    public function setStatus(string $status): static {
+    public function setStatus(string $status): static
+    {
         $this->status = $status;
 
         return $this;
@@ -290,14 +309,16 @@ class Journal extends AbstractEntity {
     /**
      * Get status.
      */
-    public function getStatus(): string {
+    public function getStatus(): string
+    {
         return $this->status;
     }
 
     /**
      * Set termsAccepted.
      */
-    public function setTermsAccepted(bool $termsAccepted): static {
+    public function setTermsAccepted(bool $termsAccepted): static
+    {
         $this->termsAccepted = $termsAccepted;
 
         return $this;
@@ -306,14 +327,16 @@ class Journal extends AbstractEntity {
     /**
      * Get termsAccepted.
      */
-    public function getTermsAccepted(): bool {
+    public function getTermsAccepted(): bool
+    {
         return $this->termsAccepted;
     }
 
     /**
      * Set email.
      */
-    public function setEmail(?string $email): static {
+    public function setEmail(?string $email): static
+    {
         $this->email = $email;
 
         return $this;
@@ -322,14 +345,16 @@ class Journal extends AbstractEntity {
     /**
      * Get email.
      */
-    public function getEmail(): ?string {
+    public function getEmail(): ?string
+    {
         return $this->email;
     }
 
     /**
      * Set publisherName.
      */
-    public function setPublisherName(?string $publisherName): static {
+    public function setPublisherName(?string $publisherName): static
+    {
         $this->publisherName = $publisherName;
 
         return $this;
@@ -338,14 +363,16 @@ class Journal extends AbstractEntity {
     /**
      * Get publisherName.
      */
-    public function getPublisherName(): ?string {
+    public function getPublisherName(): ?string
+    {
         return $this->publisherName;
     }
 
     /**
      * Set publisherUrl.
      */
-    public function setPublisherUrl(?string $publisherUrl): static {
+    public function setPublisherUrl(?string $publisherUrl): static
+    {
         $this->publisherUrl = $publisherUrl;
 
         return $this;
@@ -354,14 +381,16 @@ class Journal extends AbstractEntity {
     /**
      * Get publisherUrl.
      */
-    public function getPublisherUrl(): ?string {
+    public function getPublisherUrl(): ?string
+    {
         return $this->publisherUrl;
     }
 
     /**
      * Add deposit.
      */
-    public function addDeposit(Deposit $deposit): static {
+    public function addDeposit(Deposit $deposit): static
+    {
         $this->deposits[] = $deposit;
 
         return $this;
@@ -370,14 +399,16 @@ class Journal extends AbstractEntity {
     /**
      * Remove deposit.
      */
-    public function removeDeposit(Deposit $deposit) : void {
+    public function removeDeposit(Deposit $deposit): void
+    {
         $this->deposits->removeElement($deposit);
     }
 
     /**
      * Get deposits.
      */
-    public function getDeposits(): Collection {
+    public function getDeposits(): Collection
+    {
         return $this->deposits;
     }
 
@@ -390,7 +421,8 @@ class Journal extends AbstractEntity {
      *
      * @return ArrayCollection|Deposit[]
      */
-    public function getSentDeposits(): array {
+    public function getSentDeposits(): array
+    {
         $criteria = Criteria::create()->where(Criteria::expr()->in('state', self::SENT_STATES));
 
         return $this->getDeposits()->matching($criteria);

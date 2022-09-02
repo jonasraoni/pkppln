@@ -17,7 +17,8 @@ use Doctrine\ORM\EntityManagerInterface;
 /**
  * Harvest deposits from journals.
  */
-class HarvestCommand extends AbstractProcessingCmd {
+class HarvestCommand extends AbstractProcessingCmd
+{
     /**
      * Harvester service.
      */
@@ -26,7 +27,8 @@ class HarvestCommand extends AbstractProcessingCmd {
     /**
      * Build the command.
      */
-    public function __construct(EntityManagerInterface $em, Harvester $harvester) {
+    public function __construct(EntityManagerInterface $em, Harvester $harvester)
+    {
         parent::__construct($em);
         $this->harvester = $harvester;
     }
@@ -34,7 +36,8 @@ class HarvestCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    protected function configure() : void {
+    protected function configure(): void
+    {
         $this->setName('pln:harvest');
         $this->setDescription('Harvest OJS deposits.');
         parent::configure();
@@ -43,42 +46,48 @@ class HarvestCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    protected function processDeposit(Deposit $deposit): null|bool|string {
+    protected function processDeposit(Deposit $deposit): null|bool|string
+    {
         return $this->harvester->processDeposit($deposit);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function nextState(): string {
+    public function nextState(): string
+    {
         return 'harvested';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function errorState(): string {
+    public function errorState(): string
+    {
         return 'harvest-error';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function processingState(): string {
+    public function processingState(): string
+    {
         return 'depositedByJournal';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function failureLogMessage(): string {
+    public function failureLogMessage(): string
+    {
         return 'Deposit harvest failed.';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function successLogMessage(): string {
+    public function successLogMessage(): string
+    {
         return 'Deposit harvest succeeded.';
     }
 }

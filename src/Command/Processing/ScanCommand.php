@@ -17,7 +17,8 @@ use Doctrine\ORM\EntityManagerInterface;
 /**
  * Scan a deposit for viruses.
  */
-class ScanCommand extends AbstractProcessingCmd {
+class ScanCommand extends AbstractProcessingCmd
+{
     /**
      * Virus scanning service.
      */
@@ -26,7 +27,8 @@ class ScanCommand extends AbstractProcessingCmd {
     /**
      * Build the command.
      */
-    public function __construct(EntityManagerInterface $em, VirusScanner $scanner) {
+    public function __construct(EntityManagerInterface $em, VirusScanner $scanner)
+    {
         parent::__construct($em);
         $this->scanner = $scanner;
     }
@@ -34,7 +36,8 @@ class ScanCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    protected function configure() : void {
+    protected function configure(): void
+    {
         $this->setName('pln:scan');
         $this->setDescription('Scan deposit packages for viruses.');
         parent::configure();
@@ -43,42 +46,48 @@ class ScanCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    protected function processDeposit(Deposit $deposit): null|bool|string {
+    protected function processDeposit(Deposit $deposit): null|bool|string
+    {
         return $this->scanner->processDeposit($deposit);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function errorState(): string {
+    public function errorState(): string
+    {
         return 'virus-error';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function failureLogMessage(): string {
+    public function failureLogMessage(): string
+    {
         return 'Virus check failed.';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function nextState(): string {
+    public function nextState(): string
+    {
         return 'virus-checked';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function processingState(): string {
+    public function processingState(): string
+    {
         return 'xml-validated';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function successLogMessage(): string {
+    public function successLogMessage(): string
+    {
         return 'Virus check passed. No infections found.';
     }
 }

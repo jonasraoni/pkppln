@@ -21,20 +21,23 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author michael
  */
-class AbstractProcessingCmdTest extends BaseControllerTestCase {
+class AbstractProcessingCmdTest extends BaseControllerTestCase
+{
     /**
      * @var OutputInterface
      */
     private $output;
 
-    public function fixtures() : array {
+    public function fixtures(): array
+    {
         return [
             JournalFixtures::class,
             DepositFixtures::class,
         ];
     }
 
-    public function testSuccessfulRun() : void {
+    public function testSuccessfulRun(): void
+    {
         $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-state');
         $cmd = new DummyCommand($this->em, true);
@@ -43,7 +46,8 @@ class AbstractProcessingCmdTest extends BaseControllerTestCase {
         $this->assertStringEndsWith('success', trim($deposit->getProcessingLog()));
     }
 
-    public function testFailureRun() : void {
+    public function testFailureRun(): void
+    {
         $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-state');
         $cmd = new DummyCommand($this->em, false);
@@ -52,7 +56,8 @@ class AbstractProcessingCmdTest extends BaseControllerTestCase {
         $this->assertStringEndsWith('dummy log message', trim($deposit->getProcessingLog()));
     }
 
-    public function testUncertainRun() : void {
+    public function testUncertainRun(): void
+    {
         $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-state');
         $cmd = new DummyCommand($this->em, null);
@@ -61,7 +66,8 @@ class AbstractProcessingCmdTest extends BaseControllerTestCase {
         $this->assertSame('', trim($deposit->getProcessingLog()));
     }
 
-    public function testCustomRun() : void {
+    public function testCustomRun(): void
+    {
         $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-state');
         $cmd = new DummyCommand($this->em, 'held');
@@ -70,7 +76,8 @@ class AbstractProcessingCmdTest extends BaseControllerTestCase {
         $this->assertStringEndsWith('Holding deposit.', trim($deposit->getProcessingLog()));
     }
 
-    public function testSuccessfulDryRun() : void {
+    public function testSuccessfulDryRun(): void
+    {
         $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-state');
         $cmd = new DummyCommand($this->em, true);
@@ -79,7 +86,8 @@ class AbstractProcessingCmdTest extends BaseControllerTestCase {
         $this->assertStringEndsWith('', trim($deposit->getProcessingLog()));
     }
 
-    public function testFailureDryRun() : void {
+    public function testFailureDryRun(): void
+    {
         $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-state');
         $cmd = new DummyCommand($this->em, false);
@@ -88,7 +96,8 @@ class AbstractProcessingCmdTest extends BaseControllerTestCase {
         $this->assertStringEndsWith('', trim($deposit->getProcessingLog()));
     }
 
-    public function testUncertainDryRun() : void {
+    public function testUncertainDryRun(): void
+    {
         $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-state');
         $cmd = new DummyCommand($this->em, null);
@@ -97,7 +106,8 @@ class AbstractProcessingCmdTest extends BaseControllerTestCase {
         $this->assertSame('', trim($deposit->getProcessingLog()));
     }
 
-    public function testCustomDryRun() : void {
+    public function testCustomDryRun(): void
+    {
         $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-state');
         $cmd = new DummyCommand($this->em, 'held');
@@ -106,51 +116,56 @@ class AbstractProcessingCmdTest extends BaseControllerTestCase {
         $this->assertStringEndsWith('', trim($deposit->getProcessingLog()));
     }
 
-    public function testGetDeposits() : void {
+    public function testGetDeposits(): void
+    {
         $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-state');
         $this->em->flush();
 
         $cmd = new DummyCommand($this->em, 'held');
         $deposits = $cmd->getDeposits();
-        $this->assertSame(1, count($deposits));
+        $this->assertCount(1, $deposits);
         $this->assertSame($deposit->getDepositUuid(), $deposits[0]->getDepositUuid());
     }
 
-    public function testGetDepositsRetry() : void {
+    public function testGetDepositsRetry(): void
+    {
         $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-error');
         $this->em->flush();
 
         $cmd = new DummyCommand($this->em, 'held');
         $deposits = $cmd->getDeposits(true);
-        $this->assertSame(1, count($deposits));
+        $this->assertCount(1, $deposits);
         $this->assertSame($deposit->getDepositUuid(), $deposits[0]->getDepositUuid());
     }
 
-    public function testGetDepositsId() : void {
+    public function testGetDepositsId(): void
+    {
         $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-state');
         $this->em->flush();
 
         $cmd = new DummyCommand($this->em, 'held');
         $deposits = $cmd->getDeposits(false, [1]);
-        $this->assertSame(1, count($deposits));
+        $this->assertCount(1, $deposits);
         $this->assertSame($deposit->getDepositUuid(), $deposits[0]->getDepositUuid());
     }
 
-    public function testGetDepositsRetryId() : void {
+    public function testGetDepositsRetryId(): void
+    {
         $deposit = $this->em->find(Deposit::class, 1);
         $deposit->setState('dummy-error');
         $this->em->flush();
 
         $cmd = new DummyCommand($this->em, 'held');
         $deposits = $cmd->getDeposits(true, [1]);
-        $this->assertSame(1, count($deposits));
+        $this->assertCount(1, $deposits);
         $this->assertSame($deposit->getDepositUuid(), $deposits[0]->getDepositUuid());
     }
 
-    protected function setUp() : void {
+    protected function setUp(): void
+    {
         parent::setUp();
         $this->output = $this->createMock(OutputInterface::class);
         $this->output->method('writeln')->willReturn(null);

@@ -18,7 +18,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Run all the processing commands in order.
  */
-class RunAllCommand extends Command {
+class RunAllCommand extends Command
+{
     /**
      * List of commands to run, in order.
      */
@@ -36,7 +37,8 @@ class RunAllCommand extends Command {
     /**
      * {@inheritdoc}
      */
-    protected function configure() : void {
+    protected function configure(): void
+    {
         $this->setName('pln:run-all');
         $this->setDescription('Run all processing commands.');
         $this->addOption('force', 'f', InputOption::VALUE_NONE, 'Force the processing state to be updated');
@@ -47,7 +49,8 @@ class RunAllCommand extends Command {
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output) : void {
+    protected function execute(InputInterface $input, OutputInterface $output): void
+    {
         foreach (self::COMMAND_LIST as $cmd) {
             $output->writeln("Running {$cmd}");
             $command = $this->getApplication()->find($cmd);

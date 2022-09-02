@@ -16,67 +16,82 @@ use PHPUnit\Framework\TestCase;
 /**
  * Description of PingResultTest.
  */
-class PingResultNullResponseTest extends TestCase {
+class PingResultNullResponseTest extends TestCase
+{
     /**
      * @var PingResult
      */
     private $result;
 
-    public function testInstance() : void {
+    public function testInstance(): void
+    {
         $this->assertInstanceOf(PingResult::class, $this->result);
     }
 
-    public function testHttpStatus() : void {
+    public function testHttpStatus(): void
+    {
         $this->assertSame(500, $this->result->getHttpStatus());
     }
 
-    public function testGetBody() : void {
-        $this->assertSame(null, $this->result->getBody());
+    public function testGetBody(): void
+    {
+        $this->assertNull($this->result->getBody());
     }
 
-    public function testHasXml() : void {
+    public function testHasXml(): void
+    {
         $this->assertFalse($this->result->hasXml());
         $this->assertNull($this->result->getXml());
     }
 
-    public function testGetHeader() : void {
+    public function testGetHeader(): void
+    {
         $this->assertSame([], $this->result->getHeader('foo'));
     }
 
-    public function testGetOjsRelease() : void {
-        $this->assertSame(null, $this->result->getOjsRelease());
+    public function testGetOjsRelease(): void
+    {
+        $this->assertNull($this->result->getOjsRelease());
     }
 
-    public function testGetPluginReleaseVersion() : void {
-        $this->assertSame(null, $this->result->getPluginReleaseVersion());
+    public function testGetPluginReleaseVersion(): void
+    {
+        $this->assertNull($this->result->getPluginReleaseVersion());
     }
 
-    public function testPluginReleaseDate() : void {
-        $this->assertSame(null, $this->result->getPluginReleaseDate());
+    public function testPluginReleaseDate(): void
+    {
+        $this->assertNull($this->result->getPluginReleaseDate());
     }
 
-    public function testPluginCurrent() : void {
-        $this->assertSame(null, $this->result->isPluginCurrent());
+    public function testPluginCurrent(): void
+    {
+        $this->assertNull($this->result->isPluginCurrent());
     }
 
-    public function testTermsAccepted() : void {
-        $this->assertSame(null, $this->result->areTermsAccepted());
+    public function testTermsAccepted(): void
+    {
+        $this->assertNull($this->result->areTermsAccepted());
     }
 
-    public function testJournalTitle() : void {
-        $this->assertSame(null, $this->result->getJournalTitle());
+    public function testJournalTitle(): void
+    {
+        $this->assertNull($this->result->getJournalTitle());
     }
 
-    public function testArticleCount() : void {
-        $this->assertSame(null, $this->result->getArticleCount());
+    public function testArticleCount(): void
+    {
+        $this->assertNull($this->result->getArticleCount());
     }
 
-    public function testArticleTitles() : void {
+    public function testArticleTitles(): void
+    {
         $expected = [];
         $this->assertSame($expected, $this->result->getArticleTitles());
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $this->result = new PingResult();
     }

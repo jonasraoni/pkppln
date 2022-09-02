@@ -26,7 +26,8 @@ use App\Tests\TestCase\BaseControllerTestCase;
 /**
  * Description of PingTest.
  */
-class PingTest extends BaseControllerTestCase {
+class PingTest extends BaseControllerTestCase
+{
     /**
      * @var Ping
      */
@@ -37,9 +38,10 @@ class PingTest extends BaseControllerTestCase {
      */
     private $list;
 
-    private function getXml() {
+    private function getXml()
+    {
         return <<<'ENDXML'
-<?xml version="1.0" ?> 
+<?xml version="1.0" ?>
 <plnplugin>
   <ojsInfo>
     <release>2.4.8.1</release>
@@ -77,17 +79,20 @@ class PingTest extends BaseControllerTestCase {
 ENDXML;
     }
 
-    protected function fixtures() : array {
+    protected function fixtures(): array
+    {
         return [
             JournalFixtures::class,
         ];
     }
 
-    public function testInstance() : void {
+    public function testInstance(): void
+    {
         $this->assertInstanceOf(Ping::class, $this->ping);
     }
 
-    public function testProcessFail() : void {
+    public function testProcessFail(): void
+    {
         $result = $this->createMock(PingResult::class);
         $result->method('getHttpStatus')->willReturn(404);
         $journal = $this->getReference('journal.1');
@@ -95,7 +100,8 @@ ENDXML;
         $this->assertSame('ping-error', $journal->getStatus());
     }
 
-    public function testProcessMissingRelease() : void {
+    public function testProcessMissingRelease(): void
+    {
         $result = $this->createMock(PingResult::class);
         $result->method('getHttpStatus')->willReturn(200);
         $result->method('getOjsRelease')->willReturn(null);
@@ -104,7 +110,8 @@ ENDXML;
         $this->assertSame('ping-error', $journal->getStatus());
     }
 
-    public function testProcessOldVersion() : void {
+    public function testProcessOldVersion(): void
+    {
         $result = $this->createMock(PingResult::class);
         $result->method('getHttpStatus')->willReturn(200);
         $result->method('getOjsRelease')->willReturn('2.4.0');
@@ -118,7 +125,8 @@ ENDXML;
         $this->assertFalse($this->list->isListed($journal->getUuid()));
     }
 
-    public function testProcessListed() : void {
+    public function testProcessListed(): void
+    {
         $result = $this->createMock(PingResult::class);
         $result->method('getHttpStatus')->willReturn(200);
         $result->method('getOjsRelease')->willReturn('2.4.9');
@@ -137,7 +145,8 @@ ENDXML;
         $this->assertSame('healthy', $journal->getStatus());
     }
 
-    public function testProcessSuccess() : void {
+    public function testProcessSuccess(): void
+    {
         $result = $this->createMock(PingResult::class);
         $result->method('getHttpStatus')->willReturn(200);
         $result->method('getOjsRelease')->willReturn('2.4.9');
@@ -151,7 +160,8 @@ ENDXML;
         $this->assertTrue($this->list->isListed($journal->getUuid()));
     }
 
-    public function testPingFail() : void {
+    public function testPingFail(): void
+    {
         $mock = new MockHandler([
             new RequestException('Bad mojo.', new Request('GET', 'http://example.com')),
         ]);
@@ -164,7 +174,8 @@ ENDXML;
         $this->assertSame('ping-error', $journal->getStatus());
     }
 
-    public function testPingSuccess() : void {
+    public function testPingSuccess(): void
+    {
         $mock = new MockHandler([
             new Response(200, [], $this->getXml()),
         ]);
@@ -179,7 +190,8 @@ ENDXML;
         $this->assertTrue($this->list->isListed($journal->getUuid()));
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $this->ping = self::$container->get(Ping::class);
         $this->list = self::$container->get(BlackWhiteList::class);

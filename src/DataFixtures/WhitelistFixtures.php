@@ -17,7 +17,8 @@ use Doctrine\Persistence\ObjectManager;
 /**
  * LoadWhitelist form.
  */
-class WhitelistFixtures extends Fixture {
+class WhitelistFixtures extends Fixture
+{
     // The first journal is whitelisted.
     public const UUIDS = [
         '44428B12-CDC4-453E-8157-319004CD8CE6',
@@ -29,7 +30,8 @@ class WhitelistFixtures extends Fixture {
     /**
      * {@inheritdoc}
      */
-    public function load(ObjectManager $em) : void {
+    public function load(ObjectManager $em): void
+    {
         for ($i = 0; $i < 4; $i++) {
             $fixture = new Whitelist();
             $fixture->setUuid(self::UUIDS[$i]);

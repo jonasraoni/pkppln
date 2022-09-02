@@ -27,7 +27,8 @@ use Symfony\Component\Routing\Annotation\Route;
  * @Security("is_granted('ROLE_USER')")
  * @Route("/document")
  */
-class DocumentController extends AbstractController implements PaginatorAwareInterface {
+class DocumentController extends AbstractController implements PaginatorAwareInterface
+{
     use PaginatorTrait;
 
     /**
@@ -35,9 +36,10 @@ class DocumentController extends AbstractController implements PaginatorAwareInt
      *
      * @Route("/", name="document_index", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
-    public function indexAction(Request $request): array {
+    public function indexAction(Request $request): array
+    {
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Document::class, 'e')->orderBy('e.id', 'ASC');
@@ -54,11 +56,12 @@ class DocumentController extends AbstractController implements PaginatorAwareInt
      * Creates a new Document entity.
      *
      * @Security("is_granted('ROLE_ADMIN')")
-     * @Route("/new", name="document_new", methods={"GET","POST"})
+     * @Route("/new", name="document_new", methods={"GET", "POST"})
      *
-     * @Template()
+     * @Template
      */
-    public function newAction(Request $request): array|RedirectResponse {
+    public function newAction(Request $request): array|RedirectResponse
+    {
         $document = new Document();
         $form = $this->createForm(DocumentType::class, $document);
         $form->handleRequest($request);
@@ -84,9 +87,10 @@ class DocumentController extends AbstractController implements PaginatorAwareInt
      *
      * @Route("/{id}", name="document_show", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
-    public function showAction(Document $document): array {
+    public function showAction(Document $document): array
+    {
         return [
             'document' => $document,
         ];
@@ -96,11 +100,12 @@ class DocumentController extends AbstractController implements PaginatorAwareInt
      * Displays a form to edit an existing Document entity.
      *
      * @Security("is_granted('ROLE_ADMIN')")
-     * @Route("/{id}/edit", name="document_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="document_edit", methods={"GET", "POST"})
      *
-     * @Template()
+     * @Template
      */
-    public function editAction(Request $request, Document $document): array|RedirectResponse {
+    public function editAction(Request $request, Document $document): array|RedirectResponse
+    {
         $editForm = $this->createForm(DocumentType::class, $document);
         $editForm->handleRequest($request);
 
@@ -124,7 +129,8 @@ class DocumentController extends AbstractController implements PaginatorAwareInt
      * @Security("is_granted('ROLE_ADMIN')")
      * @Route("/{id}/delete", name="document_delete", methods={"GET"})
      */
-    public function deleteAction(Request $request, Document $document): array|RedirectResponse {
+    public function deleteAction(Request $request, Document $document): array|RedirectResponse
+    {
         $em = $this->getDoctrine()->getManager();
         $em->remove($document);
         $em->flush();

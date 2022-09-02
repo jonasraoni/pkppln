@@ -16,24 +16,29 @@ use App\Tests\TestCase\BaseControllerTestCase;
 /**
  * Description of WhitelistTest.
  */
-class WhitelistTest extends BaseControllerTestCase {
+class WhitelistTest extends BaseControllerTestCase
+{
     private $whitelist;
 
-    public function testInstance() : void {
+    public function testInstance(): void
+    {
         $this->assertInstanceOf(Whitelist::class, $this->whitelist);
     }
 
-    public function testSetUuid() : void {
+    public function testSetUuid(): void
+    {
         $this->whitelist->setUuid('abc123');
         $this->assertSame('ABC123', $this->whitelist->getUuid());
     }
 
-    public function testToString() : void {
+    public function testToString(): void
+    {
         $this->whitelist->setUuid('abc123');
         $this->assertSame('ABC123', (string) $this->whitelist);
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $this->whitelist = new Whitelist();
     }

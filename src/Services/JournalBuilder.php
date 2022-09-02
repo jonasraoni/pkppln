@@ -19,7 +19,8 @@ use SimpleXMLElement;
 /**
  * Journal builder service.
  */
-class JournalBuilder {
+class JournalBuilder
+{
     /**
      * Doctrine instance.
      */
@@ -28,7 +29,8 @@ class JournalBuilder {
     /**
      * Construct the builder.
      */
-    public function __construct(EntityManagerInterface $em) {
+    public function __construct(EntityManagerInterface $em)
+    {
         $this->em = $em;
     }
 
@@ -37,7 +39,8 @@ class JournalBuilder {
      *
      * Does not flush the journal to the database.
      */
-    public function fromXml(SimpleXMLElement $xml, string $uuid): Journal {
+    public function fromXml(SimpleXMLElement $xml, string $uuid): Journal
+    {
         $journal = $this->em->getRepository(Journal::class)->findOneBy([
             'uuid' => strtoupper($uuid),
         ]);
@@ -62,7 +65,8 @@ class JournalBuilder {
     /**
      * The journal with UUID $uuid has contacted the PLN.
      */
-    public function fromRequest(string $uuid, string $url): Journal {
+    public function fromRequest(string $uuid, string $url): Journal
+    {
         $journal = $this->em->getRepository('App:Journal')->findOneBy([
             'uuid' => strtoupper($uuid),
         ]);

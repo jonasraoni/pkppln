@@ -16,12 +16,15 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20200629224907 extends AbstractMigration {
-    public function getDescription() : string {
+final class Version20200629224907 extends AbstractMigration
+{
+    public function getDescription(): string
+    {
         return 'FOSUser -> NinesUser';
     }
 
-    public function up(Schema $schema) : void {
+    public function up(Schema $schema): void
+    {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
@@ -55,7 +58,8 @@ ENDSQL
         $this->addSql('CREATE UNIQUE INDEX uniq_5ba994a1e7927c74 ON nines_user (email)');
     }
 
-    public function down(Schema $schema) : void {
+    public function down(Schema $schema): void
+    {
         $this->throwIrreversibleMigrationException();
     }
 }

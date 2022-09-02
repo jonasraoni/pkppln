@@ -15,44 +15,49 @@ use App\Entity\TermOfUse;
 use Nines\UserBundle\DataFixtures\UserFixtures;
 use App\Tests\TestCase\BaseControllerTestCase;
 
-class TermOfUseControllerTest extends BaseControllerTestCase {
-    protected function fixtures() : array {
+class TermOfUseControllerTest extends BaseControllerTestCase
+{
+    protected function fixtures(): array
+    {
         return [
             UserFixtures::class,
             TermOfUseFixtures::class,
         ];
     }
 
-    public function testAnonIndex() : void {
-
+    public function testAnonIndex(): void
+    {
         $crawler = $this->client->request('GET', '/termofuse/');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertSame(0, $crawler->selectLink('New')->count());
     }
 
-    public function testUserIndex() : void {
+    public function testUserIndex(): void
+    {
         $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/termofuse/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(0, $crawler->selectLink('New')->count());
     }
 
-    public function testAdminIndex() : void {
+    public function testAdminIndex(): void
+    {
         $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/termofuse/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->selectLink('New')->count());
     }
 
-    public function testAnonShow() : void {
-
+    public function testAnonShow(): void
+    {
         $crawler = $this->client->request('GET', '/termofuse/1');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertSame(0, $crawler->selectLink('Edit')->count());
         $this->assertSame(0, $crawler->selectLink('Delete')->count());
     }
 
-    public function testUserShow() : void {
+    public function testUserShow(): void
+    {
         $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/termofuse/1');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
@@ -60,7 +65,8 @@ class TermOfUseControllerTest extends BaseControllerTestCase {
         $this->assertSame(0, $crawler->selectLink('Delete')->count());
     }
 
-    public function testAdminShow() : void {
+    public function testAdminShow(): void
+    {
         $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/termofuse/1');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
@@ -68,20 +74,22 @@ class TermOfUseControllerTest extends BaseControllerTestCase {
         $this->assertSame(1, $crawler->selectLink('Delete')->count());
     }
 
-    public function testAnonEdit() : void {
-
+    public function testAnonEdit(): void
+    {
         $crawler = $this->client->request('GET', '/termofuse/1/edit');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($this->client->getResponse()->isRedirect());
     }
 
-    public function testUserEdit() : void {
+    public function testUserEdit(): void
+    {
         $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/termofuse/1/edit');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testAdminEdit() : void {
+    public function testAdminEdit(): void
+    {
         $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/termofuse/1/edit');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
@@ -101,20 +109,22 @@ class TermOfUseControllerTest extends BaseControllerTestCase {
         $this->assertSame(2, $responseCrawler->filter('td:contains("test.newcode")')->count());
     }
 
-    public function testAnonNew() : void {
-
+    public function testAnonNew(): void
+    {
         $crawler = $this->client->request('GET', '/termofuse/new');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($this->client->getResponse()->isRedirect());
     }
 
-    public function testUserNew() : void {
+    public function testUserNew(): void
+    {
         $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/termofuse/new');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testAdminNew() : void {
+    public function testAdminNew(): void
+    {
         $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/termofuse/new');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
@@ -134,21 +144,23 @@ class TermOfUseControllerTest extends BaseControllerTestCase {
         $this->assertSame(2, $responseCrawler->filter('td:contains("test.code")')->count());
     }
 
-    public function testAnonDelete() : void {
-
+    public function testAnonDelete(): void
+    {
         $crawler = $this->client->request('GET', '/termofuse/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($this->client->getResponse()->isRedirect());
     }
 
-    public function testUserDelete() : void {
+    public function testUserDelete(): void
+    {
         $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/termofuse/1/delete');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testAdminDelete() : void {
-        $preCount = count($this->em->getRepository(TermOfUse::class)->findAll());
+    public function testAdminDelete(): void
+    {
+        $preCount = \count($this->em->getRepository(TermOfUse::class)->findAll());
         $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/termofuse/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
@@ -157,7 +169,7 @@ class TermOfUseControllerTest extends BaseControllerTestCase {
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
         $this->em->clear();
-        $postCount = count($this->em->getRepository(TermOfUse::class)->findAll());
+        $postCount = \count($this->em->getRepository(TermOfUse::class)->findAll());
         $this->assertSame($preCount - 1, $postCount);
     }
 }

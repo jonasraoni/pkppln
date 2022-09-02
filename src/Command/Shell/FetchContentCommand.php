@@ -29,7 +29,8 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * Fetch all the content of one or more journals from LOCKSS via LOCKSSOMatic.
  */
-class FetchContentCommand extends Command {
+class FetchContentCommand extends Command
+{
     use LoggerAwareTrait;
 
     protected EntityManagerInterface $em;
@@ -41,7 +42,8 @@ class FetchContentCommand extends Command {
     /**
      * Initialize the command.
      */
-    public function __construct(LoggerInterface $logger, EntityManagerInterface $em, FilePaths $filePaths, SwordClient $swordClient) {
+    public function __construct(LoggerInterface $logger, EntityManagerInterface $em, FilePaths $filePaths, SwordClient $swordClient)
+    {
         parent::__construct();
         $this->logger = $logger;
         $this->em = $em;
@@ -53,7 +55,8 @@ class FetchContentCommand extends Command {
     /**
      * Configure the command.
      */
-    public function configure() : void {
+    public function configure(): void
+    {
         $this->setName('pln:fetch');
         $this->setDescription('Download the archived content for one or more journals.');
         $this->addArgument('journals', InputArgument::IS_ARRAY, 'The database ID of one or more journals.');
@@ -62,7 +65,8 @@ class FetchContentCommand extends Command {
     /**
      * Set the HTTP client for contacting LOCKSSOMatic.
      */
-    public function setHttpClient(Client $httpClient) : void {
+    public function setHttpClient(Client $httpClient): void
+    {
         $this->httpClient = $httpClient;
     }
 
@@ -70,8 +74,9 @@ class FetchContentCommand extends Command {
      * Build and configure and return an HTTP client. Uses the client set
      * from setHttpClient() if available.
      */
-    public function getHttpClient(): Client {
-        if ( ! $this->httpClient) {
+    public function getHttpClient(): Client
+    {
+        if (! $this->httpClient) {
             $this->httpClient = new Client(['verify' => false, 'connect_timeout' => 15]);
         }
 
@@ -81,7 +86,8 @@ class FetchContentCommand extends Command {
     /**
      * Fetch one deposit from LOCKSSOMatic.
      */
-    public function fetch(Deposit $deposit, string $href) : void {
+    public function fetch(Deposit $deposit, string $href): void
+    {
         $client = $this->getHttpClient();
         $filepath = $this->filePaths->getRestoreDir($deposit->getJournal()) . '/' . basename($href);
         $this->logger->notice("Saving {$deposit->getJournal()->getTitle()} vol. {$deposit->getVolume()} no. {$deposit->getIssue()} to {$filepath}");
@@ -107,7 +113,8 @@ class FetchContentCommand extends Command {
      * Requests a SWORD deposit statement from LOCKSSOMatic, and uses the
      * sword:originalDeposit element to fetch the content.
      */
-    public function downloadJournal(Journal $journal) : void {
+    public function downloadJournal(Journal $journal): void
+    {
         foreach ($journal->getDeposits() as $deposit) {
             $statement = $this->swordClient->statement($deposit);
             $originals = $statement->xpath('//sword:originalDeposit');
@@ -125,14 +132,16 @@ class FetchContentCommand extends Command {
      *
      * @return Collection|Journal[]
      */
-    public function getJournals(array $journalIds): array {
+    public function getJournals(array $journalIds): array
+    {
         return $this->em->getRepository('App:Journal')->findBy(['id' => $journalIds]);
     }
 
     /**
      * Execute the command.
      */
-    public function execute(InputInterface $input, OutputInterface $output) : void {
+    public function execute(InputInterface $input, OutputInterface $output): void
+    {
         $journalIds = $input->getArgument('journals');
         $journals = $this->getJournals($journalIds);
         foreach ($journals as $journal) {

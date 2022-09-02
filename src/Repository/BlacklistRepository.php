@@ -18,15 +18,18 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * Custom blacklist queries for doctrine.
  */
-class BlacklistRepository extends ServiceEntityRepository {
-    public function __construct(ManagerRegistry $registry) {
+class BlacklistRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
         parent::__construct($registry, Blacklist::class);
     }
 
     /**
      * Build a query to search for blacklist entries.
      */
-    public function searchQuery(string $q): Query {
+    public function searchQuery(string $q): Query
+    {
         $qb = $this->createQueryBuilder('b');
         $qb->where('CONCAT(b.uuid, \' \', b.comment) LIKE :q');
         $qb->setParameter('q', '%' . $q . '%');

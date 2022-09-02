@@ -18,15 +18,18 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * Whitelist repository for custom doctrine queries.
  */
-class WhitelistRepository extends ServiceEntityRepository {
-    public function __construct(ManagerRegistry $registry) {
+class WhitelistRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
         parent::__construct($registry, Whitelist::class);
     }
 
     /**
      * Build a query to search for whitelist entries.
      */
-    public function searchQuery(string $q): Query {
+    public function searchQuery(string $q): Query
+    {
         $qb = $this->createQueryBuilder('b');
         $qb->where('CONCAT(b.uuid, \' \', b.comment) LIKE :q');
         $qb->setParameter('q', '%' . $q . '%');

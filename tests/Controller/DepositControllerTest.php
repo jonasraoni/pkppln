@@ -15,8 +15,10 @@ use App\DataFixtures\JournalFixtures;
 use Nines\UserBundle\DataFixtures\UserFixtures;
 use App\Tests\TestCase\BaseControllerTestCase;
 
-class DepositControllerTest extends BaseControllerTestCase {
-    protected function fixtures() : array {
+class DepositControllerTest extends BaseControllerTestCase
+{
+    protected function fixtures(): array
+    {
         return [
             UserFixtures::class,
             DepositFixtures::class,
@@ -24,50 +26,55 @@ class DepositControllerTest extends BaseControllerTestCase {
         ];
     }
 
-    public function testAnonIndex() : void {
-
+    public function testAnonIndex(): void
+    {
         $crawler = $this->client->request('GET', '/journal/1/deposit/');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testUserIndex() : void {
+    public function testUserIndex(): void
+    {
         $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/journal/1/deposit/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testAdminIndex() : void {
+    public function testAdminIndex(): void
+    {
         $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/journal/1/deposit/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testAnonShow() : void {
-
+    public function testAnonShow(): void
+    {
         $crawler = $this->client->request('GET', '/journal/1/deposit/1');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testUserShow() : void {
+    public function testUserShow(): void
+    {
         $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/journal/1/deposit/1');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testAdminShow() : void {
+    public function testAdminShow(): void
+    {
         $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/journal/1/deposit/1');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testAnonSearch() : void {
-
+    public function testAnonSearch(): void
+    {
         $formCrawler = $this->client->request('GET', '/journal/2/deposit/search');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($this->client->getResponse()->isRedirect());
     }
 
-    public function testUserSearch() : void {
+    public function testUserSearch(): void
+    {
         $this->login(UserFixtures::USER);
         $formCrawler = $this->client->request('GET', '/journal/2/deposit/search');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
@@ -79,7 +86,8 @@ class DepositControllerTest extends BaseControllerTestCase {
         $this->assertSame(1, $this->client->getCrawler()->filter('td:contains("92ED9A27-A584-4487-A3F9-997379FBA182")')->count());
     }
 
-    public function testAdminSearch() : void {
+    public function testAdminSearch(): void
+    {
         $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/journal/2/deposit/search');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());

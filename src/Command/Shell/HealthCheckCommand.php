@@ -31,7 +31,8 @@ use Twig\Environment;
  * notifications to interested users.
  * @todo Probably not working the Swift_Message
  */
-class HealthCheckCommand extends Command {
+class HealthCheckCommand extends Command
+{
     use LoggerAwareTrait;
 
     protected Ping $ping;
@@ -41,7 +42,8 @@ class HealthCheckCommand extends Command {
     /**
      * Set the service container, and initialize the command.
      */
-    public function __construct(LoggerInterface $logger, Ping $ping, Environment $environment, ContainerInterface $container) {
+    public function __construct(LoggerInterface $logger, Ping $ping, Environment $environment, ContainerInterface $container)
+    {
         parent::__construct();
         $this->templating = $environment;
         $this->logger = $logger;
@@ -52,7 +54,8 @@ class HealthCheckCommand extends Command {
     /**
      * {@inheritdoc}
      */
-    protected function configure() : void {
+    protected function configure(): void
+    {
         $this->setName('pln:health:check');
         $this->setDescription('Find journals that have gone silent.');
         $this->addOption('dry-run', 'd', InputOption::VALUE_NONE, 'Do not update journal status');
@@ -67,7 +70,8 @@ class HealthCheckCommand extends Command {
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    protected function sendNotifications(int $days, array $users, array $journals) : void {
+    protected function sendNotifications(int $days, array $users, array $journals): void
+    {
         $notification = $this->templating->render('App:HealthCheck:notification.txt.twig', [
             'journals' => $journals,
             'days' => $days,
@@ -91,7 +95,8 @@ class HealthCheckCommand extends Command {
      *
      * @todo Use the Ping service
      */
-    protected function pingJournal(Journal $journal): bool {
+    protected function pingJournal(Journal $journal): bool
+    {
         $client = new Client(['verify' => false, 'connect_timeout' => 15]);
 
         try {
@@ -122,18 +127,19 @@ class HealthCheckCommand extends Command {
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    protected function execute(InputInterface $input, OutputInterface $output) : void {
+    protected function execute(InputInterface $input, OutputInterface $output): void
+    {
         $em = $this->getContainer()->get('doctrine')->getManager();
         $days = $this->getContainer()->getParameter('days_silent');
         $journals = $em->getRepository('App:Journal')->findSilent($days);
-        $count = count($journals);
+        $count = \count($journals);
         $this->logger->notice("Found {$count} silent journals.");
-        if (0 === count($journals)) {
+        if (0 === \count($journals)) {
             return;
         }
 
         $users = $em->getRepository('AppUserBundle:User')->findUserToNotify();
-        if (0 === count($users)) {
+        if (0 === \count($users)) {
             $this->logger->error('No users to notify.');
 
             return;
@@ -151,7 +157,7 @@ class HealthCheckCommand extends Command {
             }
         }
 
-        if ( ! $input->getOption('dry-run')) {
+        if (! $input->getOption('dry-run')) {
             $em->flush();
         }
     }

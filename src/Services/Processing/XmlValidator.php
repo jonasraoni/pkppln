@@ -22,7 +22,8 @@ use App\Utilities\XmlParser;
  *
  * @todo Rewrite this to use XmlParser.
  */
-class XmlValidator {
+class XmlValidator
+{
     /**
      * The PKP Public Identifier for OJS export XML.
      */
@@ -58,7 +59,8 @@ class XmlValidator {
     /**
      * Build the validator.
      */
-    public function __construct(FilePaths $filePaths, DtdValidator $dtdValidator, SchemaValidator $schemaValidator) {
+    public function __construct(FilePaths $filePaths, DtdValidator $dtdValidator, SchemaValidator $schemaValidator)
+    {
         $this->filePaths = $filePaths;
         $this->dtdValidator = $dtdValidator;
         $this->schemaValidator = $schemaValidator;
@@ -69,27 +71,31 @@ class XmlValidator {
     /**
      * Override the default bag reader.
      */
-    public function setBagReader(BagReader $bagReader) : void {
+    public function setBagReader(BagReader $bagReader): void
+    {
         $this->bagReader = $bagReader;
     }
 
     /**
      * Override the default Xml Parser.
      */
-    public function setXmlParser(XmlParser $xmlParser) : void {
+    public function setXmlParser(XmlParser $xmlParser): void
+    {
         $this->xmlParser = $xmlParser;
     }
 
     /**
      * Add any errors to the report.
      */
-    public function reportErrors(array $errors, string &$report) : void {
+    public function reportErrors(array $errors, string &$report): void
+    {
         foreach ($errors as $error) {
             $report .= "On line {$error['line']}: {$error['message']}\n";
         }
     }
 
-    public function processDeposit(Deposit $deposit): bool {
+    public function processDeposit(Deposit $deposit): bool
+    {
         $harvestedPath = $this->filePaths->getHarvestFile($deposit);
         $bag = $bag = $this->bagReader->readBag($harvestedPath);
         $report = '';

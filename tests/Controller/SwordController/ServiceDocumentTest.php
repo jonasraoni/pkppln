@@ -13,8 +13,10 @@ namespace App\Tests\Controller\SwordController;
 use App\DataFixtures\WhitelistFixtures;
 use App\Entity\Journal;
 
-class ServiceDocumentTest extends AbstractSwordTestCase {
-    public function testServiceDocument() : void {
+class ServiceDocumentTest extends AbstractSwordTestCase
+{
+    public function testServiceDocument(): void
+    {
         $this->client->request('GET', '/api/sword/2.0/sd-iri', [], [], [
             'HTTP_On-Behalf-Of' => '7AD045C9-89E6-4ACA-8363-56FE9A45C34F',
             'HTTP_Journal-Url' => 'http://example.com',
@@ -22,21 +24,24 @@ class ServiceDocumentTest extends AbstractSwordTestCase {
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testServiceDocumentNoOBH() : void {
+    public function testServiceDocumentNoOBH(): void
+    {
         $this->client->request('GET', '/api/sword/2.0/sd-iri', [], [], [
             'HTTP_Journal-Url' => 'http://example.com',
         ]);
         $this->assertSame(400, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testServiceDocumentNoJournalUrl() : void {
+    public function testServiceDocumentNoJournalUrl(): void
+    {
         $this->client->request('GET', '/api/sword/2.0/sd-iri', [], [], [
             'HTTP_On-Behalf-Of' => '7AD045C9-89E6-4ACA-8363-56FE9A45C34F',
         ]);
         $this->assertSame(400, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testServiceDocumentBadObh() : void {
+    public function testServiceDocumentBadObh(): void
+    {
         $this->client->request('GET', '/api/sword/2.0/sd-iri', [], [], [
             'HTTP_On-Behalf-Of' => '',
             'HTTP_Journal-Url' => 'http://example.com',
@@ -44,7 +49,8 @@ class ServiceDocumentTest extends AbstractSwordTestCase {
         $this->assertSame(400, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testServiceDocumentBadJournalUrl() : void {
+    public function testServiceDocumentBadJournalUrl(): void
+    {
         $this->client->request('GET', '/api/sword/2.0/sd-iri', [], [], [
             'HTTP_On-Behalf-Of' => '7AD045C9-89E6-4ACA-8363-56FE9A45C34F',
             'HTTP_Journal-Url' => '',
@@ -52,8 +58,9 @@ class ServiceDocumentTest extends AbstractSwordTestCase {
         $this->assertSame(400, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testServiceDocumentContentNewJournal() : void {
-        $count = count($this->em->getRepository(Journal::class)->findAll());
+    public function testServiceDocumentContentNewJournal(): void
+    {
+        $count = \count($this->em->getRepository(Journal::class)->findAll());
 
         $this->client->request('GET', '/api/sword/2.0/sd-iri', [], [], [
             'HTTP_On-Behalf-Of' => '7AD045C9-89E6-4ACA-8363-56FE9A45C34F',
@@ -78,8 +85,9 @@ class ServiceDocumentTest extends AbstractSwordTestCase {
         $this->assertSame('new', $journal->getStatus());
     }
 
-    public function testServiceDocumentContentWhitelistedJournal() : void {
-        $count = count($this->em->getRepository(Journal::class)->findAll());
+    public function testServiceDocumentContentWhitelistedJournal(): void
+    {
+        $count = \count($this->em->getRepository(Journal::class)->findAll());
 
         $this->client->request('GET', '/api/sword/2.0/sd-iri', [], [], [
             'HTTP_On-Behalf-Of' => WhitelistFixtures::UUIDS[0],

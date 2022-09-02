@@ -28,10 +28,12 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @author mjoyce
  */
-class ExtractDepositCommand extends Command {
+class ExtractDepositCommand extends Command
+{
     protected EntityManagerInterface $em;
 
-    public function __construct(EntityManagerInterface $em) {
+    public function __construct(EntityManagerInterface $em)
+    {
         parent::__construct();
         $this->em = $em;
     }
@@ -39,7 +41,8 @@ class ExtractDepositCommand extends Command {
     /**
      * {@inheritdoc}
      */
-    public function configure() : void {
+    public function configure(): void
+    {
         $this->setName('pln:extract');
         $this->setDescription('Extract the content of an OJS deposit XML file.');
         $this->addArgument('file', InputArgument::REQUIRED, 'UUID of the deposit to extract.');
@@ -52,7 +55,8 @@ class ExtractDepositCommand extends Command {
      *
      * @throws Exception
      */
-    public function execute(InputInterface $input, OutputInterface $output) : void {
+    public function execute(InputInterface $input, OutputInterface $output): void
+    {
         $file = $input->getArgument('file');
         $path = $input->getArgument('path');
         $fs = new Filesystem();
@@ -61,14 +65,14 @@ class ExtractDepositCommand extends Command {
         if ('/' !== substr($path, -1, 1)) {
             $path .= '/';
         }
-        if ( ! $fs->exists($path)) {
+        if (! $fs->exists($path)) {
             $fs->mkdir($path);
         }
         ini_set('memory_limit', '128M');
 
         $dom = new DOMDocument();
-        $valid = $dom->load($file, LIBXML_COMPACT | LIBXML_PARSEHUGE);
-        if ( ! $valid) {
+        $valid = $dom->load($file, \LIBXML_COMPACT | \LIBXML_PARSEHUGE);
+        if (! $valid) {
             throw new Exception("{$file} is not a valid XML file.");
         }
         $xp = new DOMXPath($dom);
@@ -76,18 +80,18 @@ class ExtractDepositCommand extends Command {
         foreach ($xp->query('//embed') as $embedded) {
             /** @var DOMNamedNodeMap */
             $attrs = $embedded->attributes;
-            if ( ! $attrs) {
+            if (! $attrs) {
                 $output->writeln('Embedded element has no attributes. Skipping.');
 
                 continue;
             }
             $filename = $attrs->getNamedItem('filename')->nodeValue;
-            if ( ! $filename) {
+            if (! $filename) {
                 $output->writeln('Embedded element has no file name. Skipping.');
 
                 continue;
             }
-            $ext = pathinfo($filename, PATHINFO_EXTENSION);
+            $ext = pathinfo($filename, \PATHINFO_EXTENSION);
             if ($ext) {
                 $ext = '.' . $ext;
             }
@@ -101,7 +105,7 @@ class ExtractDepositCommand extends Command {
             }
             $tmpName = basename($tmpPath);
             $output->writeln("Extracting {$filename} as {$path}{$tmpName}{$ext}.");
-            $fh = fopen($tmpPath, 'wb');
+            $fh = fopen($tmpPath, 'w');
             $chunkSize = 1024 * 1024; // 1MB chunks.
             $length = $xp->evaluate('string-length(./text())', $embedded);
             $offset = 1; // xpath string offsets start at 1, not zero.

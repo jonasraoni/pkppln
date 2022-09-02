@@ -28,13 +28,15 @@ use SimpleXMLElement;
 /**
  * Description of PingTest.
  */
-class SwordClientTest extends BaseControllerTestCase {
+class SwordClientTest extends BaseControllerTestCase
+{
     /**
      * @var SwordClient
      */
     private $swordClient;
 
-    private function serviceDocumentData() {
+    private function serviceDocumentData()
+    {
         return <<<'ENDXML'
 <?xml version="1.0" ?>
 <service xmlns:dcterms="http://purl.org/dc/terms/"
@@ -59,7 +61,8 @@ class SwordClientTest extends BaseControllerTestCase {
 ENDXML;
     }
 
-    private function createDepositResponse() {
+    private function createDepositResponse()
+    {
         return <<<'ENDXML'
 <entry xmlns="http://www.w3.org/2005/Atom"
        xmlns:sword="http://purl.org/net/sword/">
@@ -78,7 +81,8 @@ ENDXML;
 ENDXML;
     }
 
-    private function receiptData() {
+    private function receiptData()
+    {
         return <<<'ENDXML'
 <entry xmlns="http://www.w3.org/2005/Atom"
        xmlns:sword="http://purl.org/net/sword/">
@@ -93,7 +97,8 @@ ENDXML;
 ENDXML;
     }
 
-    private function statementData() {
+    private function statementData()
+    {
         return <<<'ENDXML'
 <atom:feed xmlns:sword="http://purl.org/net/sword/terms/"
            xmlns:atom="http://www.w3.org/2005/Atom"
@@ -115,18 +120,21 @@ ENDXML;
 ENDXML;
     }
 
-    protected function fixtures() : array {
+    protected function fixtures(): array
+    {
         return [
             DepositFixtures::class,
             JournalFixtures::class,
         ];
     }
 
-    public function testSanity() : void {
+    public function testSanity(): void
+    {
         $this->assertInstanceOf(SwordClient::class, $this->swordClient);
     }
 
-    public function testServiceDocument() : void {
+    public function testServiceDocument(): void
+    {
         $mock = new MockHandler([
             new Response(200, [], $this->serviceDocumentData()),
         ]);
@@ -140,7 +148,7 @@ ENDXML;
         $sd = $this->swordClient->serviceDocument();
         $this->assertInstanceOf(ServiceDocument::class, $sd);
 
-        $this->assertSame(1, count($container));
+        $this->assertCount(1, $container);
         $transaction = $container[0];
         $this->assertSame('GET', $transaction['request']->getMethod());
         $this->assertSame(
@@ -149,7 +157,8 @@ ENDXML;
         );
     }
 
-    public function testServiceDocumentException() : void {
+    public function testServiceDocumentException(): void
+    {
         $this->expectException(Exception::class);
         $mock = new MockHandler([
             new Response(400, []),
@@ -160,7 +169,8 @@ ENDXML;
         $sd = $this->swordClient->serviceDocument();
     }
 
-    public function testServiceDocumentGenericException() : void {
+    public function testServiceDocumentGenericException(): void
+    {
         $this->expectException(Exception::class);
         $mock = new MockHandler([
             new Exception('FAILURE WILL ROBINSON'),
@@ -171,7 +181,8 @@ ENDXML;
         $sd = $this->swordClient->serviceDocument();
     }
 
-    public function testServiceDocumentExceptionResponse() : void {
+    public function testServiceDocumentExceptionResponse(): void
+    {
         $this->expectException(Exception::class);
         $mock = new MockHandler([
             new Response(400, [], 'NO NO'),
@@ -182,7 +193,8 @@ ENDXML;
         $sd = $this->swordClient->serviceDocument();
     }
 
-    public function testCreateDeposit() : void {
+    public function testCreateDeposit(): void
+    {
         $mock = new MockHandler([
             new Response(200, [], $this->serviceDocumentData()),
             new Response(201, ['Location' => 'http://example.com'], $this->createDepositResponse()),
@@ -198,7 +210,7 @@ ENDXML;
         $result = $this->swordClient->createDeposit($deposit);
         $this->assertTrue($result);
 
-        $this->assertSame(2, count($container));
+        $this->assertCount(2, $container);
         $request = $container[1]['request'];
         $this->assertSame('POST', $request->getMethod());
         $this->assertSame(
@@ -209,7 +221,8 @@ ENDXML;
         $this->assertSame('http://example.com', $deposit->getDepositReceipt());
     }
 
-    public function testCreateDepositException() : void {
+    public function testCreateDepositException(): void
+    {
         $this->expectException(Exception::class);
         $mock = new MockHandler([
             new Response(200, [], $this->serviceDocumentData()),
@@ -226,7 +239,8 @@ ENDXML;
         $result = $this->swordClient->createDeposit($deposit);
     }
 
-    public function testCreateDepositGenericException() : void {
+    public function testCreateDepositGenericException(): void
+    {
         $this->expectException(Exception::class);
         $mock = new MockHandler([
             new Response(200, [], $this->serviceDocumentData()),
@@ -244,7 +258,8 @@ ENDXML;
         $this->assertContains('NO FUN FOR YOU', $deposit->getErrorLog("\n"));
     }
 
-    public function testGetDepositReceiptNull() : void {
+    public function testGetDepositReceiptNull(): void
+    {
         $mock = new MockHandler([
             new Response(200, [], $this->receiptData()),
         ]);
@@ -259,10 +274,11 @@ ENDXML;
         $deposit->setDepositReceipt(null);
         $result = $this->swordClient->receipt($deposit);
         $this->assertNull($result);
-        $this->assertSame(0, count($container));
+        $this->assertCount(0, $container);
     }
 
-    public function testGetDepositReceipt() : void {
+    public function testGetDepositReceipt(): void
+    {
         $mock = new MockHandler([
             new Response(200, [], $this->receiptData()),
         ]);
@@ -277,13 +293,14 @@ ENDXML;
         $result = $this->swordClient->receipt($deposit);
         $this->assertInstanceOf(SimpleXMLElement::class, $result);
 
-        $this->assertSame(1, count($container));
+        $this->assertCount(1, $container);
         $request = $container[0]['request'];
         $this->assertSame('GET', $request->getMethod());
         $this->assertSame('http://example.com/receipt/1', (string) $request->getUri());
     }
 
-    public function testGetDepositStatement() : void {
+    public function testGetDepositStatement(): void
+    {
         $mock = new MockHandler([
             new Response(200, [], $this->receiptData()),
             new Response(200, [], $this->statementData()),
@@ -299,13 +316,14 @@ ENDXML;
         $result = $this->swordClient->statement($deposit);
         $this->assertInstanceOf(SimpleXMLElement::class, $result);
 
-        $this->assertSame(2, count($container));
+        $this->assertCount(2, $container);
         $request = $container[1]['request'];
         $this->assertSame('GET', $request->getMethod());
         $this->assertSame('http://path/to/statement', (string) $request->getUri());
     }
 
-    public function testFetch() : void {
+    public function testFetch(): void
+    {
         $root = vfsStream::setup();
 
         $fp = $this->createMock(FilePaths::class);
@@ -328,13 +346,14 @@ ENDXML;
         $result = $this->swordClient->fetch($deposit);
         $this->assertSame('vfs://root/path.zip', $result);
 
-        $this->assertSame(3, count($container));
+        $this->assertCount(3, $container);
         $request = $container[2]['request'];
         $this->assertSame('GET', $request->getMethod());
         $this->assertSame('http://path/to/deposit', (string) $request->getUri());
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $this->swordClient = self::$container->get(SwordClient::class);
     }

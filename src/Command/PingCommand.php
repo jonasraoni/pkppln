@@ -22,7 +22,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Ping the journals to make sure they're up and running.
  */
-class PingCommand extends Command {
+class PingCommand extends Command
+{
     /**
      * Fully configured ping service.
      */
@@ -36,7 +37,8 @@ class PingCommand extends Command {
     /**
      * Build the command.
      */
-    public function __construct(EntityManagerInterface $em, Ping $ping) {
+    public function __construct(EntityManagerInterface $em, Ping $ping)
+    {
         parent::__construct();
         $this->ping = $ping;
         $this->em = $em;
@@ -45,7 +47,8 @@ class PingCommand extends Command {
     /**
      * {@inheritdoc}
      */
-    protected function configure() : void {
+    protected function configure(): void
+    {
         $this->setName('pln:ping-whitelist');
         $this->setDescription('Find journals running a sufficiently new version of OJS and whitelist them.');
         $this->addArgument('minVersion', InputArgument::OPTIONAL, 'Minimum version required to whitelist.');
@@ -56,7 +59,8 @@ class PingCommand extends Command {
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output) : void {
+    protected function execute(InputInterface $input, OutputInterface $output): void
+    {
         $all = $input->getOption('all');
         $journals = $this->findJournals($all);
         foreach ($journals as $journal) {
@@ -69,7 +73,8 @@ class PingCommand extends Command {
     /**
      * Find the journals that need to be binged.
      */
-    public function findJournals(bool $all) {
+    public function findJournals(bool $all)
+    {
         $repo = $this->em->getRepository(Journal::class);
         if ($all) {
             return $repo->findAll();

@@ -17,7 +17,8 @@ use Exception;
 /**
  * Validate the size and checksum of a downloaded deposit.
  */
-class PayloadValidator {
+class PayloadValidator
+{
     /**
      * Buffer size for the hashing.
      */
@@ -31,14 +32,16 @@ class PayloadValidator {
     /**
      * Construct the validator.
      */
-    public function __construct(FilePaths $fp) {
+    public function __construct(FilePaths $fp)
+    {
         $this->fp = $fp;
     }
 
     /**
      * Override the file path service.
      */
-    public function setFilePaths(FilePaths $filePaths) : void {
+    public function setFilePaths(FilePaths $filePaths): void
+    {
         $this->fp = $filePaths;
     }
 
@@ -48,7 +51,8 @@ class PayloadValidator {
      * @throws Exception
      *                   If the algorithm is unknown.
      */
-    public function hashFile(string $algorithm, string $filepath): string {
+    public function hashFile(string $algorithm, string $filepath): string
+    {
         $handle = fopen($filepath, 'r');
         $context = null;
         switch (strtolower($algorithm)) {
@@ -76,7 +80,8 @@ class PayloadValidator {
     /**
      * Process one deposit.
      */
-    public function processDeposit(Deposit $deposit): bool {
+    public function processDeposit(Deposit $deposit): bool
+    {
         try {
             $depositPath = $this->fp->getHarvestFile($deposit);
             $checksumValue = $this->hashFile($deposit->getChecksumType(), $depositPath);

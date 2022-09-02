@@ -24,7 +24,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * Description of DepositBuilder.
  */
-class DepositBuilder {
+class DepositBuilder
+{
     use LoggerAwareTrait;
 
     /**
@@ -45,7 +46,8 @@ class DepositBuilder {
     /**
      * Build the service.
      */
-    public function __construct(EntityManagerInterface $em, UrlGeneratorInterface $generator, FilePaths $filePaths) {
+    public function __construct(EntityManagerInterface $em, UrlGeneratorInterface $generator, FilePaths $filePaths)
+    {
         $this->em = $em;
         $this->generator = $generator;
         $this->filePaths = $filePaths;
@@ -54,7 +56,8 @@ class DepositBuilder {
     /**
      * Find and return the deposit with $uuid or create a new deposit.
      */
-    protected function findDeposit(string $uuid): Deposit {
+    protected function findDeposit(string $uuid): Deposit
+    {
         /** @var Deposit */
         $deposit = $this->em->getRepository(Deposit::class)->findOneBy(['depositUuid' => strtoupper($uuid)]);
         if (!$deposit) {
@@ -85,7 +88,8 @@ class DepositBuilder {
     /**
      * Build a deposit from XML.
      */
-    public function fromXml(Journal $journal, SimpleXMLElement $xml): Deposit {
+    public function fromXml(Journal $journal, SimpleXMLElement $xml): Deposit
+    {
         $id = Xpath::getXmlValue($xml, '//atom:id');
         $deposit = $this->findDeposit(substr($id, 9, 36));
         $deposit->setState('depositedByJournal');

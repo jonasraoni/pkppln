@@ -18,28 +18,33 @@ use App\Tests\TestCase\BaseControllerTestCase;
 /**
  * Description of JournalRepositoryTest.
  */
-class TermOfUseRepositoryTest extends BaseControllerTestCase {
+class TermOfUseRepositoryTest extends BaseControllerTestCase
+{
     /**
      * @return TermOfUseRepository
      */
     private $repo;
 
-    protected function fixtures() : array {
+    protected function fixtures(): array
+    {
         return [
             TermOfUseFixtures::class,
         ];
     }
 
-    public function testGetTerms() : void {
+    public function testGetTerms(): void
+    {
         $terms = $this->repo->getTerms();
-        $this->assertSame([4, 3, 2, 1], array_map(function ($term) {return $term->getId(); }, $terms));
+        $this->assertSame([4, 3, 2, 1], array_map(fn ($term) => $term->getId(), $terms));
     }
 
-    public function testGetLastUpdated() : void {
+    public function testGetLastUpdated(): void
+    {
         $this->assertNotNull($this->repo->getLastUpdated());
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $this->repo = $this->em->getRepository(TermOfUse::class);
     }

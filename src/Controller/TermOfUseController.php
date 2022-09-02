@@ -29,7 +29,8 @@ use Symfony\Component\Routing\Annotation\Route;
  * @Security("is_granted('ROLE_USER')")
  * @Route("/termofuse")
  */
-class TermOfUseController extends AbstractController implements PaginatorAwareInterface {
+class TermOfUseController extends AbstractController implements PaginatorAwareInterface
+{
     use PaginatorTrait;
 
     /**
@@ -37,9 +38,10 @@ class TermOfUseController extends AbstractController implements PaginatorAwareIn
      *
      * @Route("/", name="termofuse_index", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
-    public function indexAction(Request $request): array {
+    public function indexAction(Request $request): array
+    {
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(TermOfUse::class, 'e')->orderBy('e.id', 'ASC');
@@ -56,11 +58,12 @@ class TermOfUseController extends AbstractController implements PaginatorAwareIn
      * Creates a new TermOfUse entity.
      *
      * @Security("is_granted('ROLE_ADMIN')")
-     * @Route("/new", name="termofuse_new", methods={"GET","POST"})
+     * @Route("/new", name="termofuse_new", methods={"GET", "POST"})
      *
-     * @Template()
+     * @Template
      */
-    public function newAction(Request $request): array|RedirectResponse {
+    public function newAction(Request $request): array|RedirectResponse
+    {
         $termOfUse = new TermOfUse();
         $form = $this->createForm(TermOfUseType::class, $termOfUse);
         $form->handleRequest($request);
@@ -86,9 +89,10 @@ class TermOfUseController extends AbstractController implements PaginatorAwareIn
      *
      * @Route("/{id}", name="termofuse_show", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
-    public function showAction(EntityManagerInterface $em, TermOfUse $termOfUse): array {
+    public function showAction(EntityManagerInterface $em, TermOfUse $termOfUse): array
+    {
         // This can't just be $termOfUse->getHistory() or something because there
         // is no foreign key relationship - the history is preserved when a term is deleted.
         $repo = $em->getRepository(TermOfUseHistory::class);
@@ -104,11 +108,12 @@ class TermOfUseController extends AbstractController implements PaginatorAwareIn
      * Displays a form to edit an existing TermOfUse entity.
      *
      * @Security("is_granted('ROLE_ADMIN')")
-     * @Route("/{id}/edit", name="termofuse_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="termofuse_edit", methods={"GET", "POST"})
      *
-     * @Template()
+     * @Template
      */
-    public function editAction(Request $request, TermOfUse $termOfUse): array|RedirectResponse {
+    public function editAction(Request $request, TermOfUse $termOfUse): array|RedirectResponse
+    {
         $editForm = $this->createForm(TermOfUseType::class, $termOfUse);
         $editForm->handleRequest($request);
 
@@ -132,7 +137,8 @@ class TermOfUseController extends AbstractController implements PaginatorAwareIn
      * @Security("is_granted('ROLE_ADMIN')")
      * @Route("/{id}/delete", name="termofuse_delete", methods={"GET"})
      */
-    public function deleteAction(Request $request, TermOfUse $termOfUse): array|RedirectResponse {
+    public function deleteAction(Request $request, TermOfUse $termOfUse): array|RedirectResponse
+    {
         $em = $this->getDoctrine()->getManager();
         $em->remove($termOfUse);
         $em->flush();

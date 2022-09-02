@@ -29,31 +29,31 @@ if (file_exists($customFile)) {
     require $customFile;
 }
 
-set('console', fn() => parse('{{bin/php}} {{release_path}}/bin/console --no-interaction --quiet'));
-set('lock_path', fn() => parse('{{deploy_path}}/.dep/deploy.lock'));
+set('console', fn () => parse('{{bin/php}} {{release_path}}/bin/console --no-interaction --quiet'));
+set('lock_path', fn () => parse('{{deploy_path}}/.dep/deploy.lock'));
 
 /*
  * Check that there are no modified files or commits that haven't been pushed. Ask the
  * user to confirm.
  */
-task('pkppln:precheck', function() : void {
+task('pkppln:precheck', function (): void {
     $out = runLocally('git status --porcelain --untracked-files=no');
     if ('' !== $out) {
-        $modified = count(explode("\n", $out));
+        $modified = \count(explode("\n", $out));
         writeln("<error>Warning:</error> {$modified} modified files have not been committed.");
         writeln($out);
         $response = askConfirmation('Continue?');
-        if ( ! $response) {
+        if (! $response) {
             exit;
         }
     }
 
     $out = runLocally('git cherry -v');
     if ('' !== $out) {
-        $commits = count(explode("\n", $out));
+        $commits = \count(explode("\n", $out));
         writeln("<error>Warning:</error> {$commits} commits not pushed.");
         $response = askConfirmation('Continue?');
-        if ( ! $response) {
+        if (! $response) {
             exit;
         }
     }
@@ -62,25 +62,25 @@ task('pkppln:precheck', function() : void {
     if ('Locked' === trim($res)) {
         writeln('<error>Warning:</error> Target is locked. Unlock and continue?');
         $response = askConfirmation('Continue?');
-        if ( ! $response) {
+        if (! $response) {
             exit;
         }
         run('rm -f {{lock_path}}');
     }
 });
 
-task('pkppln:assets', function() : void {
+task('pkppln:assets', function (): void {
     $output = run('{{console}} assets:install --symlink');
     writeln($output);
 })->desc('Install any bundle assets.');
 
-task('pkppln:yarn', function() : void {
+task('pkppln:yarn', function (): void {
     $output = run('cd {{ release_path }} && yarn install --prod --silent');
     writeln($output);
 })->desc('Install yarn dependencies.');
 
-task('pkppln:fonts', function() : void {
-    if ( ! file_exists('config/fonts.yaml')) {
+task('pkppln:fonts', function (): void {
+    if (! file_exists('config/fonts.yaml')) {
         return;
     }
     $output = run('cd {{ release_path }} && ./bin/console nines:fonts:download');
@@ -93,7 +93,7 @@ task('pkppln:fonts', function() : void {
  * Use the option --skip-tests to skip this step, but do so with caution.
  */
 option('skip-tests', null, InputOption::VALUE_NONE, 'Skip testing. Probably a bad idea.');
-task('pkppln:phpunit', function() : void {
+task('pkppln:phpunit', function (): void {
     if (input()->getOption('skip-tests')) {
         writeln('Skipped');
 
@@ -107,18 +107,18 @@ task('pkppln:phpunit', function() : void {
     writeln($output);
 })->desc('Run all unit tests');
 
-task('pkppln:sphinx:build', function() : void {
+task('pkppln:sphinx:build', function (): void {
     if (file_exists('docs')) {
         runLocally('sphinx-build docs/source public/docs/sphinx');
     }
 })->desc('Build sphinx docs locally.');
 
-task('pkppln:sphinx:upload', function() : void {
+task('pkppln:sphinx:upload', function (): void {
     if (file_exists('docs')) {
         $user = get('user');
         $host = get('hostname');
         $become = get('become');
-        within('{{release_path}}', function() : void {
+        within('{{release_path}}', function (): void {
             run('mkdir -p public/docs/sphinx');
         });
         runLocally("rsync -av --rsync-path='sudo -u {$become} rsync' ./public/docs/sphinx/ {$user}@{$host}:{{release_path}}/public/docs/sphinx", ['timeout' => null]);
@@ -130,7 +130,7 @@ task('pkppln:sphinx', [
     'pkppln:sphinx:upload',
 ])->desc('Wrapper around pkppln:sphinx:build and pkppln:sphinx:upload');
 
-task('pkppln:db:backup', function() : void {
+task('pkppln:db:backup', function (): void {
     $user = get('user');
     $become = get('become');
     $app = get('application');
@@ -144,7 +144,7 @@ task('pkppln:db:backup', function() : void {
     set('become', $become);
 })->desc('Backup the mysql database');
 
-task('pkppln:db:schema', function() : void {
+task('pkppln:db:schema', function (): void {
     $user = get('user');
     $become = get('become');
     $app = get('application');
@@ -160,7 +160,7 @@ task('pkppln:db:schema', function() : void {
 })->desc('Make a database schema-only backup and download it.');
 
 option('all-tables', null, InputOption::VALUE_NONE, 'Do not ignore any tables when fetching database.');
-task('pkppln:db:data', function() : void {
+task('pkppln:db:data', function (): void {
     $user = get('user');
     $become = get('become');
     $app = get('application');
@@ -168,8 +168,8 @@ task('pkppln:db:data', function() : void {
     set('become', $user); // prevent sudo -u from failing.
     $file = "/home/{$user}/{$app}-data.sql";
     $ignore = get('ignore_tables', []);
-    if (count($ignore) && ! input()->getOption('all-tables')) {
-        $ignoredTables = implode(',', array_map(fn($s) => $app . '.' . $s, $ignore));
+    if (\count($ignore) && ! input()->getOption('all-tables')) {
+        $ignoredTables = implode(',', array_map(fn ($s) => $app . '.' . $s, $ignore));
         run("sudo mysqldump {$app} --flush-logs --no-create-info -r {$file} --ignore-table={{$ignoredTables}}");
     } else {
         run("sudo mysqldump {$app} --flush-logs --no-create-info -r {$file}");
@@ -181,7 +181,7 @@ task('pkppln:db:data', function() : void {
     set('become', $become);
 })->desc('Make a database data-only backup and download it.');
 
-task('pkppln:db:migrate', function() : void {
+task('pkppln:db:migrate', function (): void {
     $count = (int) runLocally('find migrations -type f -name "*.php" | wc -l');
     if ($count > 1) {
         $options = '--allow-no-migration';
@@ -203,8 +203,8 @@ task('pkppln:db:migrate', function() : void {
 })->desc('Apply database migrations');
 
 // Roll up any outstanding migrations.
-task('pkppln:db:rollup', function() : void {
-    if ( ! file_exists('migrations')) {
+task('pkppln:db:rollup', function (): void {
+    if (! file_exists('migrations')) {
         mkdir('migrations');
     }
     $count = (int) runLocally('find migrations -type f -name "*.php" | wc -l');
@@ -217,14 +217,14 @@ task('pkppln:db:rollup', function() : void {
     runLocally('php bin/console doctrine:migrations:rollup');
 })->desc('Roll up any database migrations');
 
-task('pkppln:media', function() : void {
+task('pkppln:media', function (): void {
     $user = get('user');
     $host = get('hostname');
     $become = get('become');
     runLocally("rsync -av --rsync-path='sudo -u {$become} rsync' {$user}@{$host}:{{release_path}}/data/ data", ['timeout' => null]);
 })->desc('Download any uploaded media, assuming it is in /data');
 
-task('pkppln:permissions', function() : void {
+task('pkppln:permissions', function (): void {
     $user = get('user');
     $become = get('become');
 
@@ -239,7 +239,7 @@ task('pkppln:permissions', function() : void {
 })->desc('Fix selinux permissions');
 
 // Display a success message.
-task('success', function() : void {
+task('success', function (): void {
     $target = get('target');
     $release = get('release_name');
     $host = get('hostname');

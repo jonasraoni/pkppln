@@ -21,7 +21,8 @@ use GuzzleHttp\Client;
 /**
  * Ping service.
  */
-class Ping {
+class Ping
+{
     /**
      * Http client configuration.
      */
@@ -56,7 +57,8 @@ class Ping {
     /**
      * Construct the ping service.
      */
-    public function __construct(string $minOjsVersion, EntityManagerInterface $em, BlackWhiteList $list) {
+    public function __construct(string $minOjsVersion, EntityManagerInterface $em, BlackWhiteList $list)
+    {
         $this->minOjsVersion = $minOjsVersion;
         $this->em = $em;
         $this->list = $list;
@@ -66,15 +68,17 @@ class Ping {
     /**
      * Set the HTTP client.
      */
-    public function setClient(Client $client): void {
+    public function setClient(Client $client): void
+    {
         $this->client = $client;
     }
 
     /**
      * Process a ping response.
      */
-    public function process(Journal $journal, PingResult $result): void {
-        if ( ! $result->getOjsRelease()) {
+    public function process(Journal $journal, PingResult $result): void
+    {
+        if (! $result->getOjsRelease()) {
             $journal->setStatus('ping-error');
             $result->addError('Journal version information missing in ping result.');
 
@@ -101,7 +105,8 @@ class Ping {
     /**
      * Ping $journal and return the result.
      */
-    public function ping(Journal $journal): PingResult {
+    public function ping(Journal $journal): PingResult
+    {
         try {
             $response = $this->client->get($journal->getGatewayUrl(), self::CONF);
             $result = new PingResult($response);

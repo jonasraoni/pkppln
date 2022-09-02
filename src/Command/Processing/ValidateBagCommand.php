@@ -19,14 +19,16 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * Validate a bag metadata and checksums.
  */
-class ValidateBagCommand extends AbstractProcessingCmd {
+class ValidateBagCommand extends AbstractProcessingCmd
+{
     private BagValidator $bagValidator;
     private FilePaths $filePaths;
 
     /**
      * Build the command.
      */
-    public function __construct(EntityManagerInterface $em, BagValidator $bagValidator, FilePaths $filePaths) {
+    public function __construct(EntityManagerInterface $em, BagValidator $bagValidator, FilePaths $filePaths)
+    {
         parent::__construct($em);
         $this->bagValidator = $bagValidator;
         $this->filePaths = $filePaths;
@@ -35,7 +37,8 @@ class ValidateBagCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    protected function configure() : void {
+    protected function configure(): void
+    {
         $this->setName('pln:validate:bag');
         $this->setDescription('Validate PLN deposit packages.');
         parent::configure();
@@ -44,14 +47,16 @@ class ValidateBagCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    protected function processDeposit(Deposit $deposit): null|bool|string {
+    protected function processDeposit(Deposit $deposit): null|bool|string
+    {
         return $this->bagValidator->processDeposit($deposit);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function afterFailure(Deposit $deposit): void {
+    protected function afterFailure(Deposit $deposit): void
+    {
         $extractedPath = $this->filePaths->getProcessingBagPath($deposit);
         $fs = new Filesystem();
         if ($fs->exists($extractedPath)) {
@@ -63,7 +68,8 @@ class ValidateBagCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    protected function afterSuccess(Deposit $deposit): void {
+    protected function afterSuccess(Deposit $deposit): void
+    {
         $harvestedPath = $this->filePaths->getHarvestFile($deposit);
         $fs = new Filesystem();
         if ($fs->exists($harvestedPath)) {
@@ -75,35 +81,40 @@ class ValidateBagCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    public function nextState(): string {
+    public function nextState(): string
+    {
         return 'bag-validated';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function processingState(): string {
+    public function processingState(): string
+    {
         return 'payload-validated';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function failureLogMessage(): string {
+    public function failureLogMessage(): string
+    {
         return 'Bag checksum validation failed.';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function successLogMessage(): string {
+    public function successLogMessage(): string
+    {
         return 'Bag checksum validation succeeded.';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function errorState(): string {
+    public function errorState(): string
+    {
         return 'bag-error';
     }
 }

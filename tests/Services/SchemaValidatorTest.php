@@ -14,13 +14,15 @@ use App\Services\SchemaValidator;
 use DOMDocument;
 use App\Tests\TestCase\BaseControllerTestCase;
 
-class SchemaValidatorTest extends BaseControllerTestCase {
+class SchemaValidatorTest extends BaseControllerTestCase
+{
     /**
      * @var SchemaValidator
      */
     protected $validator;
 
-    private function getValidXml() {
+    private function getValidXml()
+    {
         return <<<'ENDSTR'
 <root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation='testSchema.xsd'>
@@ -31,7 +33,8 @@ class SchemaValidatorTest extends BaseControllerTestCase {
 ENDSTR;
     }
 
-    private function getInvalidXml() {
+    private function getInvalidXml()
+    {
         return <<<'ENDSTR'
 <root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation='testSchema.xsd'>
@@ -44,27 +47,31 @@ ENDSTR;
 ENDSTR;
     }
 
-    public function testInstance() : void {
+    public function testInstance(): void
+    {
         $this->assertInstanceOf(SchemaValidator::class, $this->validator);
     }
 
-    public function testValidate() : void {
+    public function testValidate(): void
+    {
         $dom = new DOMDocument();
         $dom->loadXML($this->getValidXml());
-        $path = dirname(__FILE__, 2) . '/data';
+        $path = \dirname(__FILE__, 2) . '/data';
         $this->validator->validate($dom, $path, true);
         $this->assertSame(0, $this->validator->countErrors());
     }
 
-    public function testValidateWithErrors() : void {
+    public function testValidateWithErrors(): void
+    {
         $dom = new DOMDocument();
         $dom->loadXML($this->getinvalidXml());
-        $path = dirname(__FILE__, 2) . '/data';
+        $path = \dirname(__FILE__, 2) . '/data';
         $this->validator->validate($dom, $path, true);
         $this->assertSame(1, $this->validator->countErrors());
     }
 
-    protected function setUp() : void {
+    protected function setUp(): void
+    {
         parent::setUp();
         $this->validator = self::$container->get(SchemaValidator::class);
         $this->validator->clearErrors();

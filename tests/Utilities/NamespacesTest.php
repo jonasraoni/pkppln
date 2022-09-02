@@ -16,18 +16,21 @@ use PHPUnit\Framework\TestCase;
 /**
  * Simplify handling namespaces for SWORD XML documents.
  */
-class NamespacesTest extends TestCase {
+class NamespacesTest extends TestCase
+{
     /**
      * @dataProvider getNamespaceData
      *
      * @param mixed $prefix
      * @param mixed $expected
      */
-    public function testGetNamespace($prefix, $expected) : void {
+    public function testGetNamespace($prefix, $expected): void
+    {
         $this->assertSame($expected, Namespaces::getNamespace($prefix));
     }
 
-    public function getNamespaceData() {
+    public function getNamespaceData()
+    {
         return [
             ['dcterms', 'http://purl.org/dc/terms/'],
             ['sword', 'http://purl.org/net/sword/'],
@@ -41,7 +44,8 @@ class NamespacesTest extends TestCase {
         ];
     }
 
-    public function testRegisterNamespaces() : void {
+    public function testRegisterNamespaces(): void
+    {
         $xml = simplexml_load_string($this->getXml());
         Namespaces::registerNamespaces($xml);
         $this->assertSame('1', (string) $xml->xpath('//dcterms:a[1]/text()')[0]);
@@ -52,7 +56,8 @@ class NamespacesTest extends TestCase {
         $this->assertSame('6', (string) $xml->xpath('//app:f[1]/text()')[0]);
     }
 
-    public function getXml() {
+    public function getXml()
+    {
         return <<<'ENDXML'
         <root>
           <a xmlns="http://purl.org/dc/terms/">1</a>

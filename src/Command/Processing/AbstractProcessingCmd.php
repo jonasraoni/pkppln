@@ -23,14 +23,16 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Parent class for all processing commands.
  */
-abstract class AbstractProcessingCmd extends Command {
+abstract class AbstractProcessingCmd extends Command
+{
     use LoggerAwareTrait;
     private EntityManagerInterface $em;
 
     /**
      * Build the command.
      */
-    public function __construct(EntityManagerInterface $em) {
+    public function __construct(EntityManagerInterface $em)
+    {
         parent::__construct();
         $this->em = $em;
     }
@@ -38,7 +40,8 @@ abstract class AbstractProcessingCmd extends Command {
     /**
      * {@inheritdoc}
      */
-    protected function configure() : void {
+    protected function configure(): void
+    {
         $this->addOption('retry', 'r', InputOption::VALUE_NONE, 'Retry failed deposits');
         $this->addOption('dry-run', 'd', InputOption::VALUE_NONE, 'Do not update processing status');
         $this->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Only process $limit deposits.');
@@ -50,7 +53,8 @@ abstract class AbstractProcessingCmd extends Command {
      *
      * @param Deposit[] $deposits
      */
-    protected function preprocessDeposits(array $deposits = []) : void {
+    protected function preprocessDeposits(array $deposits = []): void
+    {
         // Do nothing by default.
     }
 
@@ -62,14 +66,16 @@ abstract class AbstractProcessingCmd extends Command {
     /**
      * Code to run before executing the command.
      */
-    protected function preExecute() : void {
+    protected function preExecute(): void
+    {
         // Do nothing, let subclasses override if needed.
     }
 
     /**
      * {@inheritdoc}
      */
-    final protected function execute(InputInterface $input, OutputInterface $output) : void {
+    final protected function execute(InputInterface $input, OutputInterface $output): void
+    {
         $this->preExecute();
         $deposits = $this->getDeposits(
             $input->getOption('retry'),
@@ -111,32 +117,35 @@ abstract class AbstractProcessingCmd extends Command {
     /**
      * Code to run after each successfully deposit is saved to the database.
      */
-    protected function afterSuccess(Deposit $deposit): void {
+    protected function afterSuccess(Deposit $deposit): void
+    {
         // do nothing, let subclasses override if needed.
     }
 
     /**
      * Code to run after each failed deposit is saved to the database.
      */
-    protected function afterFailure(Deposit $deposit): void {
+    protected function afterFailure(Deposit $deposit): void
+    {
         // do nothing, let subclasses override if needed.
     }
 
     /**
      * Get a list of deposits to process.
-     * 
+     *
      * @return Deposit[]
      */
-    public function getDeposits(bool $retry = false, array $depositIds = [], ?int $limit = null): array {
+    public function getDeposits(bool $retry = false, array $depositIds = [], ?int $limit = null): array
+    {
         ($qb = $this->em->createQueryBuilder())->select('d')->from(Deposit::class, 'd')
             ->where('d.state = :state')
             ->setParameter('state', $retry ? $this->errorState() : $this->processingState());
 
-        if (count($depositIds)) {
+        if (\count($depositIds)) {
             $qb->andWhere('d.id in (:ids)')->setParameter('ids', $depositIds);
         }
 
-        if($limit) {
+        if ($limit) {
             $qb->setMaxResults($limit);
         }
 
@@ -151,7 +160,8 @@ abstract class AbstractProcessingCmd extends Command {
      *
      * If $dryRun is is true results will not be flushed to the database.
      */
-    public function runDeposit(Deposit $deposit, OutputInterface $output, bool $dryRun = false) : void {
+    public function runDeposit(Deposit $deposit, OutputInterface $output, bool $dryRun = false): void
+    {
         try {
             $result = $this->processDeposit($deposit);
         } catch (Exception $e) {
@@ -169,7 +179,7 @@ abstract class AbstractProcessingCmd extends Command {
             return;
         }
 
-        if (is_string($result)) {
+        if (\is_string($result)) {
             $deposit->setState($result);
             $deposit->addToProcessingLog('Holding deposit.');
         } elseif (true === $result) {
@@ -186,6 +196,6 @@ abstract class AbstractProcessingCmd extends Command {
             $this->afterSuccess($deposit);
         } elseif ($result === false) {
             $this->afterFailure($deposit);
-        } 
+        }
     }
 }

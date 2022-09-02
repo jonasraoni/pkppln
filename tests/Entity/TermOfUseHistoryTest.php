@@ -16,20 +16,24 @@ use App\Tests\TestCase\BaseControllerTestCase;
 /**
  * Description of TermOfUseHistoryTest.
  */
-class TermOfUseHistoryTest extends BaseControllerTestCase {
+class TermOfUseHistoryTest extends BaseControllerTestCase
+{
     private $history;
 
-    public function testToString() : void {
+    public function testToString(): void
+    {
         $this->history->setAction('update');
         $this->assertSame('update', (string) $this->history);
     }
 
-    public function testGetUser() : void {
+    public function testGetUser(): void
+    {
         $this->history->setUser('Yoda');
         $this->assertSame('Yoda', $this->history->getUser());
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $this->history = new TermOfUseHistory();
     }

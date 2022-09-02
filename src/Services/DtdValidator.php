@@ -15,11 +15,13 @@ use DOMDocument;
 /**
  * Simple wrapper around around DOMDocument->validate().
  */
-class DtdValidator extends AbstractValidator {
+class DtdValidator extends AbstractValidator
+{
     /**
      * Validate a DOM document.
      */
-    public function validate(DOMDocument $dom, ?string $path = null, bool $clearErrors = true) : void {
+    public function validate(DOMDocument $dom, ?string $path = null, bool $clearErrors = true): void
+    {
         if ($clearErrors) {
             $this->clearErrors();
         }

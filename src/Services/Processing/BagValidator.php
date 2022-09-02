@@ -17,7 +17,8 @@ use App\Utilities\BagReader;
 /**
  * Validate a bag, according to the bagit spec.
  */
-class BagValidator {
+class BagValidator
+{
     /**
      * File path service.
      */
@@ -31,7 +32,8 @@ class BagValidator {
     /**
      * Build the validator.
      */
-    public function __construct(FilePaths $fp) {
+    public function __construct(FilePaths $fp)
+    {
         $this->filePaths = $fp;
         $this->bagReader = new BagReader();
     }
@@ -39,14 +41,16 @@ class BagValidator {
     /**
      * Override the bag reader.
      */
-    public function setBagReader(BagReader $bagReader) : void {
+    public function setBagReader(BagReader $bagReader): void
+    {
         $this->bagReader = $bagReader;
     }
 
-    public function processDeposit(Deposit $deposit): bool {
+    public function processDeposit(Deposit $deposit): bool
+    {
         $harvestedPath = $this->filePaths->getHarvestFile($deposit);
         $bag = $this->bagReader->readBag($harvestedPath);
-        if ( ! $bag->validate()) {
+        if (! $bag->validate()) {
             foreach ($bag->getErrors() as $error) {
                 $deposit->addErrorLog("Bag validation error for {$error['file']} - {$error['message']}");
             }

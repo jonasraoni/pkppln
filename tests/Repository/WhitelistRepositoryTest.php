@@ -18,25 +18,29 @@ use App\Tests\TestCase\BaseControllerTestCase;
 /**
  * Description of WhitelistRepositoryTest.
  */
-class WhitelistRepositoryTest extends BaseControllerTestCase {
+class WhitelistRepositoryTest extends BaseControllerTestCase
+{
     /**
      * @return WhitelistRepository
      */
     private $repo;
 
-    protected function fixtures() : array {
+    protected function fixtures(): array
+    {
         return [
             WhitelistFixtures::class,
         ];
     }
 
-    public function testSearchQuery() : void {
+    public function testSearchQuery(): void
+    {
         $query = $this->repo->searchQuery('960CD4D9');
         $result = $query->execute();
-        $this->assertSame(1, count($result));
+        $this->assertCount(1, $result);
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $this->repo = $this->em->getRepository(Whitelist::class);
     }

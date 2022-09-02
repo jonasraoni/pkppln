@@ -18,24 +18,29 @@ use DateTimeInterface;
 /**
  * Description of JournalTest.
  */
-class JournalTest extends BaseControllerTestCase {
+class JournalTest extends BaseControllerTestCase
+{
     private $journal;
 
-    public function testInstance() : void {
+    public function testInstance(): void
+    {
         $this->assertInstanceOf(Journal::class, $this->journal);
     }
 
-    public function testSetUuid() : void {
+    public function testSetUuid(): void
+    {
         $this->journal->setUuid('abc123');
         $this->assertSame('ABC123', $this->journal->getUuid());
     }
 
-    public function testSetNotified() : void {
+    public function testSetNotified(): void
+    {
         $this->journal->setNotified(new DateTime());
         $this->assertInstanceOf(DateTimeInterface::class, $this->journal->getNotified());
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $this->journal = new Journal();
     }

@@ -20,7 +20,8 @@ use SplFileInfo;
  *
  * @author michael
  */
-class BaseControllerTestCase extends ControllerTestCase {
+class BaseControllerTestCase extends ControllerTestCase
+{
     use FixturesTrait;
 
     /**
@@ -41,7 +42,8 @@ class BaseControllerTestCase extends ControllerTestCase {
     /**
      * Get a list of fixture classes to load.
      */
-    protected function fixtures() : array {
+    protected function fixtures(): array
+    {
         return [];
     }
 
@@ -57,20 +59,22 @@ class BaseControllerTestCase extends ControllerTestCase {
      *
      * @return null|object
      */
-    protected function getReference(string $id, $reload = false) {
-        if ( ! $this->references->hasReference($id)) {
+    protected function getReference(string $id, $reload = false)
+    {
+        if (! $this->references->hasReference($id)) {
             return;
         }
         $object = $this->references->getReference($id);
-        if ( ! $reload) {
+        if (! $reload) {
             return $object;
         }
 
         return $this->entityManager->find($object::class, $object->getId());
     }
 
-    protected function cleanup($files) : void {
-        if ( ! is_array($files)) {
+    protected function cleanup($files): void
+    {
+        if (! \is_array($files)) {
             $files = [$files];
         }
 
@@ -78,7 +82,7 @@ class BaseControllerTestCase extends ControllerTestCase {
             if ($file instanceof SplFileInfo) {
                 $this->cleanup[] = $file->getRealPath();
             } else {
-                if (is_string($file)) {
+                if (\is_string($file)) {
                     $this->cleanup[] = $file;
                 } else {
                     throw new Exception('Cannot clean up ' . $file::class);
@@ -90,7 +94,8 @@ class BaseControllerTestCase extends ControllerTestCase {
     /**
      * Set up the container and fixtures.
      */
-    protected function setUp() : void {
+    protected function setUp(): void
+    {
         parent::setUp();
         self::bootKernel();
         $this->references = $this->loadFixtures($this->fixtures())->getReferenceRepository();
@@ -102,7 +107,8 @@ class BaseControllerTestCase extends ControllerTestCase {
      *
      * @throws MappingException
      */
-    protected function tearDown() : void {
+    protected function tearDown(): void
+    {
         parent::tearDown();
 
         foreach ($this->cleanup as $path) {

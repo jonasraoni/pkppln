@@ -31,11 +31,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Upgrade a PKP PLN instance from version 1 to version 2.
  */
-class UpgradeCommand extends Command {
+class UpgradeCommand extends Command
+{
     /**
      * Doctrine connection to the old database.
      */
-     private Connection $source;
+    private Connection $source;
 
     /**
      * Entity manager for the new database.
@@ -68,7 +69,8 @@ class UpgradeCommand extends Command {
      * see app/config/config.yml for examples of the configuration.
      * see app/config/services.yml to configure the dependency injection.
      */
-    public function __construct(Connection $oldEm, EntityManagerInterface $em) {
+    public function __construct(Connection $oldEm, EntityManagerInterface $em)
+    {
         parent::__construct();
         $this->source = $oldEm;
         $this->em = $em;
@@ -80,14 +82,16 @@ class UpgradeCommand extends Command {
     /**
      * Map an old database ID to a new one.
      */
-    protected function setIdMap(string $class, int $old, int $new) : void {
+    protected function setIdMap(string $class, int $old, int $new): void
+    {
         $this->idMapping[$class][$old] = $new;
     }
 
     /**
      * Get the new database ID for a $class.
      */
-    protected function getIdMap(string $class, int $old, ?int $default = null): ?int {
+    protected function getIdMap(string $class, int $old, ?int $default = null): ?int
+    {
         if (isset($this->idMapping[$class][$old])) {
             return $this->idMapping[$class][$old];
         }
@@ -98,7 +102,8 @@ class UpgradeCommand extends Command {
     /**
      * Configure the command.
      */
-    public function configure() : void {
+    public function configure(): void
+    {
         $this->setName('pln:upgrade');
         $this->setDescription('Copy and upgrade data from old database to new one.');
         $this->addOption('force', null, InputOption::VALUE_NONE, 'Actually make the database changes.');
@@ -111,7 +116,8 @@ class UpgradeCommand extends Command {
      * object it is persisted and flushed, and the old ID is mapped to the
      * new one.
      */
-    public function upgradeTable(string $table, callable $callback) : void {
+    public function upgradeTable(string $table, callable $callback): void
+    {
         $countQuery = $this->source->query("SELECT count(*) c FROM {$table}");
         $countQuery->execute();
         $countRow = $countQuery->fetch();
@@ -139,7 +145,8 @@ class UpgradeCommand extends Command {
     /**
      * Upgrade the whitelist table.
      */
-    public function upgradeWhitelist() : void {
+    public function upgradeWhitelist(): void
+    {
         $callback = function ($row) {
             $entry = new Whitelist();
             $entry->setComment($row['comment']);
@@ -154,7 +161,8 @@ class UpgradeCommand extends Command {
     /**
      * Upgrade the blacklist table.
      */
-    public function upgradeBlacklist() : void {
+    public function upgradeBlacklist(): void
+    {
         $callback = function ($row) {
             $entry = new Blacklist();
             $entry->setComment($row['comment']);
@@ -169,7 +177,8 @@ class UpgradeCommand extends Command {
     /**
      * Upgrade the users table.
      */
-    public function upgradeUsers() : void {
+    public function upgradeUsers(): void
+    {
         $callback = function ($row) {
             $entry = new User();
             $entry->setEmail($row['username']);
@@ -189,7 +198,8 @@ class UpgradeCommand extends Command {
      *
      * Term history is upgraded elsewhere.
      */
-    public function upgradeTerms() : void {
+    public function upgradeTerms(): void
+    {
         $callback = function ($row) {
             $term = new TermOfUse();
             $term->setWeight($row['weight']);
@@ -208,7 +218,8 @@ class UpgradeCommand extends Command {
      *
      * Terms of Use must be upgraded first.
      */
-    public function upgradeTermHistory() : void {
+    public function upgradeTermHistory(): void
+    {
         $callback = function ($row) {
             $history = new TermOfUseHistory();
             $termId = $this->getIdMap(TermOfUse::class, $row['term_id'], $row['term_id']);
@@ -227,7 +238,8 @@ class UpgradeCommand extends Command {
     /**
      * Upgrade the journal table.
      */
-    public function upgradeJournals() : void {
+    public function upgradeJournals(): void
+    {
         $callback = function ($row) {
             $journal = new Journal();
             $journal->setUuid($row['uuid']);
@@ -268,16 +280,17 @@ class UpgradeCommand extends Command {
      * @throws Exception
      *                   If a deposit came from a journal that cannot be found.
      */
-    public function upgradeDeposits() : void {
+    public function upgradeDeposits(): void
+    {
         $callback = function ($row) {
             $deposit = new Deposit();
 
             $journalId = $this->getIdMap(Journal::class, $row['journal_id']);
-            if ( ! $journalId) {
+            if (! $journalId) {
                 throw new Exception('No ID for journal: ' . $row['journal_id']);
             }
             $journal = $this->em->find(Journal::class, $journalId);
-            if ( ! $journal) {
+            if (! $journal) {
                 throw new Exception("Journal {$row['journal_id']} not found.");
             }
             $deposit->setJournal($journal);
@@ -285,7 +298,7 @@ class UpgradeCommand extends Command {
             $auContainerId = $this->getIdMap(AuContainer::class, $row['au_container_id']);
             if ($auContainerId) {
                 $auContainer = $this->em->find(AuContainer::class, $auContainerId);
-                if ( ! $auContainer) {
+                if (! $auContainer) {
                     throw new Exception("Cannot find au container {$row['au_container_id']} for deposit {$row['id']}.");
                 }
                 $deposit->setAuContainer($auContainer);
@@ -312,7 +325,7 @@ class UpgradeCommand extends Command {
             if ($row['deposit_date']) {
                 $deposit->setDepositDate(new DateTime($row['deposit_date']));
             }
-            if ( ! preg_match('|^http://pkp-pln|', $row['deposit_receipt'])) {
+            if (! preg_match('|^http://pkp-pln|', $row['deposit_receipt'])) {
                 $deposit->setDepositReceipt($row['deposit_receipt']);
             }
             $deposit->setProcessingLog($row['processing_log']);
@@ -329,7 +342,8 @@ class UpgradeCommand extends Command {
     /**
      * Upgrade the documents table.
      */
-    public function upgradeDocuments() : void {
+    public function upgradeDocuments(): void
+    {
         $callback = function ($row) {
             $document = new Document();
             $document->setTitle($row['title']);
@@ -342,7 +356,8 @@ class UpgradeCommand extends Command {
         $this->upgradeTable('document', $callback);
     }
 
-    public function upgradeAuContainers() : void {
+    public function upgradeAuContainers(): void
+    {
         $callback = function ($row) {
             $auContainer = new AuContainer();
             $auContainer->setOpen($row['open']);
@@ -360,8 +375,9 @@ class UpgradeCommand extends Command {
      * @throws Exception
      *                   If an error occurred.
      */
-    public function execute(InputInterface $input, OutputInterface $output) : void {
-        if ( ! $input->getOption('force')) {
+    public function execute(InputInterface $input, OutputInterface $output): void
+    {
+        if (! $input->getOption('force')) {
             $output->writeln('Will not run without --force.');
             exit;
         }

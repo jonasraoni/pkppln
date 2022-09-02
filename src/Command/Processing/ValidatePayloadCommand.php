@@ -17,7 +17,8 @@ use Doctrine\ORM\EntityManagerInterface;
 /**
  * Validate the payload checksum.
  */
-class ValidatePayloadCommand extends AbstractProcessingCmd {
+class ValidatePayloadCommand extends AbstractProcessingCmd
+{
     /**
      * Payload validator service.
      */
@@ -26,7 +27,8 @@ class ValidatePayloadCommand extends AbstractProcessingCmd {
     /**
      * Build the command.
      */
-    public function __construct(EntityManagerInterface $em, PayloadValidator $payloadValidator) {
+    public function __construct(EntityManagerInterface $em, PayloadValidator $payloadValidator)
+    {
         parent::__construct($em);
         $this->payloadValidator = $payloadValidator;
     }
@@ -34,7 +36,8 @@ class ValidatePayloadCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    protected function configure() : void {
+    protected function configure(): void
+    {
         $this->setName('pln:validate:payload');
         $this->setDescription('Validate PLN deposit packages.');
         parent::configure();
@@ -43,42 +46,48 @@ class ValidatePayloadCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    protected function processDeposit(Deposit $deposit): null|bool|string {
+    protected function processDeposit(Deposit $deposit): null|bool|string
+    {
         return $this->payloadValidator->processDeposit($deposit);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function nextState(): string {
+    public function nextState(): string
+    {
         return 'payload-validated';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function processingState(): string {
+    public function processingState(): string
+    {
         return 'harvested';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function failureLogMessage(): string {
+    public function failureLogMessage(): string
+    {
         return 'Payload checksum validation failed.';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function successLogMessage(): string {
+    public function successLogMessage(): string
+    {
         return 'Payload checksum validation succeeded.';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function errorState(): string {
+    public function errorState(): string
+    {
         return 'payload-error';
     }
 }

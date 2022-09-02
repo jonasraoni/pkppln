@@ -19,8 +19,10 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * Custom doctrine queries for deposits.
  */
-class DepositRepository extends ServiceEntityRepository {
-    public function __construct(ManagerRegistry $registry) {
+class DepositRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
         parent::__construct($registry, Deposit::class);
     }
 
@@ -29,7 +31,8 @@ class DepositRepository extends ServiceEntityRepository {
      *
      * The query isn't executed here.
      */
-    public function searchQuery(string $q, Journal $journal = null): Query {
+    public function searchQuery(string $q, Journal $journal = null): Query
+    {
         $qb = $this->createQueryBuilder('d');
         $qb->where('CONCAT(d.depositUuid, d.url) LIKE :q');
         $qb->setParameter('q', '%' . $q . '%');
@@ -44,7 +47,8 @@ class DepositRepository extends ServiceEntityRepository {
     /**
      * Summarize deposits by counting them by state.
      */
-    public function stateSummary(): array {
+    public function stateSummary(): array
+    {
         $qb = $this->createQueryBuilder('e');
         $qb->select('e.state, count(e) as ct')
             ->groupBy('e.state')
@@ -61,7 +65,8 @@ class DepositRepository extends ServiceEntityRepository {
      *
      * @return Collection|Deposit[]
      */
-    public function findNew(int $limit = 5): array {
+    public function findNew(int $limit = 5): array
+    {
         $qb = $this->createQueryBuilder('d');
         $qb->orderBy('d.id', 'DESC');
         $qb->setMaxResults($limit);

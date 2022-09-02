@@ -19,7 +19,8 @@ use PHPUnit\Framework\TestCase;
 /**
  * Description of XpathTest.
  */
-class BagReaderTest extends TestCase {
+class BagReaderTest extends TestCase
+{
     /**
      * @var vfsStreamDirectory
      */
@@ -30,12 +31,14 @@ class BagReaderTest extends TestCase {
      */
     private $reader;
 
-    public function testReadBagException() : void {
+    public function testReadBagException(): void
+    {
         $this->expectException(Exception::class);
         $this->reader->readBag($this->root->url() . '/doesnotexist');
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $this->root = vfsStream::setup();
         $this->reader = new BagReader();

@@ -27,7 +27,8 @@ use XMLWriter;
  *
  * @see http://www.editeur.org/127/ONIX-PH/
  */
-class GenerateOnixCommand extends Command {
+class GenerateOnixCommand extends Command
+{
     use LoggerAwareTrait;
 
     public const BATCH_SIZE = 50;
@@ -38,7 +39,8 @@ class GenerateOnixCommand extends Command {
     /**
      * Set the service container, and initialize the command.
      */
-    public function __construct(EntityManagerInterface $em, FilePaths $filePaths, LoggerInterface $logger) {
+    public function __construct(EntityManagerInterface $em, FilePaths $filePaths, LoggerInterface $logger)
+    {
         parent::__construct();
         $this->em = $em;
         $this->filePaths = $filePaths;
@@ -50,7 +52,8 @@ class GenerateOnixCommand extends Command {
      *
      * @return IterableResult|Journal[][]
      */
-    protected function getJournals(): IterableResult {
+    protected function getJournals(): IterableResult
+    {
         $query = $this->em->createQuery('SELECT j FROM App:Journal j');
 
         return $query->iterate();
@@ -59,7 +62,8 @@ class GenerateOnixCommand extends Command {
     /**
      * Generate a CSV file at $filePath.
      */
-    protected function generateCsv(string $filePath) : void {
+    protected function generateCsv(string $filePath): void
+    {
         $handle = fopen($filePath, 'w');
         $iterator = $this->getJournals();
         fputcsv($handle, ['Generated', date('Y-m-d')]);
@@ -106,7 +110,8 @@ class GenerateOnixCommand extends Command {
     /**
      * Generate an XML file at $filePath.
      */
-    protected function generateXml(string $filePath) : void {
+    protected function generateXml(string $filePath): void
+    {
         $iterator = $this->getJournals();
 
         $writer = new XMLWriter();
@@ -134,7 +139,7 @@ class GenerateOnixCommand extends Command {
         foreach ($iterator as $row) {
             $journal = $row[0];
             $deposits = $journal->getSentDeposits();
-            if (! count($deposits)) {
+            if (! \count($deposits)) {
                 $this->em->detach($journal);
 
                 continue;
@@ -230,18 +235,19 @@ class GenerateOnixCommand extends Command {
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output) : void {
+    protected function execute(InputInterface $input, OutputInterface $output): void
+    {
         $this->em->getConnection()->getConfiguration()->setSQLLogger(null);
         ini_set('memory_limit', '512M');
         $files = $input->getArgument('file');
-        if ( ! $files || ! count($files)) {
+        if (! $files || ! \count($files)) {
             $files[] = $this->filePaths->getOnixPath('xml');
             $files[] = $this->filePaths->getOnixPath('csv');
         }
 
         foreach ($files as $file) {
             $this->logger->info("Writing {$file}");
-            $ext = pathinfo($file, PATHINFO_EXTENSION);
+            $ext = pathinfo($file, \PATHINFO_EXTENSION);
             switch ($ext) {
                 case 'xml':
                     $this->generateXml($file);
@@ -262,7 +268,8 @@ class GenerateOnixCommand extends Command {
     /**
      * {@inheritdoc}
      */
-    public function configure() : void {
+    public function configure(): void
+    {
         $this->setName('pln:onix');
         $this->setDescription('Generate ONIX-PH feed.');
         $this->addArgument('file', InputArgument::IS_ARRAY, 'File(s) to write the feed to.');

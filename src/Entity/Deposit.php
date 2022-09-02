@@ -19,11 +19,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Deposit.
  *
  * @ORM\Table(name="deposit", indexes={
- * @ORM\Index(columns={"deposit_uuid", "url"}, flags={"fulltext"})
+ *     @ORM\Index(columns={"deposit_uuid", "url"}, flags={"fulltext"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\DepositRepository")
  */
-class Deposit extends AbstractEntity {
+class Deposit extends AbstractEntity
+{
     /**
      * Default OJS version.
      *
@@ -217,7 +218,8 @@ class Deposit extends AbstractEntity {
     /**
      * Construct a deposit.
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->license = [];
         $this->processingLog = '';
@@ -230,14 +232,16 @@ class Deposit extends AbstractEntity {
     /**
      * Return the deposit UUID.
      */
-    public function __toString() : string {
+    public function __toString(): string
+    {
         return $this->getDepositUuid();
     }
 
     /**
      * Set journalVersion.
      */
-    public function setJournalVersion(string $journalVersion): static {
+    public function setJournalVersion(string $journalVersion): static
+    {
         $this->journalVersion = $journalVersion;
 
         return $this;
@@ -246,14 +250,16 @@ class Deposit extends AbstractEntity {
     /**
      * Get journalVersion.
      */
-    public function getJournalVersion(): string {
+    public function getJournalVersion(): string
+    {
         return $this->journalVersion;
     }
 
     /**
      * Set license.
      */
-    public function setLicense(array $license): static {
+    public function setLicense(array $license): static
+    {
         $this->license = $license;
 
         return $this;
@@ -262,7 +268,8 @@ class Deposit extends AbstractEntity {
     /**
      * Add a bit of licensing information to a deposit.
      */
-    public function addLicense(string $key, string $value): static {
+    public function addLicense(string $key, string $value): static
+    {
         if (trim($value)) {
             $this->license[$key] = trim($value);
         }
@@ -273,14 +280,16 @@ class Deposit extends AbstractEntity {
     /**
      * Get license.
      */
-    public function getLicense(): array {
+    public function getLicense(): array
+    {
         return $this->license;
     }
 
     /**
      * Set fileType.
      */
-    public function setFileType(?string $fileType): static {
+    public function setFileType(?string $fileType): static
+    {
         $this->fileType = $fileType;
 
         return $this;
@@ -289,7 +298,8 @@ class Deposit extends AbstractEntity {
     /**
      * Get fileType.
      */
-    public function getFileType(): ?string {
+    public function getFileType(): ?string
+    {
         return $this->fileType;
     }
 
@@ -298,7 +308,8 @@ class Deposit extends AbstractEntity {
      *
      * UUIDs are stored and returned in upper case letters.
      */
-    public function setDepositUuid(string $depositUuid): static {
+    public function setDepositUuid(string $depositUuid): static
+    {
         $this->depositUuid = strtoupper($depositUuid);
 
         return $this;
@@ -307,21 +318,24 @@ class Deposit extends AbstractEntity {
     /**
      * Get depositUuid.
      */
-    public function getDepositUuid(): string {
+    public function getDepositUuid(): string
+    {
         return $this->depositUuid;
     }
 
     /**
      * Get received.
      */
-    public function getReceived(): DateTimeInterface {
+    public function getReceived(): DateTimeInterface
+    {
         return $this->created;
     }
 
     /**
      * Set action.
      */
-    public function setAction(string $action): static {
+    public function setAction(string $action): static
+    {
         $this->action = $action;
 
         return $this;
@@ -330,14 +344,16 @@ class Deposit extends AbstractEntity {
     /**
      * Get action.
      */
-    public function getAction(): string {
+    public function getAction(): string
+    {
         return $this->action;
     }
 
     /**
      * Set volume.
      */
-    public function setVolume(string $volume): static {
+    public function setVolume(string $volume): static
+    {
         $this->volume = $volume;
 
         return $this;
@@ -346,14 +362,16 @@ class Deposit extends AbstractEntity {
     /**
      * Get volume.
      */
-    public function getVolume(): string {
+    public function getVolume(): string
+    {
         return $this->volume;
     }
 
     /**
      * Set issue.
      */
-    public function setIssue(string $issue): static {
+    public function setIssue(string $issue): static
+    {
         $this->issue = $issue;
 
         return $this;
@@ -362,14 +380,16 @@ class Deposit extends AbstractEntity {
     /**
      * Get issue.
      */
-    public function getIssue(): string {
+    public function getIssue(): string
+    {
         return $this->issue;
     }
 
     /**
      * Set pubDate.
      */
-    public function setPubDate(DateTimeInterface $pubDate): static {
+    public function setPubDate(DateTimeInterface $pubDate): static
+    {
         $this->pubDate = $pubDate;
 
         return $this;
@@ -378,14 +398,16 @@ class Deposit extends AbstractEntity {
     /**
      * Get pubDate.
      */
-    public function getPubDate(): DateTimeInterface {
+    public function getPubDate(): DateTimeInterface
+    {
         return $this->pubDate;
     }
 
     /**
      * Set checksumType.
      */
-    public function setChecksumType(string $checksumType): static {
+    public function setChecksumType(string $checksumType): static
+    {
         $this->checksumType = strtolower($checksumType);
 
         return $this;
@@ -394,14 +416,16 @@ class Deposit extends AbstractEntity {
     /**
      * Get checksumType.
      */
-    public function getChecksumType(): string {
+    public function getChecksumType(): string
+    {
         return $this->checksumType;
     }
 
     /**
      * Set checksumValue.
      */
-    public function setChecksumValue(string $checksumValue): static {
+    public function setChecksumValue(string $checksumValue): static
+    {
         $this->checksumValue = strtoupper($checksumValue);
 
         return $this;
@@ -410,14 +434,16 @@ class Deposit extends AbstractEntity {
     /**
      * Get checksumValue.
      */
-    public function getChecksumValue(): string {
+    public function getChecksumValue(): string
+    {
         return $this->checksumValue;
     }
 
     /**
      * Set url.
      */
-    public function setUrl(string $url): static {
+    public function setUrl(string $url): static
+    {
         $this->url = $url;
 
         return $this;
@@ -426,14 +452,16 @@ class Deposit extends AbstractEntity {
     /**
      * Get url.
      */
-    public function getUrl(): string {
+    public function getUrl(): string
+    {
         return $this->url;
     }
 
     /**
      * Set size.
      */
-    public function setSize(int $size): static {
+    public function setSize(int $size): static
+    {
         $this->size = $size;
 
         return $this;
@@ -442,14 +470,16 @@ class Deposit extends AbstractEntity {
     /**
      * Get size.
      */
-    public function getSize(): int {
+    public function getSize(): int
+    {
         return $this->size;
     }
 
     /**
      * Set state.
      */
-    public function setState(string $state): static {
+    public function setState(string $state): static
+    {
         $this->state = $state;
 
         return $this;
@@ -458,14 +488,16 @@ class Deposit extends AbstractEntity {
     /**
      * Get state.
      */
-    public function getState(): string {
+    public function getState(): string
+    {
         return $this->state;
     }
 
     /**
      * Set errorLog.
      */
-    public function setErrorLog(array $errorLog): static {
+    public function setErrorLog(array $errorLog): static
+    {
         $this->errorLog = $errorLog;
 
         return $this;
@@ -474,7 +506,8 @@ class Deposit extends AbstractEntity {
     /**
      * Get errorLog.
      */
-    public function getErrorLog(?string $delim = null): array|string {
+    public function getErrorLog(?string $delim = null): array|string
+    {
         if ($delim) {
             return implode($delim, $this->errorLog);
         }
@@ -485,7 +518,8 @@ class Deposit extends AbstractEntity {
     /**
      * Add a message to the error log.
      */
-    public function addErrorLog(string $error): static {
+    public function addErrorLog(string $error): static
+    {
         $this->errorLog[] = $error;
 
         return $this;
@@ -494,7 +528,8 @@ class Deposit extends AbstractEntity {
     /**
      * Set plnState.
      */
-    public function setPlnState(?string $plnState): static {
+    public function setPlnState(?string $plnState): static
+    {
         $this->plnState = $plnState;
 
         return $this;
@@ -503,14 +538,16 @@ class Deposit extends AbstractEntity {
     /**
      * Get plnState.
      */
-    public function getPlnState(): ?string {
+    public function getPlnState(): ?string
+    {
         return $this->plnState;
     }
 
     /**
      * Set packageSize.
      */
-    public function setPackageSize(?int $packageSize): static {
+    public function setPackageSize(?int $packageSize): static
+    {
         $this->packageSize = $packageSize;
 
         return $this;
@@ -519,14 +556,16 @@ class Deposit extends AbstractEntity {
     /**
      * Get packageSize.
      */
-    public function getPackageSize(): ?int {
+    public function getPackageSize(): ?int
+    {
         return $this->packageSize;
     }
 
     /**
      * Set packageChecksumType.
      */
-    public function setPackageChecksumType(?string $packageChecksumType): static {
+    public function setPackageChecksumType(?string $packageChecksumType): static
+    {
         if ($packageChecksumType) {
             $this->packageChecksumType = strtolower($packageChecksumType);
         }
@@ -537,14 +576,16 @@ class Deposit extends AbstractEntity {
     /**
      * Get packageChecksumType.
      */
-    public function getPackageChecksumType(): ?string {
+    public function getPackageChecksumType(): ?string
+    {
         return $this->packageChecksumType;
     }
 
     /**
      * Set packageChecksumValue.
      */
-    public function setPackageChecksumValue(?string $packageChecksumValue): static {
+    public function setPackageChecksumValue(?string $packageChecksumValue): static
+    {
         if ($packageChecksumValue) {
             $this->packageChecksumValue = strtoupper($packageChecksumValue);
         }
@@ -555,14 +596,16 @@ class Deposit extends AbstractEntity {
     /**
      * Get packageChecksumValue.
      */
-    public function getPackageChecksumValue(): ?string {
+    public function getPackageChecksumValue(): ?string
+    {
         return $this->packageChecksumValue;
     }
 
     /**
      * Set depositDate.
      */
-    public function setDepositDate(?DateTimeInterface $depositDate): static {
+    public function setDepositDate(?DateTimeInterface $depositDate): static
+    {
         $this->depositDate = $depositDate;
 
         return $this;
@@ -571,14 +614,16 @@ class Deposit extends AbstractEntity {
     /**
      * Get depositDate.
      */
-    public function getDepositDate(): ?DateTimeInterface {
+    public function getDepositDate(): ?DateTimeInterface
+    {
         return $this->depositDate;
     }
 
     /**
      * Set depositReceipt.
      */
-    public function setDepositReceipt(?string $depositReceipt): static {
+    public function setDepositReceipt(?string $depositReceipt): static
+    {
         $this->depositReceipt = $depositReceipt;
 
         return $this;
@@ -587,14 +632,16 @@ class Deposit extends AbstractEntity {
     /**
      * Get depositReceipt.
      */
-    public function getDepositReceipt(): ?string {
+    public function getDepositReceipt(): ?string
+    {
         return $this->depositReceipt;
     }
 
     /**
      * Set processingLog.
      */
-    public function setProcessingLog(string $processingLog): static {
+    public function setProcessingLog(string $processingLog): static
+    {
         $this->processingLog = $processingLog;
 
         return $this;
@@ -603,14 +650,16 @@ class Deposit extends AbstractEntity {
     /**
      * Get processingLog.
      */
-    public function getProcessingLog(): string {
+    public function getProcessingLog(): string
+    {
         return $this->processingLog;
     }
 
     /**
      * Append to the processing history.
      */
-    public function addToProcessingLog(string $content): static {
+    public function addToProcessingLog(string $content): static
+    {
         $date = date(DateTimeInterface::ATOM);
         $this->processingLog .= "{$date}\n{$content}\n\n";
 
@@ -620,7 +669,8 @@ class Deposit extends AbstractEntity {
     /**
      * Set harvestAttempts.
      */
-    public function setHarvestAttempts(int $harvestAttempts): static {
+    public function setHarvestAttempts(int $harvestAttempts): static
+    {
         $this->harvestAttempts = $harvestAttempts;
 
         return $this;
@@ -629,14 +679,16 @@ class Deposit extends AbstractEntity {
     /**
      * Get harvestAttempts.
      */
-    public function getHarvestAttempts(): int {
+    public function getHarvestAttempts(): int
+    {
         return $this->harvestAttempts;
     }
 
     /**
      * Set journal.
      */
-    public function setJournal(Journal $journal = null): static {
+    public function setJournal(Journal $journal = null): static
+    {
         $this->journal = $journal;
 
         return $this;
@@ -645,14 +697,16 @@ class Deposit extends AbstractEntity {
     /**
      * Get journal.
      */
-    public function getJournal(): Journal {
+    public function getJournal(): Journal
+    {
         return $this->journal;
     }
 
     /**
      * Set auContainer.
      */
-    public function setAuContainer(AuContainer $auContainer = null): static {
+    public function setAuContainer(AuContainer $auContainer = null): static
+    {
         $this->auContainer = $auContainer;
 
         return $this;
@@ -661,7 +715,8 @@ class Deposit extends AbstractEntity {
     /**
      * Get auContainer.
      */
-    public function getAuContainer(): AuContainer {
+    public function getAuContainer(): AuContainer
+    {
         return $this->auContainer;
     }
 }

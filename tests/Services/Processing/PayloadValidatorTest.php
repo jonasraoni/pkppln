@@ -22,7 +22,8 @@ use org\bovigo\vfs\vfsStreamDirectory;
 /**
  * Description of PayloadValidatorTest.
  */
-class PayloadValidatorTest extends BaseControllerTestCase {
+class PayloadValidatorTest extends BaseControllerTestCase
+{
     /**
      * @var PayloadValidator
      */
@@ -33,7 +34,8 @@ class PayloadValidatorTest extends BaseControllerTestCase {
      */
     private $root;
 
-    public function testInstance() : void {
+    public function testInstance(): void
+    {
         $this->assertInstanceOf(PayloadValidator::class, $this->validator);
     }
 
@@ -44,12 +46,14 @@ class PayloadValidatorTest extends BaseControllerTestCase {
      * @param mixed $name
      * @param mixed $data
      */
-    public function testHashFile($alg, $name, $data) : void {
+    public function testHashFile($alg, $name, $data): void
+    {
         $file = vfsStream::newFile('deposit.zip')->withContent($data)->at($this->root);
         $this->assertSame(strtoupper(hash($alg, $data)), $this->validator->hashFile($name, $file->url()));
     }
 
-    public function hashFileData() {
+    public function hashFileData()
+    {
         return [
             ['sha1', 'sha-1', 'some data.'],
             ['sha1', 'sha1', 'some data.'],
@@ -59,13 +63,15 @@ class PayloadValidatorTest extends BaseControllerTestCase {
         ];
     }
 
-    public function testHashFileException() : void {
+    public function testHashFileException(): void
+    {
         $this->expectException(Exception::class);
         $file = vfsStream::newFile('deposit.zip')->withContent('some data.')->at($this->root);
         $this->validator->hashFile('cheese', $file->url());
     }
 
-    public function testProcessDeposit() : void {
+    public function testProcessDeposit(): void
+    {
         $file = vfsStream::newFile('deposit.zip')->withContent('some data.')->at($this->root);
 
         $filePaths = $this->createMock(FilePaths::class);
@@ -85,7 +91,8 @@ class PayloadValidatorTest extends BaseControllerTestCase {
         $this->assertSame('', $deposit->getProcessingLog());
     }
 
-    public function testProcessDepositChecksumMismatch() : void {
+    public function testProcessDepositChecksumMismatch(): void
+    {
         $file = vfsStream::newFile('deposit.zip')->withContent('some data.')->at($this->root);
 
         $filePaths = $this->createMock(FilePaths::class);
@@ -105,7 +112,8 @@ class PayloadValidatorTest extends BaseControllerTestCase {
         $this->assertStringContainsStringIgnoringCase('Deposit checksum does not match', $deposit->getProcessingLog());
     }
 
-    public function testProcessDepositChecksumUnknown() : void {
+    public function testProcessDepositChecksumUnknown(): void
+    {
         $file = vfsStream::newFile('deposit.zip')->withContent('some data.')->at($this->root);
 
         $filePaths = $this->createMock(FilePaths::class);
@@ -125,7 +133,8 @@ class PayloadValidatorTest extends BaseControllerTestCase {
         $this->assertStringContainsStringIgnoringCase('Unknown hash algorithm cheese', $deposit->getProcessingLog());
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $this->validator = self::$container->get(PayloadValidator::class);
         $this->root = vfsStream::setup();

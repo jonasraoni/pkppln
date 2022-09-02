@@ -28,7 +28,8 @@ use Symfony\Component\Routing\Annotation\Route;
  * @Security("is_granted('ROLE_USER')")
  * @Route("/journal")
  */
-class JournalController extends AbstractController implements PaginatorAwareInterface {
+class JournalController extends AbstractController implements PaginatorAwareInterface
+{
     use PaginatorTrait;
 
     /**
@@ -36,9 +37,10 @@ class JournalController extends AbstractController implements PaginatorAwareInte
      *
      * @Route("/", name="journal_index", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
-    public function indexAction(Request $request): array {
+    public function indexAction(Request $request): array
+    {
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Journal::class, 'e')->orderBy('e.id', 'ASC');
@@ -60,9 +62,10 @@ class JournalController extends AbstractController implements PaginatorAwareInte
      *
      * @Route("/search", name="journal_search", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
-    public function searchAction(Request $request) {
+    public function searchAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Journal::class);
         $q = $request->query->get('q');
@@ -85,9 +88,10 @@ class JournalController extends AbstractController implements PaginatorAwareInte
      *
      * @Route("/{id}", name="journal_show", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
-    public function showAction(Journal $journal, BlackWhiteList $list): array {
+    public function showAction(Journal $journal, BlackWhiteList $list): array
+    {
         return [
             'journal' => $journal,
             'list' => $list,
@@ -99,9 +103,10 @@ class JournalController extends AbstractController implements PaginatorAwareInte
      *
      * @Route("/{id}/ping", name="journal_ping", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
-    public function pingAction(Journal $journal, Ping $ping, EntityManagerInterface $em): array {
+    public function pingAction(Journal $journal, Ping $ping, EntityManagerInterface $em): array
+    {
         $result = $ping->ping($journal);
         $em->flush();
 

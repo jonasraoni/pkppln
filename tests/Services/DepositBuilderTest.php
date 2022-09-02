@@ -21,14 +21,16 @@ use DateTimeInterface;
 /**
  * Description of DepositBuilderTest.
  */
-class DepositBuilderTest extends BaseControllerTestCase {
+class DepositBuilderTest extends BaseControllerTestCase
+{
     private Deposit $deposit;
 
-    private function getXml() {
+    private function getXml()
+    {
         $data = <<<'ENDXML'
 <?xml version="1.0" encoding="utf-8"?>
-<entry xmlns="http://www.w3.org/2005/Atom" 
-       xmlns:dcterms="http://purl.org/dc/terms/" 
+<entry xmlns="http://www.w3.org/2005/Atom"
+       xmlns:dcterms="http://purl.org/dc/terms/"
        xmlns:pkp="http://pkp.sfu.ca/SWORD">
 	<email>user@example.com</email>
 	<title>Intl J Test</title>
@@ -38,14 +40,14 @@ class DepositBuilderTest extends BaseControllerTestCase {
 	<pkp:issn>0000-0000</pkp:issn>
 	<id>urn:uuid:00FD6D96-0155-43A4-97F7-2C6EE8EBFF09</id>
 	<updated>1996-12-31T16:00:00Z</updated>
-	<pkp:content size="3613" volume="44" issue="4" pubdate="2015-07-14" 
+	<pkp:content size="3613" volume="44" issue="4" pubdate="2015-07-14"
             checksumType="SHA-1" checksumValue="25b0bd51bb05c145672617fced484c9e71ec553b">
             http://example.com//00FD6D96-0155-43A4-97F7-2C6EE8EBFF09
         </pkp:content>
 	<pkp:license>
             <pkp:publishingMode mode="0">Open</pkp:publishingMode>
 	</pkp:license>
-</entry>   
+</entry>
 ENDXML;
         $xml = simplexml_load_string($data);
         Namespaces::registerNamespaces($xml);
@@ -53,26 +55,31 @@ ENDXML;
         return $xml;
     }
 
-    public function fixtures() : array {
+    public function fixtures(): array
+    {
         return [
             JournalFixtures::class,
             DepositFixtures::class,
         ];
     }
 
-    public function testInstance() : void {
+    public function testInstance(): void
+    {
         $this->assertInstanceOf(DepositBuilder::class, self::$container->get(DepositBuilder::class));
     }
 
-    public function testBuildInstance() : void {
+    public function testBuildInstance(): void
+    {
         $this->assertInstanceOf(Deposit::class, $this->deposit);
     }
 
-    public function testReceived() : void {
+    public function testReceived(): void
+    {
         $this->assertInstanceOf(DateTimeInterface::class, $this->deposit->getReceived());
     }
 
-    public function testProcessingLog() : void {
+    public function testProcessingLog(): void
+    {
         $this->assertStringEndsWith("Deposit received.\n\n", $this->deposit->getProcessingLog());
     }
 
@@ -82,11 +89,13 @@ ENDXML;
      * @param mixed $expected
      * @param mixed $method
      */
-    public function testNewDeposit($expected, $method) : void {
+    public function testNewDeposit($expected, $method): void
+    {
         $this->assertSame($expected, $this->deposit->{$method}());
     }
 
-    public function depositData() {
+    public function depositData()
+    {
         return [
             ['2.4.8', 'getJournalVersion'],
             [['publishingMode' => 'Open'], 'getLicense'],
@@ -110,7 +119,8 @@ ENDXML;
         ];
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $builder = self::$container->get(DepositBuilder::class);
         $this->deposit = $builder->fromXml($this->getReference('journal.1'), $this->getXml());

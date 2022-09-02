@@ -23,7 +23,8 @@ use Symfony\Component\Filesystem\Filesystem;
  * Attempts to check file sizes via HTTP HEAD before downloading, and checks
  * that there will be sufficient disk space.
  */
-class Harvester {
+class Harvester
+{
     /**
      * Configuration for the harvester client.
      */
@@ -73,7 +74,8 @@ class Harvester {
     /**
      * Construct the harvester.
      */
-    public function __construct(int $maxHarvestAttempts, FilePaths $filePaths) {
+    public function __construct(int $maxHarvestAttempts, FilePaths $filePaths)
+    {
         $this->maxAttempts = $maxHarvestAttempts;
         $this->filePaths = $filePaths;
         $this->fs = new Filesystem();
@@ -83,14 +85,16 @@ class Harvester {
     /**
      * Override the HTTP client, usually based on Guzzle.
      */
-    public function setClient(Client $client) : void {
+    public function setClient(Client $client): void
+    {
         $this->client = $client;
     }
 
     /**
      * Override the file system client.
      */
-    public function setFilesystem(Filesystem $fs) : void {
+    public function setFilesystem(Filesystem $fs): void
+    {
         $this->fs = $fs;
     }
 
@@ -99,7 +103,8 @@ class Harvester {
      *
      * Returns true on success and false on failure.
      */
-    public function writeDeposit(string $path, ResponseInterface $response): bool {
+    public function writeDeposit(string $path, ResponseInterface $response): bool
+    {
         $body = $response->getBody();
         if (! $body->getSize()) {
             throw new Exception('Response body was empty.');
@@ -126,7 +131,8 @@ class Harvester {
      *
      * @throws Exception If the HTTP status code isn't 200, throw an error.
      */
-    public function fetchDeposit(string $url): ResponseInterface {
+    public function fetchDeposit(string $url): ResponseInterface
+    {
         $response = $this->client->get($url);
         if (200 !== $response->getStatusCode()) {
             throw new Exception("Harvest download error - HTTP {$response->getStatusCode()} - {$response->getReasonPhrase()} - {$url}");
@@ -140,7 +146,8 @@ class Harvester {
      *
      * @throws Exception If the HEAD request status code isn't 200, throw an exception.
      */
-    public function checkSize(Deposit $deposit) : void {
+    public function checkSize(Deposit $deposit): void
+    {
         $response = $this->client->head($deposit->getUrl());
         if (200 !== $response->getStatusCode() || ! $response->hasHeader('Content-Length')) {
             throw new Exception("HTTP HEAD request cannot check file size: HTTP {$response->getStatusCode()} - {$response->getReasonPhrase()} - {$deposit->getUrl()}");
@@ -162,7 +169,8 @@ class Harvester {
      *
      * Fetch the data and write it to the file system.
      */
-    public function processDeposit(Deposit $deposit): ?bool {
+    public function processDeposit(Deposit $deposit): ?bool
+    {
         if ($deposit->getHarvestAttempts() > $this->maxAttempts) {
             $deposit->setState('harvest-error');
 

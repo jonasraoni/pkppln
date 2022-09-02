@@ -16,7 +16,8 @@ use App\Services\FilePaths;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
-class FilePathsTest extends TestCase {
+class FilePathsTest extends TestCase
+{
     /**
      * @dataProvider rootDirData
      *
@@ -24,12 +25,14 @@ class FilePathsTest extends TestCase {
      * @param mixed $rootDir
      * @param mixed $projectDir
      */
-    public function testRootDir($expected, $rootDir, $projectDir) : void {
+    public function testRootDir($expected, $rootDir, $projectDir): void
+    {
         $fp = new FilePaths($rootDir, $projectDir);
         $this->assertSame($expected, $fp->getRootPath());
     }
 
-    public function rootDirData() {
+    public function rootDirData()
+    {
         return [
             ['', '', ''],
             ['/path/to/data', '/path/to/data', '/path/to/project'],
@@ -37,7 +40,8 @@ class FilePathsTest extends TestCase {
         ];
     }
 
-    public function testGetRestoreDir() : void {
+    public function testGetRestoreDir(): void
+    {
         $mock = $this->createMock(Filesystem::class);
         $mock->method('exists')->willReturn(true);
         $fp = new FilePaths('/data', '/path/', $mock);
@@ -46,7 +50,8 @@ class FilePathsTest extends TestCase {
         $this->assertSame('/data/restore/ABC123', $fp->getRestoreDir($journal));
     }
 
-    public function testGetRestoreDirNew() : void {
+    public function testGetRestoreDirNew(): void
+    {
         $mock = $this->createMock(Filesystem::class);
         $mock->method('exists')->willReturn(false);
         $mock->method('mkdir')->willReturn(true);
@@ -56,7 +61,8 @@ class FilePathsTest extends TestCase {
         $this->assertSame('/data/restore/ABC123', $fp->getRestoreDir($journal));
     }
 
-    public function testGetRestoreFile() : void {
+    public function testGetRestoreFile(): void
+    {
         $mock = $this->createMock(Filesystem::class);
         $mock->method('exists')->willReturn(true);
         $fp = new FilePaths('/data', '/path/', $mock);
@@ -68,7 +74,8 @@ class FilePathsTest extends TestCase {
         $this->assertSame('/data/restore/ABC123/DEF456.zip', $fp->getRestoreFile($deposit));
     }
 
-    public function testGetHarvestDir() : void {
+    public function testGetHarvestDir(): void
+    {
         $mock = $this->createMock(Filesystem::class);
         $mock->method('exists')->willReturn(true);
         $fp = new FilePaths('/data', '/path/', $mock);
@@ -77,7 +84,8 @@ class FilePathsTest extends TestCase {
         $this->assertSame('/data/harvest/ABC123', $fp->getHarvestDir($journal));
     }
 
-    public function testGetHarvestDirNew() : void {
+    public function testGetHarvestDirNew(): void
+    {
         $mock = $this->createMock(Filesystem::class);
         $mock->method('exists')->willReturn(false);
         $mock->method('mkdir')->willReturn(true);
@@ -87,7 +95,8 @@ class FilePathsTest extends TestCase {
         $this->assertSame('/data/harvest/ABC123', $fp->getHarvestDir($journal));
     }
 
-    public function testGetHarvestFile() : void {
+    public function testGetHarvestFile(): void
+    {
         $mock = $this->createMock(Filesystem::class);
         $mock->method('exists')->willReturn(true);
         $fp = new FilePaths('/data', '/path/', $mock);
@@ -99,7 +108,8 @@ class FilePathsTest extends TestCase {
         $this->assertSame('/data/harvest/ABC123/DEF456.zip', $fp->getHarvestFile($deposit));
     }
 
-    public function testGetProcessingDir() : void {
+    public function testGetProcessingDir(): void
+    {
         $mock = $this->createMock(Filesystem::class);
         $mock->method('exists')->willReturn(true);
         $fp = new FilePaths('/data', '/path/', $mock);
@@ -108,7 +118,8 @@ class FilePathsTest extends TestCase {
         $this->assertSame('/data/processing/ABC123', $fp->getProcessingDir($journal));
     }
 
-    public function testGetProcessingDirNew() : void {
+    public function testGetProcessingDirNew(): void
+    {
         $mock = $this->createMock(Filesystem::class);
         $mock->method('exists')->willReturn(false);
         $mock->method('mkdir')->willReturn(true);
@@ -118,7 +129,8 @@ class FilePathsTest extends TestCase {
         $this->assertSame('/data/processing/ABC123', $fp->getProcessingDir($journal));
     }
 
-    public function testGetProcessingBagPath() : void {
+    public function testGetProcessingBagPath(): void
+    {
         $mock = $this->createMock(Filesystem::class);
         $mock->method('exists')->willReturn(true);
         $fp = new FilePaths('/data', '/path/', $mock);
@@ -130,7 +142,8 @@ class FilePathsTest extends TestCase {
         $this->assertSame('/data/processing/ABC123/DEF456', $fp->getProcessingBagPath($deposit));
     }
 
-    public function testGetProcessingBagPathNew() : void {
+    public function testGetProcessingBagPathNew(): void
+    {
         $mock = $this->createMock(Filesystem::class);
         $mock->method('exists')->willReturn(false);
         $mock->method('mkdir')->willReturn(false);
@@ -143,7 +156,8 @@ class FilePathsTest extends TestCase {
         $this->assertSame('/data/processing/ABC123/DEF456', $fp->getProcessingBagPath($deposit));
     }
 
-    public function testGetStagingDir() : void {
+    public function testGetStagingDir(): void
+    {
         $mock = $this->createMock(Filesystem::class);
         $mock->method('exists')->willReturn(true);
         $fp = new FilePaths('/data', '/path/', $mock);
@@ -152,7 +166,8 @@ class FilePathsTest extends TestCase {
         $this->assertSame('/data/staged/ABC123', $fp->getStagingDir($journal));
     }
 
-    public function testGetStagingDirNew() : void {
+    public function testGetStagingDirNew(): void
+    {
         $mock = $this->createMock(Filesystem::class);
         $mock->method('exists')->willReturn(false);
         $mock->method('exists')->willReturn(true);
@@ -162,7 +177,8 @@ class FilePathsTest extends TestCase {
         $this->assertSame('/data/staged/ABC123', $fp->getStagingDir($journal));
     }
 
-    public function testGetStagingBagPath() : void {
+    public function testGetStagingBagPath(): void
+    {
         $mock = $this->createMock(Filesystem::class);
         $mock->method('exists')->willReturn(true);
         $fp = new FilePaths('/data', '/path/', $mock);
@@ -174,7 +190,8 @@ class FilePathsTest extends TestCase {
         $this->assertSame('/data/staged/ABC123/DEF456.zip', $fp->getStagingBagPath($deposit));
     }
 
-    public function testGetOnixPath() : void {
+    public function testGetOnixPath(): void
+    {
         $fp = new FilePaths('/data', '/path/');
         $this->assertSame('/data/onix.xml', $fp->getOnixPath());
     }

@@ -19,50 +19,59 @@ use App\Tests\TestCase\BaseControllerTestCase;
 /**
  * Description of DepositRepositoryTest.
  */
-class DepositRepositoryTest extends BaseControllerTestCase {
+class DepositRepositoryTest extends BaseControllerTestCase
+{
     /**
      * @return DepositRepository
      */
     private $repo;
 
-    protected function fixtures() : array {
+    protected function fixtures(): array
+    {
         return [
             DepositFixtures::class,
             JournalFixtures::class,
         ];
     }
 
-    public function testSearchQueryUuid() : void {
+    public function testSearchQueryUuid(): void
+    {
         $result = $this->repo->searchQuery('A584');
-        $this->assertSame(1, count($result->execute()));
+        $this->assertCount(1, $result->execute());
     }
 
-    public function testSearchQueryUrl() : void {
+    public function testSearchQueryUrl(): void
+    {
         $result = $this->repo->searchQuery('1.zip');
-        $this->assertSame(1, count($result->execute()));
+        $this->assertCount(1, $result->execute());
     }
 
-    public function testSearchQueryUuidWithJournal() : void {
+    public function testSearchQueryUuidWithJournal(): void
+    {
         $result = $this->repo->searchQuery('A584', $this->getReference('journal.1'));
-        $this->assertSame(1, count($result->execute()));
+        $this->assertCount(1, $result->execute());
     }
 
-    public function testSearchQueryUrlWithJorunal() : void {
+    public function testSearchQueryUrlWithJorunal(): void
+    {
         $result = $this->repo->searchQuery('1.zip', $this->getReference('journal.1'));
-        $this->assertSame(1, count($result->execute()));
+        $this->assertCount(1, $result->execute());
     }
 
-    public function testSearchQueryUuidWithOtherJournal() : void {
+    public function testSearchQueryUuidWithOtherJournal(): void
+    {
         $result = $this->repo->searchQuery('A584', $this->getReference('journal.2'));
-        $this->assertSame(0, count($result->execute()));
+        $this->assertCount(0, $result->execute());
     }
 
-    public function testSearchQueryUrlWithOtherJorunal() : void {
+    public function testSearchQueryUrlWithOtherJorunal(): void
+    {
         $result = $this->repo->searchQuery('1.zip', $this->getReference('journal.2'));
-        $this->assertSame(0, count($result->execute()));
+        $this->assertCount(0, $result->execute());
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $this->repo = $this->em->getRepository(Deposit::class);
     }

@@ -24,7 +24,8 @@ use Xenolope\Quahog\Result;
 /**
  * Virus scanning service, via ClamAV.
  */
-class VirusScanner {
+class VirusScanner
+{
     /**
      * Buffer size for extracting embedded files.
      */
@@ -45,7 +46,8 @@ class VirusScanner {
     /**
      * Construct the virus scanner.
      */
-    public function __construct(string $socketPath, FilePaths $filePaths) {
+    public function __construct(string $socketPath, FilePaths $filePaths)
+    {
         $this->filePaths = $filePaths;
         $this->socketPath = $socketPath;
         $this->bufferSize = self::BUFFER_SIZE;
@@ -55,7 +57,8 @@ class VirusScanner {
     /**
      * Set the socket factory.
      */
-    public function setFactory(Factory $factory) : void {
+    public function setFactory(Factory $factory): void
+    {
         $this->factory = $factory;
     }
 
@@ -67,9 +70,10 @@ class VirusScanner {
      * fail. Symfony tries to instantiate all services for each request, and if
      * one constructor throws an exception everything gets cranky.
      */
-    public function getClient(): Client {
+    public function getClient(): Client
+    {
         $socket = $this->factory->createClient('unix://' . $this->socketPath);
-        $client = new Client($socket, 30, PHP_NORMAL_READ);
+        $client = new Client($socket, 30, \PHP_NORMAL_READ);
         $client->startSession();
 
         return $client;
@@ -78,7 +82,8 @@ class VirusScanner {
     /**
      * Scan an embedded file.
      */
-    public function scanEmbed(DOMElement $embed, DOMXpath $xp, Client $client): Result {
+    public function scanEmbed(DOMElement $embed, DOMXpath $xp, Client $client): Result
+    {
         $length = $xp->evaluate('string-length(./text())', $embed);
         // Xpath starts at 1.
         $offset = 1;
@@ -100,7 +105,8 @@ class VirusScanner {
      *
      * @return string[]
      */
-    public function scanXmlFile(string $pathname, Client $client, XmlParser $parser = null): array {
+    public function scanXmlFile(string $pathname, Client $client, XmlParser $parser = null): array
+    {
         $parser ??= new XmlParser();
         $dom = $parser->fromFile($pathname);
         $xp = new DOMXPath($dom);
@@ -119,11 +125,12 @@ class VirusScanner {
      *
      * @return string[]
      */
-    public function scanArchiveFiles(PharData $phar, Client $client, Deposit $deposit): array {
+    public function scanArchiveFiles(PharData $phar, Client $client, Deposit $deposit): array
+    {
         $depositXML = '/data/' . 'Issue' . $deposit->getDepositUuid() . '.xml';
         $results = [];
         foreach (new RecursiveIteratorIterator($phar) as $file) {
-            $fh = fopen($file->getPathname(), 'rb');
+            $fh = fopen($file->getPathname(), 'r');
             $r = $client->scanResourceStream($fh);
             fclose($fh);
             $results[] = $this->getStatusMessage($r, $file->getFileName());
@@ -138,7 +145,8 @@ class VirusScanner {
     /**
      * Process one deposit.
      */
-    public function processDeposit(Deposit $deposit, Client $client = null): bool {
+    public function processDeposit(Deposit $deposit, Client $client = null): bool
+    {
         if (null === $client) {
             $client = $this->getClient();
         }
@@ -159,7 +167,8 @@ class VirusScanner {
     /**
      * Retrieves the status message of a scan
      */
-    private function getStatusMessage(Result $result, string $filename): string {
+    private function getStatusMessage(Result $result, string $filename): string
+    {
         $status = $result->isOk() ? Client::RESULT_OK : ($result->isFound() ? Client::RESULT_FOUND : Client::RESULT_ERROR);
         $reason = $result->isOk() ? '' : ": {$result->getReason()}";
         return "{$filename} {$status}{$reason}";

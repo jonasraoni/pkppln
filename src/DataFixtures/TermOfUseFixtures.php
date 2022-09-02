@@ -17,11 +17,13 @@ use Doctrine\Persistence\ObjectManager;
 /**
  * LoadTermOfUse form.
  */
-class TermOfUseFixtures extends Fixture {
+class TermOfUseFixtures extends Fixture
+{
     /**
      * {@inheritdoc}
      */
-    public function load(ObjectManager $em) : void {
+    public function load(ObjectManager $em): void
+    {
         for ($i = 0; $i < 4; $i++) {
             $fixture = new TermOfUse();
             $fixture->setWeight(4 - $i);

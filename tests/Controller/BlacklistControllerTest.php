@@ -15,44 +15,49 @@ use App\Entity\Blacklist;
 use Nines\UserBundle\DataFixtures\UserFixtures;
 use App\Tests\TestCase\BaseControllerTestCase;
 
-class BlacklistControllerTest extends BaseControllerTestCase {
-    protected function fixtures() : array {
+class BlacklistControllerTest extends BaseControllerTestCase
+{
+    protected function fixtures(): array
+    {
         return [
             UserFixtures::class,
             BlacklistFixtures::class,
         ];
     }
 
-    public function testAnonIndex() : void {
-
+    public function testAnonIndex(): void
+    {
         $crawler = $this->client->request('GET', '/blacklist/');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertSame(0, $crawler->selectLink('New')->count());
     }
 
-    public function testUserIndex() : void {
+    public function testUserIndex(): void
+    {
         $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/blacklist/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(0, $crawler->selectLink('New')->count());
     }
 
-    public function testAdminIndex() : void {
+    public function testAdminIndex(): void
+    {
         $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/blacklist/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->selectLink('New')->count());
     }
 
-    public function testAnonShow() : void {
-
+    public function testAnonShow(): void
+    {
         $crawler = $this->client->request('GET', '/blacklist/1');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertSame(0, $crawler->selectLink('Edit')->count());
         $this->assertSame(0, $crawler->selectLink('Delete')->count());
     }
 
-    public function testUserShow() : void {
+    public function testUserShow(): void
+    {
         $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/blacklist/1');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
@@ -60,7 +65,8 @@ class BlacklistControllerTest extends BaseControllerTestCase {
         $this->assertSame(0, $crawler->selectLink('Delete')->count());
     }
 
-    public function testAdminShow() : void {
+    public function testAdminShow(): void
+    {
         $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/blacklist/1');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
@@ -68,14 +74,15 @@ class BlacklistControllerTest extends BaseControllerTestCase {
         $this->assertSame(1, $crawler->selectLink('Delete')->count());
     }
 
-    public function testAnonSearch() : void {
-
+    public function testAnonSearch(): void
+    {
         $formCrawler = $this->client->request('GET', '/blacklist/search');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($this->client->getResponse()->isRedirect());
     }
 
-    public function testUserSearch() : void {
+    public function testUserSearch(): void
+    {
         $this->login(UserFixtures::USER);
         $formCrawler = $this->client->request('GET', '/blacklist/search');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
@@ -87,7 +94,8 @@ class BlacklistControllerTest extends BaseControllerTestCase {
         $this->assertSame(1, $this->client->getCrawler()->filter('td:contains("AC54ED1A-9795-4EED-94FD-D80CB62E0C84")')->count());
     }
 
-    public function testAdminSearch() : void {
+    public function testAdminSearch(): void
+    {
         $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/blacklist/search');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
@@ -99,19 +107,22 @@ class BlacklistControllerTest extends BaseControllerTestCase {
         $this->assertSame(1, $this->client->getCrawler()->filter('td:contains("AC54ED1A-9795-4EED-94FD-D80CB62E0C84")')->count());
     }
 
-    public function testAnonEdit() : void {
+    public function testAnonEdit(): void
+    {
         $crawler = $this->client->request('GET', '/blacklist/1/edit');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($this->client->getResponse()->isRedirect());
     }
 
-    public function testUserEdit() : void {
+    public function testUserEdit(): void
+    {
         $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/blacklist/1/edit');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testAdminEdit() : void {
+    public function testAdminEdit(): void
+    {
         $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/blacklist/1/edit');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
@@ -128,20 +139,22 @@ class BlacklistControllerTest extends BaseControllerTestCase {
         $this->assertSame(1, $responseCrawler->filter('td:contains("77E72F60-67B0-43AE-95FF-14F16BBF4B30")')->count());
     }
 
-    public function testAnonNew() : void {
-
+    public function testAnonNew(): void
+    {
         $crawler = $this->client->request('GET', '/blacklist/new');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($this->client->getResponse()->isRedirect());
     }
 
-    public function testUserNew() : void {
+    public function testUserNew(): void
+    {
         $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/blacklist/new');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testAdminNew() : void {
+    public function testAdminNew(): void
+    {
         $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/blacklist/new');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
@@ -158,21 +171,23 @@ class BlacklistControllerTest extends BaseControllerTestCase {
         $this->assertSame(1, $responseCrawler->filter('td:contains("77E72F60-67B0-43AE-95FF-14F16BBF4B30")')->count());
     }
 
-    public function testAnonDelete() : void {
-
+    public function testAnonDelete(): void
+    {
         $crawler = $this->client->request('GET', '/blacklist/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($this->client->getResponse()->isRedirect());
     }
 
-    public function testUserDelete() : void {
+    public function testUserDelete(): void
+    {
         $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/blacklist/1/delete');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testAdminDelete() : void {
-        $preCount = count($this->em->getRepository(Blacklist::class)->findAll());
+    public function testAdminDelete(): void
+    {
+        $preCount = \count($this->em->getRepository(Blacklist::class)->findAll());
         $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/blacklist/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
@@ -181,7 +196,7 @@ class BlacklistControllerTest extends BaseControllerTestCase {
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
         $this->em->clear();
-        $postCount = count($this->em->getRepository(Blacklist::class)->findAll());
+        $postCount = \count($this->em->getRepository(Blacklist::class)->findAll());
         $this->assertSame($preCount - 1, $postCount);
     }
 }

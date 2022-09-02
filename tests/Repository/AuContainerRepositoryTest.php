@@ -13,26 +13,30 @@ namespace App\Entity;
 use App\DataFixtures\AuContainerFixtures;
 use App\Tests\TestCase\BaseControllerTestCase;
 
-class AuContainerRepositoryTest extends BaseControllerTestCase {
+class AuContainerRepositoryTest extends BaseControllerTestCase
+{
     /**
      * @var AuContainer
      */
     protected $repository;
 
-    public function testGetOpenContainer() : void {
+    public function testGetOpenContainer(): void
+    {
         $c = $this->repository->getOpenContainer();
         $this->assertInstanceOf('App\Entity\AuContainer', $c);
-        $this->assertSame(true, $c->isOpen());
+        $this->assertTrue($c->isOpen());
         $this->assertSame(2, $c->getId());
     }
 
-    public function fixtures() : array {
+    public function fixtures(): array
+    {
         return [
             AuContainerFixtures::class,
         ];
     }
 
-    public function setUp() : void {
+    protected function setUp(): void
+    {
         parent::setUp();
         $this->repository = $this->em->getRepository('App:AuContainer');
     }

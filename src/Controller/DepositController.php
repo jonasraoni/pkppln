@@ -26,9 +26,10 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Security("is_granted('ROLE_USER')")
  * @Route("/journal/{journalId}/deposit")
- * @ParamConverter("journal", options={"id"="journalId"})
+ * @ParamConverter("journal", options={"id": "journalId"})
  */
-class DepositController extends AbstractController implements PaginatorAwareInterface {
+class DepositController extends AbstractController implements PaginatorAwareInterface
+{
     use PaginatorTrait;
 
     /**
@@ -36,9 +37,10 @@ class DepositController extends AbstractController implements PaginatorAwareInte
      *
      * @Route("/", name="deposit_index", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
-    public function indexAction(Request $request, Journal $journal): array {
+    public function indexAction(Request $request, Journal $journal): array
+    {
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Deposit::class, 'e')->where('e.journal = :journal')->orderBy('e.id', 'ASC')->setParameter('journal', $journal);
@@ -62,9 +64,10 @@ class DepositController extends AbstractController implements PaginatorAwareInte
      * @Route("/search", name="deposit_search", methods={"GET"})
      *
      * @Security("is_granted('ROLE_USER')")
-     * @Template()
+     * @Template
      */
-    public function searchAction(Request $request, Journal $journal) {
+    public function searchAction(Request $request, Journal $journal)
+    {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Deposit::class);
         $q = $request->query->get('q');
@@ -88,9 +91,10 @@ class DepositController extends AbstractController implements PaginatorAwareInte
      *
      * @Route("/{id}", name="deposit_show", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
-    public function showAction(Journal $journal, Deposit $deposit): array {
+    public function showAction(Journal $journal, Deposit $deposit): array
+    {
         return [
             'journal' => $journal,
             'deposit' => $deposit,

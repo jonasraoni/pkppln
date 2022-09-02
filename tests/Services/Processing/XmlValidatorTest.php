@@ -16,17 +16,20 @@ use App\Tests\TestCase\BaseControllerTestCase;
 /**
  * Description of PayloadValidatorTest.
  */
-class XmlValidatorTest extends BaseControllerTestCase {
+class XmlValidatorTest extends BaseControllerTestCase
+{
     /**
      * @var XmlValidator
      */
     private $validator;
 
-    public function testInstance() : void {
+    public function testInstance(): void
+    {
         $this->assertInstanceOf(XmlValidator::class, $this->validator);
     }
 
-    public function testReportErrors() : void {
+    public function testReportErrors(): void
+    {
         $errors = [
             ['line' => 1, 'message' => 'bad things happend.'],
             ['line' => 3, 'message' => 'good things happend.'],
@@ -38,7 +41,8 @@ class XmlValidatorTest extends BaseControllerTestCase {
         $this->assertStringContainsStringIgnoringCase('On line 3: good things happend.', $report);
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $this->validator = self::$container->get(XmlValidator::class);
     }

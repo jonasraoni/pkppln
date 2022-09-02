@@ -21,16 +21,18 @@ use App\Tests\TestCase\BaseControllerTestCase;
 use SimpleXMLElement;
 use Symfony\Component\BrowserKit\Client;
 
-abstract class AbstractSwordTestCase extends BaseControllerTestCase {
-
-    protected function getXml() {
+abstract class AbstractSwordTestCase extends BaseControllerTestCase
+{
+    protected function getXml()
+    {
         $xml = new SimpleXMLElement($this->client->getResponse()->getContent());
         Namespaces::registerNamespaces($xml);
 
         return $xml;
     }
 
-    public function fixtures() : array {
+    public function fixtures(): array
+    {
         return [
             JournalFixtures::class,
             DepositFixtures::class,
@@ -49,19 +51,21 @@ abstract class AbstractSwordTestCase extends BaseControllerTestCase {
      *
      * @return string
      */
-    public function getXmlValue(SimpleXMLElement $xml, $xpath) {
+    public function getXmlValue(SimpleXMLElement $xml, $xpath)
+    {
         $data = $xml->xpath($xpath);
-        if (1 === count($data)) {
+        if (1 === \count($data)) {
             return trim((string) $data[0]);
         }
-        if (0 === count($data)) {
+        if (0 === \count($data)) {
             return;
         }
 
         throw new Exception("Too many elements for '{$xpath}'");
     }
 
-    protected function setUp() : void {
+    protected function setUp(): void
+    {
         parent::setUp();
     }
 }

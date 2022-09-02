@@ -16,11 +16,12 @@ use Exception;
 /**
  * Wrapper around some XML parsing.
  */
-class XmlParser {
+class XmlParser
+{
     /**
      * Options passed to LibXML.
      */
-    public const LIBXML_OPTS = LIBXML_COMPACT | LIBXML_PARSEHUGE;
+    public const LIBXML_OPTS = \LIBXML_COMPACT | \LIBXML_PARSEHUGE;
 
     /**
      * Block size for streaming.
@@ -35,27 +36,30 @@ class XmlParser {
     /**
      * Build the parser.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->errors = [];
     }
 
     /**
      * Check if the parse generated errors.
      */
-    public function hasErrors(): bool {
-        return count($this->errors) > 0;
+    public function hasErrors(): bool
+    {
+        return \count($this->errors) > 0;
     }
 
     /**
      * Filter out any invalid UTF-8 data in $from and write the result to $to.
      */
-    public function filter(string $from, string $to): int {
-        $fromHandle = fopen($from, 'rb');
-        $toHandle = fopen($to, 'wb');
+    public function filter(string $from, string $to): int
+    {
+        $fromHandle = fopen($from, 'r');
+        $toHandle = fopen($to, 'w');
         $changes = 0;
         while ($buffer = fread($fromHandle, self::BLOCKSIZE)) {
             $filtered = iconv('UTF-8', 'UTF-8//IGNORE', $buffer);
-            $changes += (strlen($buffer) - strlen($filtered));
+            $changes += (\strlen($buffer) - \strlen($filtered));
             fwrite($toHandle, $filtered);
         }
 
@@ -73,7 +77,8 @@ class XmlParser {
      *
      * @throws Exception
      */
-    public function fromFile(string $filename): DOMDocument {
+    public function fromFile(string $filename): DOMDocument
+    {
         $dom = new DOMDocument('1.0', 'UTF-8');
         libxml_use_internal_errors(true);
         $originalResult = $dom->load($filename, self::LIBXML_OPTS);

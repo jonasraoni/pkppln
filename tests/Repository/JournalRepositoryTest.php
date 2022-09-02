@@ -20,23 +20,27 @@ use App\Tests\TestCase\BaseControllerTestCase;
 /**
  * Description of JournalRepositoryTest.
  */
-class JournalRepositoryTest extends BaseControllerTestCase {
+class JournalRepositoryTest extends BaseControllerTestCase
+{
     /**
      * @return JournalRepository
      */
     private $repo;
 
-    protected function fixtures() : array {
+    protected function fixtures(): array
+    {
         return [
             JournalFixtures::class,
         ];
     }
 
-    public function testGetJournalsToPingNoListed() : void {
-        $this->assertSame(4, count($this->repo->getJournalsToPing()));
+    public function testGetJournalsToPingNoListed(): void
+    {
+        $this->assertCount(4, $this->repo->getJournalsToPing());
     }
 
-    public function testGetJournalsToPingListed() : void {
+    public function testGetJournalsToPingListed(): void
+    {
         $whitelist = new Whitelist();
         $whitelist->setUuid(JournalFixtures::UUIDS[0]);
         $whitelist->setComment('Test');
@@ -49,27 +53,30 @@ class JournalRepositoryTest extends BaseControllerTestCase {
 
         $this->em->flush();
 
-        $this->assertSame(2, count($this->repo->getJournalsToPing()));
+        $this->assertCount(2, $this->repo->getJournalsToPing());
     }
 
-    public function testGetJournalsToPingPingErrors() : void {
+    public function testGetJournalsToPingPingErrors(): void
+    {
         $journal = $this->em->find(Journal::class, 1);
         $journal->setStatus('ping-error');
         $this->em->flush();
 
-        $this->assertSame(3, count($this->repo->getJournalsToPing()));
+        $this->assertCount(3, $this->repo->getJournalsToPing());
     }
 
     /**
      * @dataProvider searchQueryData
      */
-    public function testSearchQuery() : void {
+    public function testSearchQuery(): void
+    {
         $query = $this->repo->searchQuery('CDC4');
         $result = $query->execute();
-        $this->assertSame(1, count($result));
+        $this->assertCount(1, $result);
     }
 
-    public function searchQueryData() {
+    public function searchQueryData()
+    {
         return [
             [1, 'CDC4'],
             [1, 'Title 1'],
@@ -81,7 +88,8 @@ class JournalRepositoryTest extends BaseControllerTestCase {
         ];
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $this->repo = $this->em->getRepository(Journal::class);
     }

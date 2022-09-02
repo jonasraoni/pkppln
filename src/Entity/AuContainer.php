@@ -19,11 +19,12 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * AuContainer organizes the deposits by size to abstract the responsibility
  * away from LOCKSSOMatic.
  *
- * @ORM\Table()
+ * @ORM\Table
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="App\Repository\AuContainerRepository")
  */
-class AuContainer extends AbstractEntity {
+class AuContainer extends AbstractEntity
+{
     /**
      * List of deposits in one AU.
      *
@@ -42,7 +43,8 @@ class AuContainer extends AbstractEntity {
     /**
      * Constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->deposits = new ArrayCollection();
         $this->open = true;
     }
@@ -50,14 +52,16 @@ class AuContainer extends AbstractEntity {
     /**
      * {@inheritdoc}
      */
-    public function __toString() : string {
+    public function __toString(): string
+    {
         return (string) $this->id;
     }
 
     /**
      * Add deposits.
      */
-    public function addDeposit(Deposit $deposit): static {
+    public function addDeposit(Deposit $deposit): static
+    {
         $this->deposits[] = $deposit;
 
         return $this;
@@ -66,21 +70,24 @@ class AuContainer extends AbstractEntity {
     /**
      * Remove deposits.
      */
-    public function removeDeposit(Deposit $deposits) : void {
+    public function removeDeposit(Deposit $deposits): void
+    {
         $this->deposits->removeElement($deposits);
     }
 
     /**
      * Get deposits.
      */
-    public function getDeposits(): Collection {
+    public function getDeposits(): Collection
+    {
         return $this->deposits;
     }
 
     /**
      * Set open. An open container can be made closed, but a closed container cannot be reopened.
      */
-    public function setOpen(bool $open): static {
+    public function setOpen(bool $open): static
+    {
         if ($this->open) {
             // Only change an open container to closed.
             $this->open = $open;
@@ -92,14 +99,16 @@ class AuContainer extends AbstractEntity {
     /**
      * Get open.
      */
-    public function isOpen(): bool {
+    public function isOpen(): bool
+    {
         return $this->open;
     }
 
     /**
      * Get the size of the container in bytes.
      */
-    public function getSize(): int {
+    public function getSize(): int
+    {
         $size = 0;
         foreach ($this->deposits as $deposit) {
             $size += $deposit->getPackageSize();
@@ -111,7 +120,8 @@ class AuContainer extends AbstractEntity {
     /**
      * Count the deposits in the container.
      */
-    public function countDeposits(): int {
+    public function countDeposits(): int
+    {
         return $this->deposits->count();
     }
 }

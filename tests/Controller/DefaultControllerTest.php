@@ -14,40 +14,45 @@ use App\DataFixtures\DepositFixtures;
 use Nines\UserBundle\DataFixtures\UserFixtures;
 use App\Tests\TestCase\BaseControllerTestCase;
 
-class DefaultControllerTest extends BaseControllerTestCase {
-    protected function fixtures() : array {
+class DefaultControllerTest extends BaseControllerTestCase
+{
+    protected function fixtures(): array
+    {
         return [
             DepositFixtures::class,
             UserFixtures::class,
         ];
     }
 
-    public function testAnonIndex() : void {
-
+    public function testAnonIndex(): void
+    {
         $crawler = $this->client->request('GET', '/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testUserIndex() : void {
+    public function testUserIndex(): void
+    {
         $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testAdminIndex() : void {
+    public function testAdminIndex(): void
+    {
         $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testAnonDepositDepositSearch() : void {
-
+    public function testAnonDepositDepositSearch(): void
+    {
         $formCrawler = $this->client->request('GET', '/deposit_search');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($this->client->getResponse()->isRedirect());
     }
 
-    public function testUserDepositSearch() : void {
+    public function testUserDepositSearch(): void
+    {
         $this->login(UserFixtures::USER);
         $formCrawler = $this->client->request('GET', '/deposit_search');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
@@ -59,7 +64,8 @@ class DefaultControllerTest extends BaseControllerTestCase {
         $this->assertSame(1, $this->client->getCrawler()->filter('td:contains("978EA2B4-01DB-4F37-BD74-871DDBE71BF5")')->count());
     }
 
-    public function testAdminDepositSearch() : void {
+    public function testAdminDepositSearch(): void
+    {
         $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/deposit_search');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
@@ -71,22 +77,22 @@ class DefaultControllerTest extends BaseControllerTestCase {
         $this->assertSame(1, $this->client->getCrawler()->filter('td:contains("978EA2B4-01DB-4F37-BD74-871DDBE71BF5")')->count());
     }
 
-    public function testFetchActionJournalMismatch() : void {
-
+    public function testFetchActionJournalMismatch(): void
+    {
         $crawler = $this->client->request('GET', '/fetch/44428B12-CDC4-453E-8157-319004CD8CE6/F93A8108-B705-4763-A592-B718B00BD4EA.zip');
         $this->assertSame(400, $this->client->getResponse()->getStatusCode());
         $this->assertStringContainsStringIgnoringCase('Journal ID does not match', $this->client->getResponse()->getContent());
     }
 
-    public function testFetchActionDeposit404() : void {
-
+    public function testFetchActionDeposit404(): void
+    {
         $crawler = $this->client->request('GET', '/fetch/04F2C06E-35B8-43C1-B60C-1934271B0B7E/F93A8108-B705-4763-A592-B718B00BD4EA.zip');
         $this->assertSame(404, $this->client->getResponse()->getStatusCode());
         $this->assertStringContainsStringIgnoringCase('Deposit not found.', $this->client->getResponse()->getContent());
     }
 
-    public function testPermissionAction() : void {
-
+    public function testPermissionAction(): void
+    {
         $crawler = $this->client->request('GET', '/permission');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertStringContainsStringIgnoringCase('LOCKSS system has permission', $this->client->getResponse()->getContent());

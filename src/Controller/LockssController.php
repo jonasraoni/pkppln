@@ -29,7 +29,8 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * Lockss Controller for handling all interaction with the LOCKSS network.
  */
-class LockssController extends AbstractController implements PaginatorAwareInterface {
+class LockssController extends AbstractController implements PaginatorAwareInterface
+{
     use LoggerAwareTrait;
     use PaginatorTrait;
 
@@ -46,17 +47,18 @@ class LockssController extends AbstractController implements PaginatorAwareInter
      *
      * @Route("/fetch/{journalUuid}/{depositUuid}.zip", name="fetch", methods={"GET"})
      *
-     * @ParamConverter("journal", class="App:Journal", options={"mapping": {"journalUuid"="uuid"}})
-     * @ParamConverter("deposit", class="App:Deposit", options={"mapping": {"depositUuid"="depositUuid"}})
+     * @ParamConverter("journal", class="App:Journal", options={"mapping": {"journalUuid": "uuid"}})
+     * @ParamConverter("deposit", class="App:Deposit", options={"mapping": {"depositUuid": "depositUuid"}})
      */
-    public function fetchAction(Request $request, Journal $journal, Deposit $deposit, FilePaths $fp): BinaryFileResponse {
+    public function fetchAction(Request $request, Journal $journal, Deposit $deposit, FilePaths $fp): BinaryFileResponse
+    {
         $this->logger->notice("{$request->getClientIp()} - fetch - {$journal->getUuid()} - {$deposit->getDepositUuid()}");
         if ($deposit->getJournal() !== $journal) {
             throw new BadRequestHttpException("The requested Journal ID does not match the deposit's journal ID.");
         }
         $fs = new Filesystem();
         $path = $fp->getStagingBagPath($deposit);
-        if ( ! $fs->exists($path)) {
+        if (! $fs->exists($path)) {
             throw new NotFoundHttpException('Deposit not found.');
         }
 
@@ -68,7 +70,8 @@ class LockssController extends AbstractController implements PaginatorAwareInter
      *
      * @Route("/permission", name="lockss_permission", methods={"GET"})
      */
-    public function permissionAction(Request $request): Response {
+    public function permissionAction(Request $request): Response
+    {
         $this->logger->notice("{$request->getClientIp()} - permission");
 
         return new Response(self::PERMISSION_STMT, Response::HTTP_OK, [

@@ -20,7 +20,8 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * PlnStatusCommand command.
  */
-class StatusCommand extends AbstractProcessingCmd {
+class StatusCommand extends AbstractProcessingCmd
+{
     /**
      * If true, completed deposits will be removed from disk.
      */
@@ -30,7 +31,8 @@ class StatusCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    public function __construct(EntityManagerInterface $em, SwordClient $client, FilePaths $filePaths, bool $cleanup) {
+    public function __construct(EntityManagerInterface $em, SwordClient $client, FilePaths $filePaths, bool $cleanup)
+    {
         parent::__construct($em);
         $this->client = $client;
         $this->filePaths = $filePaths;
@@ -40,7 +42,8 @@ class StatusCommand extends AbstractProcessingCmd {
     /**
      * Configure the command.
      */
-    protected function configure() : void {
+    protected function configure(): void
+    {
         $this->setName('pln:status');
         $this->setDescription('Check status of deposits.');
         parent::configure();
@@ -49,7 +52,8 @@ class StatusCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    protected function processDeposit(Deposit $deposit): null|bool|string {
+    protected function processDeposit(Deposit $deposit): null|bool|string
+    {
         $statusXml = $this->client->statement($deposit);
         $term = (string) $statusXml->xpath('//atom:category[@label="State"]/@term')[0];
         $deposit->setPlnState($term);
@@ -60,7 +64,8 @@ class StatusCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    protected function afterSuccess(Deposit $deposit): void {
+    protected function afterSuccess(Deposit $deposit): void
+    {
         if (!$this->cleanup) {
             return;
         }
@@ -86,35 +91,40 @@ class StatusCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    public function errorState(): string {
+    public function errorState(): string
+    {
         return 'deposited';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function failureLogMessage(): string {
+    public function failureLogMessage(): string
+    {
         return 'Status check with LOCKSSOMatic failed.';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function nextState(): string {
+    public function nextState(): string
+    {
         return 'complete';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function processingState(): string {
+    public function processingState(): string
+    {
         return 'deposited';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function successLogMessage(): string {
+    public function successLogMessage(): string
+    {
         return 'Status check with LOCKSSOMatic succeeded.';
     }
 }

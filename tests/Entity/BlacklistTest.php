@@ -16,24 +16,29 @@ use App\Tests\TestCase\BaseControllerTestCase;
 /**
  * Description of BlacklistTest.
  */
-class BlacklistTest extends BaseControllerTestCase {
+class BlacklistTest extends BaseControllerTestCase
+{
     private $blacklist;
 
-    public function testInstance() : void {
+    public function testInstance(): void
+    {
         $this->assertInstanceOf(Blacklist::class, $this->blacklist);
     }
 
-    public function testSetUuid() : void {
+    public function testSetUuid(): void
+    {
         $this->blacklist->setUuid('abc123');
         $this->assertSame('ABC123', $this->blacklist->getUuid());
     }
 
-    public function testToString() : void {
+    public function testToString(): void
+    {
         $this->blacklist->setUuid('abc123');
         $this->assertSame('ABC123', (string) $this->blacklist);
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $this->blacklist = new Blacklist();
     }

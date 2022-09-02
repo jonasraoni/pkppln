@@ -17,12 +17,15 @@ use App\Tests\TestCase\BaseControllerTestCase;
 /**
  * Description of TermsOfUseListenerTest.
  */
-class TermsOfUseListenerTest extends BaseControllerTestCase {
-    protected function fixtures() : array {
+class TermsOfUseListenerTest extends BaseControllerTestCase
+{
+    protected function fixtures(): array
+    {
         return [];
     }
 
-    public function testCreate() : void {
+    public function testCreate(): void
+    {
         $term = new TermOfUse();
         $term->setContent('test 1');
         $term->setKeyCode('t1');
@@ -43,7 +46,8 @@ class TermsOfUseListenerTest extends BaseControllerTestCase {
         $this->assertSame([null, 'test 1'], $changeset['content']);
     }
 
-    public function testUpdate() : void {
+    public function testUpdate(): void
+    {
         $term = new TermOfUse();
         $term->setContent('test 1');
         $term->setKeyCode('t1');
@@ -70,7 +74,8 @@ class TermsOfUseListenerTest extends BaseControllerTestCase {
         $this->assertSame(['test 1', 'updated'], $changeset['content']);
     }
 
-    public function testDelete() : void {
+    public function testDelete(): void
+    {
         $term = new TermOfUse();
         $term->setContent('test 1');
         $term->setKeyCode('t1');

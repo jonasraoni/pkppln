@@ -19,7 +19,8 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * @ORM\Table(name="document")
  * @ORM\Entity(repositoryClass="App\Repository\DocumentRepository")
  */
-class Document extends AbstractEntity {
+class Document extends AbstractEntity
+{
     /**
      * Document title.
      *
@@ -51,21 +52,24 @@ class Document extends AbstractEntity {
     /**
      * Build the document object.
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
     /**
      * Return the document title.
      */
-    public function __toString() : string {
+    public function __toString(): string
+    {
         return $this->title;
     }
 
     /**
      * Set title.
      */
-    public function setTitle(string $title): static {
+    public function setTitle(string $title): static
+    {
         $this->title = $title;
 
         return $this;
@@ -74,14 +78,16 @@ class Document extends AbstractEntity {
     /**
      * Get title.
      */
-    public function getTitle(): string {
+    public function getTitle(): string
+    {
         return $this->title;
     }
 
     /**
      * Set path.
      */
-    public function setPath(string $path): static {
+    public function setPath(string $path): static
+    {
         $this->path = $path;
 
         return $this;
@@ -90,14 +96,16 @@ class Document extends AbstractEntity {
     /**
      * Get path.
      */
-    public function getPath(): string {
+    public function getPath(): string
+    {
         return $this->path;
     }
 
     /**
      * Set summary.
      */
-    public function setSummary(string $summary): static {
+    public function setSummary(string $summary): static
+    {
         $this->summary = $summary;
 
         return $this;
@@ -106,14 +114,16 @@ class Document extends AbstractEntity {
     /**
      * Get summary.
      */
-    public function getSummary(): string {
+    public function getSummary(): string
+    {
         return $this->summary;
     }
 
     /**
      * Set content.
      */
-    public function setContent(string $content): static {
+    public function setContent(string $content): static
+    {
         $this->content = $content;
 
         return $this;
@@ -122,7 +132,8 @@ class Document extends AbstractEntity {
     /**
      * Get content.
      */
-    public function getContent(): string {
+    public function getContent(): string
+    {
         return $this->content;
     }
 }

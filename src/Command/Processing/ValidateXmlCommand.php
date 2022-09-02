@@ -18,14 +18,16 @@ use Doctrine\ORM\EntityManagerInterface;
 /**
  * Validate XML in a deposit.
  */
-class ValidateXmlCommand extends AbstractProcessingCmd {
+class ValidateXmlCommand extends AbstractProcessingCmd
+{
     private XmlValidator $xmlValidator;
     private SchemaValidator $schemaValidator;
 
     /**
      * Build the command.
      */
-    public function __construct(EntityManagerInterface $em, XmlValidator $xmlValidator) {
+    public function __construct(EntityManagerInterface $em, XmlValidator $xmlValidator)
+    {
         parent::__construct($em);
         $this->xmlValidator = $xmlValidator;
     }
@@ -33,7 +35,8 @@ class ValidateXmlCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    protected function configure() : void {
+    protected function configure(): void
+    {
         $this->setName('pln:validate:xml');
         $this->setDescription('Validate OJS XML export files.');
         parent::configure();
@@ -42,42 +45,48 @@ class ValidateXmlCommand extends AbstractProcessingCmd {
     /**
      * {@inheritdoc}
      */
-    protected function processDeposit(Deposit $deposit): null|bool|string {
+    protected function processDeposit(Deposit $deposit): null|bool|string
+    {
         return $this->xmlValidator->processDeposit($deposit);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function nextState(): string {
+    public function nextState(): string
+    {
         return 'xml-validated';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function processingState(): string {
+    public function processingState(): string
+    {
         return 'bag-validated';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function failureLogMessage(): string {
+    public function failureLogMessage(): string
+    {
         return 'XML Validation failed.';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function successLogMessage(): string {
+    public function successLogMessage(): string
+    {
         return 'XML validation succeeded.';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function errorState(): string {
+    public function errorState(): string
+    {
         return 'xml-error';
     }
 }

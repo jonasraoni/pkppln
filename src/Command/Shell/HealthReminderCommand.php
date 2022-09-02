@@ -25,13 +25,15 @@ use Twig\Environment;
  * Send reminders about journals that haven't contacted the PLN in a while.
  * @todo Probably not working the Swift_Message
  */
-class HealthReminderCommand extends Command {
+class HealthReminderCommand extends Command
+{
     use LoggerAwareTrait;
 
     private Environment $templating;
     private ContainerInterface $container;
 
-    public function __construct(Environment $environment, LoggerInterface $logger, ContainerInterface $container) {
+    public function __construct(Environment $environment, LoggerInterface $logger, ContainerInterface $container)
+    {
         parent::__construct();
         $this->templating = $environment;
         $this->logger = $logger;
@@ -41,7 +43,8 @@ class HealthReminderCommand extends Command {
     /**
      * {@inheritdoc}
      */
-    protected function configure() : void {
+    protected function configure(): void
+    {
         $this->setName('pln:health:reminder');
         $this->setDescription('Remind admins about silent journals.');
         $this->addOption(
@@ -59,7 +62,8 @@ class HealthReminderCommand extends Command {
      * @param User[] $users
      * @param Journal[] $journals
      */
-    protected function sendReminders(int $days, array $users, array $journals) : void {
+    protected function sendReminders(int $days, array $users, array $journals): void
+    {
         $notification = $this->templating->render('App:HealthCheck:reminder.txt.twig', [
             'journals' => $journals,
             'days' => $days,
@@ -81,18 +85,19 @@ class HealthReminderCommand extends Command {
     /**
      * Execute the runall command, which executes all the commands.
      */
-    protected function execute(InputInterface $input, OutputInterface $output) : void {
+    protected function execute(InputInterface $input, OutputInterface $output): void
+    {
         $em = $this->container->get('doctrine')->getManager();
         $days = $this->container->getParameter('days_reminder');
         $journals = $em->getRepository('App:Journal')->findOverdue($days);
-        $count = count($journals);
+        $count = \count($journals);
         $this->logger->notice("Found {$count} overdue journals.");
-        if (0 === count($journals)) {
+        if (0 === \count($journals)) {
             return;
         }
 
         $users = $em->getRepository('AppUserBundle:User')->findUserToNotify();
-        if (0 === count($users)) {
+        if (0 === \count($users)) {
             $this->logger->error('No users to notify.');
 
             return;
@@ -103,7 +108,7 @@ class HealthReminderCommand extends Command {
             $journal->setNotified(new DateTime());
         }
 
-        if ( ! $input->getOption('dry-run')) {
+        if (! $input->getOption('dry-run')) {
             $em->flush();
         }
     }

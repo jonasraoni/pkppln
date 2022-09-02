@@ -18,8 +18,10 @@ use Nines\UserBundle\DataFixtures\UserFixtures;
 use App\Tests\TestCase\BaseControllerTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class AuContainerControllerTest extends BaseControllerTestCase {
-    protected function fixtures() : array {
+class AuContainerControllerTest extends BaseControllerTestCase
+{
+    protected function fixtures(): array
+    {
         return [
             UserFixtures::class,
             BlacklistFixtures::class,
@@ -29,7 +31,8 @@ class AuContainerControllerTest extends BaseControllerTestCase {
         ];
     }
 
-    public function testIndex() : void {
+    public function testIndex(): void
+    {
         $this->login(UserFixtures::USER);
         $this->client->request('GET', '/aucontainer/');
         $response = $this->client->getResponse();
@@ -38,7 +41,8 @@ class AuContainerControllerTest extends BaseControllerTestCase {
         $this->assertStringContainsString('2 (0 deposits/0kb)', $this->client->getResponse()->getContent());
     }
 
-    public function setUp() : void {
+    protected function setUp(): void
+    {
         parent::setUp();
     }
 }

@@ -17,8 +17,10 @@ use PHPUnit\Framework\TestCase;
 /**
  * Description of XpathTest.
  */
-class XpathTest extends TestCase {
-    private function getXml() {
+class XpathTest extends TestCase
+{
+    private function getXml()
+    {
         $data = <<<'ENDXML'
         <root>
           <a>1</a>
@@ -36,12 +38,14 @@ ENDXML;
      * @param mixed $query
      * @param null|mixed $default
      */
-    public function testGetXmlValue($expected, $query, $default = null) : void {
+    public function testGetXmlValue($expected, $query, $default = null): void
+    {
         $xml = $this->getXml();
         $this->assertSame($expected, Xpath::getXmlValue($xml, $query, $default));
     }
 
-    public function getXmlData() {
+    public function getXmlData()
+    {
         return [
             ['1', '//a', null],
             ['1', '//a', '3'],
@@ -49,15 +53,17 @@ ENDXML;
         ];
     }
 
-    public function testGetXmlValueException() : void {
+    public function testGetXmlValueException(): void
+    {
         $this->expectException(Exception::class);
         $xml = $this->getXml();
         Xpath::getXmlValue($xml, '/root/node()');
     }
 
-    public function testQuery() : void {
+    public function testQuery(): void
+    {
         $xml = $this->getXml();
         $result = Xpath::query($xml, '/root/*');
-        $this->assertSame(2, count($result));
+        $this->assertCount(2, $result);
     }
 }

@@ -14,13 +14,15 @@ use App\Services\DtdValidator;
 use DOMDocument;
 use App\Tests\TestCase\BaseControllerTestCase;
 
-class DtdValidatorTest extends BaseControllerTestCase {
+class DtdValidatorTest extends BaseControllerTestCase
+{
     /**
      * @var DtdValidator
      */
     protected $validator;
 
-    private function getValidXml() {
+    private function getValidXml()
+    {
         return <<<'ENDSTR'
 <?xml version="1.0" standalone="yes"?>
 <!DOCTYPE root [
@@ -35,7 +37,8 @@ class DtdValidatorTest extends BaseControllerTestCase {
 ENDSTR;
     }
 
-    private function getInvalidXml() {
+    private function getInvalidXml()
+    {
         return <<<'ENDSTR'
 <?xml version="1.0" standalone="yes"?>
 <!DOCTYPE root [
@@ -50,18 +53,21 @@ ENDSTR;
 ENDSTR;
     }
 
-    public function testInstance() : void {
+    public function testInstance(): void
+    {
         $this->assertInstanceOf(DtdValidator::class, $this->validator);
     }
 
-    public function testValidateNoDtd() : void {
+    public function testValidateNoDtd(): void
+    {
         $dom = new DOMDocument();
         $dom->loadXML('<root />');
         $this->validator->validate($dom);
         $this->assertSame(0, $this->validator->countErrors());
     }
 
-    public function testValidate() : void {
+    public function testValidate(): void
+    {
         $dom = new DOMDocument();
         $dom->loadXML($this->getValidXml());
         $this->validator->validate($dom, null, true);
@@ -69,7 +75,8 @@ ENDSTR;
         $this->assertSame(0, $this->validator->countErrors());
     }
 
-    public function testValidateWithErrors() : void {
+    public function testValidateWithErrors(): void
+    {
         $dom = new DOMDocument();
         $dom->loadXML($this->getInvalidXml());
         $this->validator->validate($dom, null, true);
@@ -77,7 +84,8 @@ ENDSTR;
         $this->assertSame(1, $this->validator->countErrors());
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $this->validator = self::$container->get(DtdValidator::class);
         $this->validator->clearErrors();

@@ -15,7 +15,8 @@ use SimpleXMLElement;
 /**
  * Simplify handling namespaces for SWORD XML documents.
  */
-class Namespaces {
+class Namespaces
+{
     public const NS = [
         'dcterms' => 'http://purl.org/dc/terms/',
         'sword' => 'http://purl.org/net/sword/',
@@ -28,8 +29,9 @@ class Namespaces {
     /**
      * Get the FQDN for the prefix, in a case-insensitive fashion.
      */
-    public static function getNamespace(?string $prefix): ?string {
-        if (array_key_exists($prefix, self::NS)) {
+    public static function getNamespace(?string $prefix): ?string
+    {
+        if (\array_key_exists($prefix, self::NS)) {
             return self::NS[$prefix];
         }
         return null;
@@ -38,7 +40,8 @@ class Namespaces {
     /**
      * Register all the known namespaces in a SimpleXMLElement.
      */
-    public static function registerNamespaces(SimpleXMLElement $xml) : void {
+    public static function registerNamespaces(SimpleXMLElement $xml): void
+    {
         foreach (array_keys(self::NS) as $key) {
             $xml->registerXPathNamespace($key, self::NS[$key]);
         }

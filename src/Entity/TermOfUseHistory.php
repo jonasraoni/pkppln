@@ -19,7 +19,8 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * @ORM\Table(name="term_of_use_history")
  * @ORM\Entity(repositoryClass="App\Repository\TermOfUseHistoryRepository")
  */
-class TermOfUseHistory extends AbstractEntity {
+class TermOfUseHistory extends AbstractEntity
+{
     /**
      * A term ID, similar to the OJS translation keys.
      *
@@ -56,14 +57,16 @@ class TermOfUseHistory extends AbstractEntity {
     /**
      * Return the action.
      */
-    public function __toString() : string {
+    public function __toString(): string
+    {
         return $this->action;
     }
 
     /**
      * Set termId.
      */
-    public function setTermId(int $termId): TermOfUseHistory {
+    public function setTermId(int $termId): self
+    {
         $this->termId = $termId;
 
         return $this;
@@ -72,14 +75,16 @@ class TermOfUseHistory extends AbstractEntity {
     /**
      * Get termId.
      */
-    public function getTermId(): int {
+    public function getTermId(): int
+    {
         return $this->termId;
     }
 
     /**
      * Set action.
      */
-    public function setAction(string $action): TermOfUseHistory {
+    public function setAction(string $action): self
+    {
         $this->action = $action;
 
         return $this;
@@ -88,14 +93,16 @@ class TermOfUseHistory extends AbstractEntity {
     /**
      * Get action.
      */
-    public function getAction(): string {
+    public function getAction(): string
+    {
         return $this->action;
     }
 
     /**
      * Set changeSet.
      */
-    public function setChangeSet(array $changeSet): TermOfUseHistory {
+    public function setChangeSet(array $changeSet): self
+    {
         $this->changeSet = $changeSet;
 
         return $this;
@@ -104,14 +111,16 @@ class TermOfUseHistory extends AbstractEntity {
     /**
      * Get changeSet.
      */
-    public function getChangeSet(): array {
+    public function getChangeSet(): array
+    {
         return $this->changeSet;
     }
 
     /**
      * Set user.
      */
-    public function setUser(string $user): TermOfUseHistory {
+    public function setUser(string $user): self
+    {
         $this->user = $user;
 
         return $this;
@@ -120,7 +129,8 @@ class TermOfUseHistory extends AbstractEntity {
     /**
      * Get user.
      */
-    public function getUser(): string {
+    public function getUser(): string
+    {
         return $this->user;
     }
 }

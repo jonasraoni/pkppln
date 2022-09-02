@@ -18,7 +18,8 @@ use App\Services\SwordClient;
  *
  * @see SwordClient
  */
-class Depositor {
+class Depositor
+{
     /**
      * Sword client to talk to LOCKSSOMatic.
      */
@@ -32,7 +33,8 @@ class Depositor {
     /**
      * Build the service.
      */
-    public function __construct(SwordClient $client, ?string $heldVersions) {
+    public function __construct(SwordClient $client, ?string $heldVersions)
+    {
         $this->client = $client;
         $this->heldVersions = $heldVersions;
     }
@@ -40,7 +42,8 @@ class Depositor {
     /**
      * Process one deposit.
      */
-    public function processDeposit(Deposit $deposit): null|bool|string {
+    public function processDeposit(Deposit $deposit): null|bool|string
+    {
         if ($this->heldVersions && version_compare($deposit->getJournalVersion(), $this->heldVersions, '>=')) {
             return 'hold';
         }

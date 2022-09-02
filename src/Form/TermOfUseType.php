@@ -17,11 +17,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * TermOfUseType form.
  */
-class TermOfUseType extends AbstractType {
+class TermOfUseType extends AbstractType
+{
     /**
      * Add form fields to $builder.
      */
-    public function buildForm(FormBuilderInterface $builder, array $options) : void {
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
         $builder->add('weight', null, [
             'label' => 'Weight',
             'required' => true,
@@ -51,7 +53,8 @@ class TermOfUseType extends AbstractType {
      * Set default, optional, and required options passed to the
      * buildForm() method via the $options parameter.
      */
-    public function configureOptions(OptionsResolver $resolver) : void {
+    public function configureOptions(OptionsResolver $resolver): void
+    {
         $resolver->setDefaults([
             'data_class' => 'App\Entity\TermOfUse',
         ]);

@@ -17,8 +17,10 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * Custom terms of use history queries.
  */
-class TermOfUseHistoryRepository extends ServiceEntityRepository {
-    public function __construct(ManagerRegistry $registry) {
+class TermOfUseHistoryRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
         parent::__construct($registry, TermOfUseHistory::class);
     }
 }

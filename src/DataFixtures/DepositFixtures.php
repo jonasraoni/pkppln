@@ -19,7 +19,8 @@ use Doctrine\Persistence\ObjectManager;
 /**
  * LoadDeposit form.
  */
-class DepositFixtures extends Fixture implements DependentFixtureInterface {
+class DepositFixtures extends Fixture implements DependentFixtureInterface
+{
     public const UUIDS = [
         'F93A8108-B705-4763-A592-B718B00BD4EA',
         '4ECC5D8B-ECC9-435C-A072-6DCF198ACD6D',
@@ -30,7 +31,8 @@ class DepositFixtures extends Fixture implements DependentFixtureInterface {
     /**
      * {@inheritdoc}
      */
-    public function load(ObjectManager $em) : void {
+    public function load(ObjectManager $em): void
+    {
         for ($i = 0; $i < 4; $i++) {
             $fixture = new Deposit();
             $fixture->setJournalVersion('2.4.8.' . $i);
@@ -62,7 +64,8 @@ class DepositFixtures extends Fixture implements DependentFixtureInterface {
     /**
      * {@inheritdoc}
      */
-    public function getDependencies() {
+    public function getDependencies()
+    {
         return [
             JournalFixtures::class,
             AuContainerFixtures::class,

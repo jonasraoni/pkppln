@@ -18,13 +18,15 @@ use SimpleXMLElement;
 /**
  * Description of PingResultTest.
  */
-class PingResultTest extends TestCase {
+class PingResultTest extends TestCase
+{
     /**
      * @var PingResult
      */
     private $result;
 
-    private function getXml() {
+    private function getXml()
+    {
         return <<<'ENDXML'
 <?xml version="1.0" ?>
 <plnplugin>
@@ -64,75 +66,91 @@ class PingResultTest extends TestCase {
 ENDXML;
     }
 
-    public function testInstance() : void {
+    public function testInstance(): void
+    {
         $this->assertInstanceOf(PingResult::class, $this->result);
     }
 
-    public function testConstructorException() : void {
+    public function testConstructorException(): void
+    {
         $response = new Response(200, [], '<n>&foo;</n>');
         $this->result = new PingResult($response);
         $this->assertTrue($this->result->hasError());
     }
 
-    public function testHttpStatus() : void {
+    public function testHttpStatus(): void
+    {
         $this->assertSame(200, $this->result->getHttpStatus());
     }
 
-    public function testError() : void {
+    public function testError(): void
+    {
         $this->assertFalse($this->result->hasError());
         $this->assertEmpty($this->result->getError());
     }
 
-    public function testAddError() : void {
+    public function testAddError(): void
+    {
         $this->assertFalse($this->result->hasError());
         $this->result->addError('bad things happened.');
         $this->assertTrue($this->result->hasError());
     }
 
-    public function testGetBody() : void {
+    public function testGetBody(): void
+    {
         $this->assertStringContainsStringIgnoringCase('1.2.0.0', $this->result->getBody());
         $this->assertStringContainsStringIgnoringCase('1.2.0.0', $this->result->getBody(true));
         $this->assertStringContainsStringIgnoringCase('1.2.0.0', $this->result->getBody(false));
     }
 
-    public function testXml() : void {
+    public function testXml(): void
+    {
         $this->assertTrue($this->result->hasXml());
         $this->assertInstanceOf(SimpleXMLElement::class, $this->result->getXml());
     }
 
-    public function testGetHeader() : void {
+    public function testGetHeader(): void
+    {
         $this->assertSame('Validated', $this->result->getHeader('foo')[0]);
     }
 
-    public function testGetOjsRelease() : void {
+    public function testGetOjsRelease(): void
+    {
         $this->assertSame('2.4.8.1', $this->result->getOjsRelease());
     }
 
-    public function testGetPluginReleaseVersion() : void {
+    public function testGetPluginReleaseVersion(): void
+    {
         $this->assertSame('1.2.0.0', $this->result->getPluginReleaseVersion());
     }
 
-    public function testPluginReleaseDate() : void {
+    public function testPluginReleaseDate(): void
+    {
         $this->assertSame('2015-07-13', $this->result->getPluginReleaseDate());
     }
 
-    public function testPluginCurrent() : void {
+    public function testPluginCurrent(): void
+    {
         $this->assertSame('1', $this->result->isPluginCurrent());
     }
 
-    public function testTermsAccepted() : void {
+    public function testTermsAccepted(): void
+    {
         $this->assertSame('yes', $this->result->areTermsAccepted());
     }
 
-    public function testJournalTitle() : void {
+    public function testJournalTitle(): void
+    {
         $this->assertSame('Publication of Soft Cheeses', $this->result->getJournalTitle());
     }
 
-    public function testArticleCount() : void {
+    public function testArticleCount(): void
+    {
         $this->assertSame(12, $this->result->getArticleCount());
     }
 
-    public function testArticleTitles() : void {
+    public function testArticleTitles(): void
+    {
         $expected = [
             ['date' => '2017-12-26 13:56:20', 'title' => 'Brie'],
             ['date' => '2017-12-26 13:56:20', 'title' => 'Coulommiers'],
@@ -140,7 +158,8 @@ ENDXML;
         $this->assertSame($expected, $this->result->getArticleTitles());
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $response = new Response(200, ['foo' => ['Validated']], $this->getXml());
         $this->result = new PingResult($response);

@@ -20,19 +20,22 @@ use DateTimeInterface;
 /**
  * Description of JournalBuilderTest.
  */
-class JournalBuilderTest extends BaseControllerTestCase {
+class JournalBuilderTest extends BaseControllerTestCase
+{
     /**
      * @var JournalBuilder
      */
     private $builder;
 
-    public function fixtures() : array {
+    public function fixtures(): array
+    {
         return [
             JournalFixtures::class,
         ];
     }
 
-    private function getXml() {
+    private function getXml()
+    {
         $data = <<<'ENDXML'
 <?xml version="1.0" encoding="utf-8"?>
 <entry xmlns="http://www.w3.org/2005/Atom"
@@ -66,16 +69,19 @@ ENDXML;
         return $xml;
     }
 
-    public function testInstance() : void {
+    public function testInstance(): void
+    {
         $this->assertInstanceOf(JournalBuilder::class, self::$container->get(JournalBuilder::class));
     }
 
-    public function testResultInstance() : void {
+    public function testResultInstance(): void
+    {
         $this->journal = $this->builder->fromXml($this->getXml(), 'B99FE131-48B5-440A-A552-4F1BF2BFDE82');
         $this->assertInstanceOf(Journal::class, $this->journal);
     }
 
-    public function testGetContacted() : void {
+    public function testGetContacted(): void
+    {
         $this->journal = $this->builder->fromXml($this->getXml(), 'B99FE131-48B5-440A-A552-4F1BF2BFDE82');
         $this->assertInstanceOf(DateTimeInterface::class, $this->journal->getContacted());
     }
@@ -86,12 +92,14 @@ ENDXML;
      * @param mixed $expected
      * @param mixed $method
      */
-    public function testFromXml($expected, $method) : void {
+    public function testFromXml($expected, $method): void
+    {
         $this->journal = $this->builder->fromXml($this->getXml(), 'B99FE131-48B5-440A-A552-4F1BF2BFDE82');
         $this->assertSame($expected, $this->journal->{$method}());
     }
 
-    public function journalXmlData() {
+    public function journalXmlData()
+    {
         return [
             ['B99FE131-48B5-440A-A552-4F1BF2BFDE82', 'getUuid'],
             [null, 'getOjsVersion'],
@@ -113,12 +121,14 @@ ENDXML;
      * @param mixed $expected
      * @param mixed $method
      */
-    public function testFromRequest($expected, $method) : void {
+    public function testFromRequest($expected, $method): void
+    {
         $this->journal = $this->builder->fromRequest('B99FE131-48B5-440A-A552-4F1BF2BFDE82', 'http://example.com/journal');
         $this->assertSame($expected, $this->journal->{$method}());
     }
 
-    public function journalRequestData() {
+    public function journalRequestData()
+    {
         return [
             ['B99FE131-48B5-440A-A552-4F1BF2BFDE82', 'getUuid'],
             [null, 'getOjsVersion'],
@@ -134,12 +144,14 @@ ENDXML;
         ];
     }
 
-    public function testFromRequestExisting() : void {
+    public function testFromRequestExisting(): void
+    {
         $this->journal = $this->builder->fromRequest(JournalFixtures::UUIDS[1], 'http://example.com/journal/0');
         $this->assertSame('healthy', $this->journal->getStatus());
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $this->builder = self::$container->get(JournalBuilder::class);
     }

@@ -20,24 +20,28 @@ use whikloj\BagItTools\Bag;
 /**
  * Description of PayloadValidatorTest.
  */
-class BagValidatorTest extends BaseControllerTestCase {
+class BagValidatorTest extends BaseControllerTestCase
+{
     /**
      * @var BagValidator
      */
     private $validator;
 
-    protected function fixtures() : array {
+    protected function fixtures(): array
+    {
         return [
             JournalFixtures::class,
             DepositFixtures::class,
         ];
     }
 
-    public function testInstance() : void {
+    public function testInstance(): void
+    {
         $this->assertInstanceOf(BagValidator::class, $this->validator);
     }
 
-    public function testValidate() : void {
+    public function testValidate(): void
+    {
         $deposit = $this->getReference('deposit.1');
 
         $bag = $this->createMock(Bag::class);
@@ -51,7 +55,8 @@ class BagValidatorTest extends BaseControllerTestCase {
         $this->assertEmpty($deposit->getErrorLog());
     }
 
-    public function testValidateVersionMismatch() : void {
+    public function testValidateVersionMismatch(): void
+    {
         $deposit = $this->getReference('deposit.1');
 
         $bag = $this->createMock(Bag::class);
@@ -63,11 +68,12 @@ class BagValidatorTest extends BaseControllerTestCase {
         $this->validator->setBagReader($reader);
 
         $this->validator->processDeposit($deposit);
-        $this->assertSame(1, count($deposit->getErrorLog()));
+        $this->assertCount(1, $deposit->getErrorLog());
         $this->assertStringStartsWith('Bag validation error for foo', $deposit->getErrorLog()[0]);
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $this->validator = self::$container->get(BagValidator::class);
     }

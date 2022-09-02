@@ -17,13 +17,15 @@ use PHPUnit\Framework\TestCase;
 /**
  * Description of PingResultTest.
  */
-class ServiceDocumentTest extends TestCase {
+class ServiceDocumentTest extends TestCase
+{
     /**
      * @var ServiceDocument
      */
     private $sd;
 
-    private function getXml() {
+    private function getXml()
+    {
         return <<<'ENDXML'
 <service xmlns:dcterms="http://purl.org/dc/terms/"
          xmlns:sword="http://purl.org/net/sword/"
@@ -46,7 +48,8 @@ class ServiceDocumentTest extends TestCase {
 ENDXML;
     }
 
-    public function testInstance() : void {
+    public function testInstance(): void
+    {
         $this->assertInstanceOf(ServiceDocument::class, $this->sd);
     }
 
@@ -56,19 +59,22 @@ ENDXML;
      * @param mixed $expected
      * @param mixed $query
      */
-    public function testGetXpathValue($expected, $query) : void {
+    public function testGetXpathValue($expected, $query): void
+    {
         $value = $this->sd->getXpathValue($query);
         $this->assertSame($expected, $value);
     }
 
-    public function getXpathValueData() {
+    public function getXpathValueData()
+    {
         return [
             ['2.0', '/app:service/sword:version'],
             [null, '/foo/bar'],
         ];
     }
 
-    public function testGetXpathValueException() : void {
+    public function testGetXpathValueException(): void
+    {
         $this->expectException(Exception::class);
         $this->sd->getXpathValue('/app:service/node()');
     }
@@ -79,11 +85,13 @@ ENDXML;
      * @param mixed $expected
      * @param mixed $method
      */
-    public function testValue($expected, $method) : void {
+    public function testValue($expected, $method): void
+    {
         $this->assertSame($expected, $this->sd->{$method}());
     }
 
-    public function valueData() {
+    public function valueData()
+    {
         return [
             ['10000', 'getMaxUpload'],
             ['SHA1 MD5', 'getUploadChecksum'],
@@ -91,12 +99,14 @@ ENDXML;
         ];
     }
 
-    public function testToString() : void {
+    public function testToString(): void
+    {
         $string = (string) $this->sd;
         $this->assertStringContainsStringIgnoringCase('LOCKSSOMatic', $string);
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $this->sd = new ServiceDocument($this->getXml());
     }

@@ -24,7 +24,8 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * Default controller.
  */
-class DefaultController extends AbstractController implements PaginatorAwareInterface {
+class DefaultController extends AbstractController implements PaginatorAwareInterface
+{
     use PaginatorTrait;
     /**
      * The LOCKSS permision statement.
@@ -36,10 +37,11 @@ class DefaultController extends AbstractController implements PaginatorAwareInte
      *
      * @Route("/", name="homepage", methods={"GET"})
      */
-    public function indexAction(EntityManagerInterface $em): Response {
+    public function indexAction(EntityManagerInterface $em): Response
+    {
         $user = $this->getUser();
 
-        if ( ! $user || ! $user->hasRole('ROLE_USER')) {
+        if (! $user || ! $user->hasRole('ROLE_USER')) {
             return $this->render('default/index_anon.html.twig');
         }
 
@@ -58,9 +60,10 @@ class DefaultController extends AbstractController implements PaginatorAwareInte
      * Browse deposits across all jouurnals by state.
      *
      * @Route("/browse/{state}", name="deposit_browse", methods={"GET"})
-     * @Template()
+     * @Template
      */
-    public function browseAction(Request $request, EntityManagerInterface $em, string $state) {
+    public function browseAction(Request $request, EntityManagerInterface $em, string $state)
+    {
         $repo = $em->getRepository(Deposit::class);
         $qb = $repo->createQueryBuilder('d');
         $qb->where('d.state = :state');
@@ -87,9 +90,10 @@ class DefaultController extends AbstractController implements PaginatorAwareInte
      * @Route("/deposit_search", name="all_deposit_search", methods={"GET"})
      *
      * @Security("is_granted('ROLE_USER')")
-     * @Template()
+     * @Template
      */
-    public function depositSearchAction(Request $request): array {
+    public function depositSearchAction(Request $request): array
+    {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Deposit::class);
         $q = $request->query->get('q');

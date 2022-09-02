@@ -19,7 +19,8 @@ use PHPUnit\Framework\TestCase;
 /**
  * Description of XpathTest.
  */
-class XmlParserTest extends TestCase {
+class XmlParserTest extends TestCase
+{
     /**
      * @var XmlParser
      */
@@ -36,7 +37,8 @@ class XmlParserTest extends TestCase {
      * @param mixed $expected
      * @param mixed $data
      */
-    public function testFilter($expected, $data) : void {
+    public function testFilter($expected, $data): void
+    {
         $sourceFile = vfsStream::newFile('bad.xml')->withContent($data)->at($this->root);
         $destFile = vfsStream::newFile('filtered.xml')->at($this->root);
         $this->assertSame($expected, $this->parser->filter($sourceFile->url(), $destFile->url()));
@@ -48,7 +50,8 @@ class XmlParserTest extends TestCase {
      * @param mixed $removed
      * @param mixed $data
      */
-    public function testFromFile($removed, $data) : void {
+    public function testFromFile($removed, $data): void
+    {
         $sourceFile = vfsStream::newFile('bad.xml')
             ->withContent("<a>{$data}</a>")
             ->at($this->root)
@@ -62,7 +65,8 @@ class XmlParserTest extends TestCase {
         }
     }
 
-    public function testInvalidXml() : void {
+    public function testInvalidXml(): void
+    {
         $this->expectException(Exception::class);
         $sourceFile = vfsStream::newFile('bad.xml')
             ->withContent('<a>chicanery</b>')
@@ -72,7 +76,8 @@ class XmlParserTest extends TestCase {
         $this->fail();
     }
 
-    public function testInvalidXmlAndUtf8() : void {
+    public function testInvalidXmlAndUtf8(): void
+    {
         $this->expectException(Exception::class);
         $sourceFile = vfsStream::newFile('bad.xml')
             ->withContent("<a>chic\xc3\x28nery</b>")
@@ -86,7 +91,8 @@ class XmlParserTest extends TestCase {
      * Yes, that's really a valid 6 octet sequence that isn't unicode.
      * Yes, we've really seen stuff like this.
      */
-    public function testSuperInvalidUtf8() : void {
+    public function testSuperInvalidUtf8(): void
+    {
         $this->expectException(Exception::class);
         $sourceFile = vfsStream::newFile('bad.xml')
             ->withContent("<a>chic\xfc\xa1\xa1\xa1\xa1\xa1nery</a>")
@@ -99,7 +105,8 @@ class XmlParserTest extends TestCase {
     /**
      * @see https://stackoverflow.com/a/3886015/9316
      */
-    public function badUtf8Data() {
+    public function badUtf8Data()
+    {
         return [
             [0, 'Valid ASCII a'],
             [0, "Valid 2 Octet Sequence \xc3\xb1"],
@@ -115,7 +122,8 @@ class XmlParserTest extends TestCase {
         ];
     }
 
-    protected function setup() : void {
+    protected function setup(): void
+    {
         parent::setUp();
         $this->parser = new XmlParser();
         $this->root = vfsStream::setup();
