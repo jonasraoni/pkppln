@@ -14,6 +14,7 @@ use App\DataFixtures\DepositFixtures;
 use App\DataFixtures\JournalFixtures;
 use App\Entity\Deposit;
 use App\Repository\DepositRepository;
+use App\Repository\Repository;
 use App\Tests\TestCase\BaseControllerTestCase;
 
 /**
@@ -73,6 +74,6 @@ class DepositRepositoryTest extends BaseControllerTestCase
     protected function setup(): void
     {
         parent::setUp();
-        $this->repo = $this->em->getRepository(Deposit::class);
+        $this->repo = Repository::Deposit();
     }
 }

@@ -12,6 +12,7 @@ namespace App\Controller;
 
 use App\Entity\Document;
 use App\Form\DocumentType;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
 use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -40,6 +41,7 @@ class DocumentController extends AbstractController implements PaginatorAwareInt
      */
     public function indexAction(Request $request): array
     {
+        /** @var EntityManagerInterface */
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Document::class, 'e')->orderBy('e.id', 'ASC');

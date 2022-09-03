@@ -49,12 +49,13 @@ class RunAllCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         foreach (self::COMMAND_LIST as $cmd) {
             $output->writeln("Running {$cmd}");
             $command = $this->getApplication()->find($cmd);
             $command->run($input, $output);
         }
+        return 0;
     }
 }

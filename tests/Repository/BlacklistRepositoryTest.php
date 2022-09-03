@@ -13,6 +13,7 @@ namespace App\Tests\Repository;
 use App\DataFixtures\BlacklistFixtures;
 use App\Entity\Blacklist;
 use App\Repository\BlacklistRepository;
+use App\Repository\Repository;
 use App\Tests\TestCase\BaseControllerTestCase;
 
 /**
@@ -42,6 +43,6 @@ class BlacklistRepositoryTest extends BaseControllerTestCase
     protected function setup(): void
     {
         parent::setUp();
-        $this->repo = $this->em->getRepository(Blacklist::class);
+        $this->repo = Repository::Blacklist();
     }
 }

@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\Journal;
 use App\Entity\Whitelist;
 use App\Form\WhitelistType;
+use App\Repository\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
 use Nines\UtilBundle\Controller\PaginatorTrait;
@@ -42,6 +42,7 @@ class WhitelistController extends AbstractController implements PaginatorAwareIn
      */
     public function indexAction(Request $request): array
     {
+        /** @var EntityManagerInterface */
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Whitelist::class, 'e')->orderBy('e.id', 'ASC');
@@ -63,8 +64,7 @@ class WhitelistController extends AbstractController implements PaginatorAwareIn
      */
     public function searchAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository(Whitelist::class);
+        $repo = Repository::Whitelist();
         $q = $request->query->get('q');
 
         if ($q) {
@@ -117,10 +117,9 @@ class WhitelistController extends AbstractController implements PaginatorAwareIn
      *
      * @Template
      */
-    public function showAction(EntityManagerInterface $em, Whitelist $whitelist): array
+    public function showAction(Whitelist $whitelist): array
     {
-        $repo = $em->getRepository(Journal::class);
-        $journal = $repo->findOneBy(['uuid' => $whitelist->getUuid()]);
+        $journal = Repository::Journal()->findOneBy(['uuid' => $whitelist->getUuid()]);
 
         return [
             'whitelist' => $whitelist,

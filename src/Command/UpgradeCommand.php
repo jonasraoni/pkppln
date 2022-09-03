@@ -375,11 +375,11 @@ class UpgradeCommand extends Command
      * @throws Exception
      *                   If an error occurred.
      */
-    public function execute(InputInterface $input, OutputInterface $output): void
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         if (! $input->getOption('force')) {
             $output->writeln('Will not run without --force.');
-            exit;
+            return 1;
         }
         $this->em->getConnection()->getConfiguration()->setSQLLogger(null);
         $this->source->getConfiguration()->setSQLLogger(null);
@@ -393,5 +393,6 @@ class UpgradeCommand extends Command
         $this->upgradeJournals();
         $this->upgradeAuContainers();
         $this->upgradeDeposits();
+        return 0;
     }
 }

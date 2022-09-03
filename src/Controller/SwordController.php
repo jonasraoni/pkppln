@@ -12,7 +12,7 @@ namespace App\Controller;
 
 use App\Entity\Deposit;
 use App\Entity\Journal;
-use App\Entity\TermOfUse;
+use App\Repository\Repository;
 use App\Services\BlackWhiteList;
 use App\Services\DepositBuilder;
 use App\Services\JournalBuilder;
@@ -72,7 +72,7 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
      * If $required is true and the header is not present BadRequestException
      * will be thrown.
      *
-     * @throws BadRequestException
+     * @throws BadRequestHttpException
      */
     private function fetchHeader(Request $request, string $key, bool $required = false): ?string
     {
@@ -180,7 +180,7 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
             $accepting = false;
         }
         $this->em->flush();
-        $termsRepo = $this->getDoctrine()->getRepository(TermOfUse::class);
+        $termsRepo = Repository::TermOfUse();
 
         return [
             'onBehalfOf' => $obh,

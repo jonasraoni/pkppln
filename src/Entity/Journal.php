@@ -16,6 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use Nines\UtilBundle\Entity\AbstractEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -406,6 +407,7 @@ class Journal extends AbstractEntity
 
     /**
      * Get deposits.
+     * @return (Collection & iterable<Deposit>)|PersistentCollection
      */
     public function getDeposits(): Collection
     {
@@ -419,9 +421,9 @@ class Journal extends AbstractEntity
      * Deposits returned will be in state deposited, complete, or status-error. Those
      * have all been sent to lockss.
      *
-     * @return ArrayCollection|Deposit[]
+     * @return Collection<(int|string), Deposit>
      */
-    public function getSentDeposits(): array
+    public function getSentDeposits(): mixed
     {
         $criteria = Criteria::create()->where(Criteria::expr()->in('state', self::SENT_STATES));
 

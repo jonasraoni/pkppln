@@ -12,6 +12,7 @@ namespace App\Services\Processing;
 
 use App\Entity\AuContainer;
 use App\Entity\Deposit;
+use App\Repository\Repository;
 use App\Services\FilePaths;
 use App\Utilities\BagReader;
 use Doctrine\ORM\EntityManagerInterface;
@@ -101,7 +102,7 @@ class BagReserializer
         $deposit->setPackageChecksumType('sha1');
         $deposit->setPackageChecksumValue(hash_file('sha1', $path));
 
-        $auContainer = $this->em->getRepository('App:AuContainer')->getOpenContainer();
+        $auContainer = Repository::AuContainer()->getOpenContainer();
         if (null === $auContainer) {
             $auContainer = new AuContainer();
             $this->em->persist($auContainer);

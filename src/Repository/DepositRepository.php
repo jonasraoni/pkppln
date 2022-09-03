@@ -52,8 +52,7 @@ class DepositRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('e');
         $qb->select('e.state, count(e) as ct')
             ->groupBy('e.state')
-            ->orderBy('e.state')
-        ;
+            ->orderBy('e.state');
 
         return $qb->getQuery()->getResult();
     }
@@ -61,9 +60,7 @@ class DepositRepository extends ServiceEntityRepository
     /**
      * Return some recent deposits.
      *
-     * @todo this should be called findRecent
-     *
-     * @return Collection|Deposit[]
+     * @return Deposit[]
      */
     public function findNew(int $limit = 5): array
     {

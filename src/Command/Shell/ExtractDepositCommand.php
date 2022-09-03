@@ -55,7 +55,7 @@ class ExtractDepositCommand extends Command
      *
      * @throws Exception
      */
-    public function execute(InputInterface $input, OutputInterface $output): void
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $file = $input->getArgument('file');
         $path = $input->getArgument('path');
@@ -122,5 +122,6 @@ class ExtractDepositCommand extends Command
                 $fs->rename($tmpPath, $tmpPath . $ext);
             }
         }
+        return 0;
     }
 }

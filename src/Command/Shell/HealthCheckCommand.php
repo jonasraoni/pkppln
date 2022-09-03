@@ -11,12 +11,10 @@ declare(strict_types=1);
 namespace App\Command\Shell;
 
 use App\Entity\Journal;
-use App\Repository\JournalRepository;
+use App\Repository\Repository;
 use App\Services\Ping;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Nines\UserBundle\Entity\User;
-use Nines\UserBundle\Repository\UserRepository;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
@@ -95,8 +93,6 @@ class HealthCheckCommand extends Command
 
     /**
      * Request a ping from a journal.
-     *
-     * @todo Use the Ping service
      */
     protected function pingJournal(Journal $journal): bool
     {
@@ -113,25 +109,22 @@ class HealthCheckCommand extends Command
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $days = $this->container->get('days_silent');
-        /** @var JournalRepository */
-        $journalRepository = $this->em->getRepository(Journal::class);
-        $journals = $journalRepository->findSilent($days);
+        $journals = Repository::Journal()->findSilent($days);
         $count = \count($journals);
         $this->logger->notice("Found {$count} silent journals.");
         if (0 === \count($journals)) {
-            return;
+            return 0;
         }
 
-        /** @var UserRepository */
-        $userRepository = $this->em->getRepository(User::class);
-        $users = $userRepository->findUserToNotify();
+        /** @todo This method doesn't exist */
+        $users = Repository::User()->findUserToNotify();
         if (0 === \count($users)) {
             $this->logger->error('No users to notify.');
 
-            return;
+            return 0;
         }
         $this->sendNotifications($days, $users, $journals);
 
@@ -149,5 +142,6 @@ class HealthCheckCommand extends Command
         if (! $input->getOption('dry-run')) {
             $this->em->flush();
         }
+        return 0;
     }
 }

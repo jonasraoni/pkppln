@@ -54,20 +54,11 @@ class PayloadValidator
     public function hashFile(string $algorithm, string $filepath): string
     {
         $handle = fopen($filepath, 'r');
-        $context = null;
-        switch (strtolower($algorithm)) {
-            case 'sha-1':
-            case 'sha1':
-                $context = hash_init('sha1');
-
-                break;
-            case 'md5':
-                $context = hash_init('md5');
-
-                break;
-            default:
-                throw new Exception("Unknown hash algorithm {$algorithm}");
-        }
+        $context = match (strtolower($algorithm)) {
+            'sha1', 'sha-1' => hash_init('sha1'),
+            'md5' => hash_init('md5'),
+            default => throw new Exception("Unknown hash algorithm {$algorithm}")
+        };
         while (($data = fread($handle, self::BUFFER_SIZE))) {
             hash_update($context, $data);
         }

@@ -10,7 +10,11 @@ declare(strict_types=1);
 
 namespace App\Command\Shell;
 
+use App\Entity\Journal;
+use App\Repository\Repository;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
+use Nines\UserBundle\Entity\User;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -33,14 +37,16 @@ class HealthReminderCommand extends Command
     private Environment $templating;
     private ContainerInterface $container;
     private MailerInterface $mailer;
+    private EntityManagerInterface $em;
 
-    public function __construct(Environment $environment, LoggerInterface $logger, ContainerInterface $container, MailerInterface $mailer)
+    public function __construct(Environment $environment, LoggerInterface $logger, ContainerInterface $container, MailerInterface $mailer, EntityManagerInterface $em)
     {
         parent::__construct();
         $this->templating = $environment;
         $this->logger = $logger;
         $this->container = $container;
         $this->mailer = $mailer;
+        $this->em = $em;
     }
 
     /**
@@ -84,22 +90,21 @@ class HealthReminderCommand extends Command
     /**
      * Execute the runall command, which executes all the commands.
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $em = $this->container->get('doctrine')->getManager();
         $days = $this->container->getParameter('days_reminder');
-        $journals = $em->getRepository('App:Journal')->findOverdue($days);
+        $journals = Repository::Journal()->findOverdue($days);
         $count = \count($journals);
         $this->logger->notice("Found {$count} overdue journals.");
         if (0 === \count($journals)) {
-            return;
+            return 0;
         }
 
-        $users = $em->getRepository('AppUserBundle:User')->findUserToNotify();
+        $users = Repository::User()->findUserToNotify();
         if (0 === \count($users)) {
             $this->logger->error('No users to notify.');
 
-            return;
+            return 0;
         }
         $this->sendReminders($days, $users, $journals);
 
@@ -108,7 +113,8 @@ class HealthReminderCommand extends Command
         }
 
         if (! $input->getOption('dry-run')) {
-            $em->flush();
+            $this->em->flush();
         }
+        return 0;
     }
 }

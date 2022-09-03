@@ -31,20 +31,18 @@ class JournalRepository extends ServiceEntityRepository
     /**
      * Get a list of journals that need to be pinged.
      *
-     * @return Collection|Journal[]
+     * @return Journal[]
      *                              List of journals.
      */
     public function getJournalsToPing(): array
     {
-        $blacklist = $this->getEntityManager()->getRepository(Blacklist::class)
+        $blacklist = Repository::Blacklist()
             ->createQueryBuilder('bl')
-            ->select('bl.uuid')
-        ;
+            ->select('bl.uuid');
 
-        $whitelist = $this->getEntityManager()->getRepository(Whitelist::class)
+        $whitelist = Repository::Whitelist()
             ->createQueryBuilder('wl')
-            ->select('wl.uuid')
-        ;
+            ->select('wl.uuid');
 
         $qb = $this->createQueryBuilder('j');
         $qb->andWhere('j.status != :status');
@@ -87,7 +85,7 @@ class JournalRepository extends ServiceEntityRepository
     /**
      * Find journals that haven't contacted the PLN in $days.
      *
-     * @return Collection|Journal[]
+     * @return Journal[]
      */
     public function findSilent(int $days): array
     {
@@ -105,7 +103,7 @@ class JournalRepository extends ServiceEntityRepository
      *
      * Excludes journals wehre notifications have been sent.
      *
-     * @return Collection|Journal[]
+     * @return Journal[]
      */
     public function findOverdue(int $days): array
     {
@@ -120,7 +118,7 @@ class JournalRepository extends ServiceEntityRepository
     /**
      * Find the $limit most recent journals to contact the PLN for the first time.
      *
-     * @return Collection|Journal[]
+     * @return Journal[]
      */
     public function findNew(int $limit = 5): array
     {

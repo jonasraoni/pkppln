@@ -12,9 +12,9 @@ namespace App\Command\Shell;
 
 use App\Entity\Deposit;
 use App\Entity\Journal;
+use App\Repository\Repository;
 use App\Services\FilePaths;
 use App\Services\SwordClient;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use GuzzleHttp\Client;
@@ -130,22 +130,23 @@ class FetchContentCommand extends Command
      *
      * @param int[] $journalIds
      *
-     * @return Collection|Journal[]
+     * @return Journal[]
      */
     public function getJournals(array $journalIds): array
     {
-        return $this->em->getRepository('App:Journal')->findBy(['id' => $journalIds]);
+        return Repository::Journal()->findBy(['id' => $journalIds]);
     }
 
     /**
      * Execute the command.
      */
-    public function execute(InputInterface $input, OutputInterface $output): void
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $journalIds = $input->getArgument('journals');
         $journals = $this->getJournals($journalIds);
         foreach ($journals as $journal) {
             $this->downloadJournal($journal);
         }
+        return 0;
     }
 }

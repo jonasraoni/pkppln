@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Entity\Journal;
+use App\Repository\Repository;
 use App\Services\Ping;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -59,7 +59,7 @@ class PingCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $all = $input->getOption('all');
         $journals = $this->findJournals($all);
@@ -68,6 +68,7 @@ class PingCommand extends Command
             $result = $this->ping->ping($journal);
             $this->em->flush();
         }
+        return 0;
     }
 
     /**
@@ -75,7 +76,7 @@ class PingCommand extends Command
      */
     public function findJournals(bool $all)
     {
-        $repo = $this->em->getRepository(Journal::class);
+        $repo = Repository::Journal();
         if ($all) {
             return $repo->findAll();
         }

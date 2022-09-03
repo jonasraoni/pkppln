@@ -11,8 +11,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Blacklist;
-use App\Entity\Journal;
 use App\Form\BlacklistType;
+use App\Repository\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
 use Nines\UtilBundle\Controller\PaginatorTrait;
@@ -41,6 +41,7 @@ class BlacklistController extends AbstractController implements PaginatorAwareIn
      */
     public function indexAction(Request $request): array
     {
+        /** @var EntityManagerInterface */
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Blacklist::class, 'e')->orderBy('e.id', 'ASC');
@@ -62,8 +63,7 @@ class BlacklistController extends AbstractController implements PaginatorAwareIn
      */
     public function searchAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository(Blacklist::class);
+        $repo = Repository::Blacklist();
         $q = $request->query->get('q');
 
         if ($q) {
@@ -116,10 +116,9 @@ class BlacklistController extends AbstractController implements PaginatorAwareIn
      *
      * @Template
      */
-    public function showAction(EntityManagerInterface $em, Blacklist $blacklist): array
+    public function showAction(Blacklist $blacklist): array
     {
-        $repo = $em->getRepository(Journal::class);
-        $journal = $repo->findOneBy(['uuid' => $blacklist->getUuid()]);
+        $journal = Repository::Journal()->findOneBy(['uuid' => $blacklist->getUuid()]);
 
         return [
             'blacklist' => $blacklist,

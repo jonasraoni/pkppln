@@ -15,6 +15,7 @@ use App\Entity\Blacklist;
 use App\Entity\Journal;
 use App\Entity\Whitelist;
 use App\Repository\JournalRepository;
+use App\Repository\Repository;
 use App\Tests\TestCase\BaseControllerTestCase;
 
 /**
@@ -91,6 +92,6 @@ class JournalRepositoryTest extends BaseControllerTestCase
     protected function setup(): void
     {
         parent::setUp();
-        $this->repo = $this->em->getRepository(Journal::class);
+        $this->repo = Repository::Journal();
     }
 }

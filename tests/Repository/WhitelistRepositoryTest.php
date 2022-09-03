@@ -12,6 +12,7 @@ namespace App\Tests\Repository;
 
 use App\DataFixtures\WhitelistFixtures;
 use App\Entity\Whitelist;
+use App\Repository\Repository;
 use App\Repository\WhitelistRepository;
 use App\Tests\TestCase\BaseControllerTestCase;
 
@@ -42,6 +43,6 @@ class WhitelistRepositoryTest extends BaseControllerTestCase
     protected function setup(): void
     {
         parent::setUp();
-        $this->repo = $this->em->getRepository(Whitelist::class);
+        $this->repo = Repository::Whitelist();
     }
 }

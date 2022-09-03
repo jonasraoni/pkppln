@@ -12,6 +12,7 @@ namespace App\Services;
 
 use App\Entity\Deposit;
 use App\Entity\Journal;
+use App\Repository\Repository;
 use App\Utilities\Xpath;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -59,7 +60,7 @@ class DepositBuilder
     protected function findDeposit(string $uuid): Deposit
     {
         /** @var Deposit */
-        $deposit = $this->em->getRepository(Deposit::class)->findOneBy(['depositUuid' => strtoupper($uuid)]);
+        $deposit = Repository::Deposit()->findOneBy(['depositUuid' => strtoupper($uuid)]);
         if (!$deposit) {
             return (new Deposit())->setDepositUuid($uuid)
                 ->setAction('add')

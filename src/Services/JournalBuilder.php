@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Journal;
+use App\Repository\Repository;
 use App\Utilities\Xpath;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -41,9 +42,7 @@ class JournalBuilder
      */
     public function fromXml(SimpleXMLElement $xml, string $uuid): Journal
     {
-        $journal = $this->em->getRepository(Journal::class)->findOneBy([
-            'uuid' => strtoupper($uuid),
-        ]);
+        $journal = Repository::Journal()->findOneBy(['uuid' => strtoupper($uuid)]);
         if (null === $journal) {
             $journal = new Journal();
         }
@@ -67,7 +66,7 @@ class JournalBuilder
      */
     public function fromRequest(string $uuid, string $url): Journal
     {
-        $journal = $this->em->getRepository('App:Journal')->findOneBy([
+        $journal = Repository::Journal()->findOneBy([
             'uuid' => strtoupper($uuid),
         ]);
         if (null === $journal) {

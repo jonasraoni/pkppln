@@ -24,8 +24,6 @@ class TermOfUseHistory extends AbstractEntity
     /**
      * A term ID, similar to the OJS translation keys.
      *
-     * @todo This is probably wrong. It shouldn't be an integer.
-     *
      * @ORM\Column(type="integer")
      */
     private int $termId;

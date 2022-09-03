@@ -12,6 +12,7 @@ namespace App\Tests\Controller;
 
 use App\DataFixtures\WhitelistFixtures;
 use App\Entity\Whitelist;
+use App\Repository\Repository;
 use Nines\UserBundle\DataFixtures\UserFixtures;
 use App\Tests\TestCase\BaseControllerTestCase;
 
@@ -186,7 +187,7 @@ class WhitelistControllerTest extends BaseControllerTestCase
 
     public function testAdminDelete(): void
     {
-        $preCount = \count($this->em->getRepository(Whitelist::class)->findAll());
+        $preCount = \count(Repository::Whitelist()->findAll());
         $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/whitelist/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
@@ -195,7 +196,7 @@ class WhitelistControllerTest extends BaseControllerTestCase
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
         $this->em->clear();
-        $postCount = \count($this->em->getRepository(Whitelist::class)->findAll());
+        $postCount = \count(Repository::Whitelist()->findAll());
         $this->assertSame($preCount - 1, $postCount);
     }
 }

@@ -12,6 +12,7 @@ namespace App\Services;
 
 use App\Entity\Blacklist;
 use App\Entity\Whitelist;
+use App\Repository\Repository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -21,34 +22,11 @@ use Doctrine\ORM\EntityManagerInterface;
 class BlackWhiteList
 {
     /**
-     * Entity manager.
-     */
-    private EntityManagerInterface $em;
-
-    /**
-     * Build the service.
-     */
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
-
-    /**
-     * Get an entry for the UUID.
-     */
-    private function getEntry(ServiceEntityRepository $repo, string $uuid)
-    {
-        return null !== $repo->findOneBy(['uuid' => strtoupper($uuid)]);
-    }
-
-    /**
      * Return true if the uuid is whitelisted.
      */
     public function isWhitelisted(string $uuid): bool
     {
-        $repo = $this->em->getRepository(Whitelist::class);
-
-        return $this->getEntry($repo, $uuid);
+        return null !== Repository::Whitelist()->findOneBy(['uuid' => strtoupper($uuid)]);
     }
 
     /**
@@ -56,9 +34,7 @@ class BlackWhiteList
      */
     public function isBlacklisted(string $uuid): bool
     {
-        $repo = $this->em->getRepository(Blacklist::class);
-
-        return $this->getEntry($repo, $uuid);
+        return null !== Repository::Blacklist()->findOneBy(['uuid' => strtoupper($uuid)]);
     }
 
     /**

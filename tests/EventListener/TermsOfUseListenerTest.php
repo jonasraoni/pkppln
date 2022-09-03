@@ -12,6 +12,7 @@ namespace App\Tests\EventListener;
 
 use App\Entity\TermOfUse;
 use App\Entity\TermOfUseHistory;
+use App\Repository\Repository;
 use App\Tests\TestCase\BaseControllerTestCase;
 
 /**
@@ -34,7 +35,7 @@ class TermsOfUseListenerTest extends BaseControllerTestCase
         $this->em->persist($term);
         $this->em->flush();
 
-        $history = $this->em->getRepository(TermOfUseHistory::class)->findOneBy([
+        $history = Repository::TermOfUseHistory()->findOneBy([
             'termId' => $term->getId(),
         ]);
         $this->assertNotNull($history);
@@ -61,7 +62,7 @@ class TermsOfUseListenerTest extends BaseControllerTestCase
         $term->setWeight(3);
         $this->em->flush();
 
-        $history = $this->em->getRepository(TermOfUseHistory::class)->findOneBy([
+        $history = Repository::TermOfUseHistory()->findOneBy([
             'termId' => $term->getId(),
             'action' => 'update',
         ]);
@@ -90,7 +91,7 @@ class TermsOfUseListenerTest extends BaseControllerTestCase
         $this->em->remove($term);
         $this->em->flush();
 
-        $history = $this->em->getRepository(TermOfUseHistory::class)->findOneBy([
+        $history = Repository::TermOfUseHistory()->findOneBy([
             'termId' => $termId,
             'action' => 'delete',
         ]);

@@ -19,7 +19,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Message;
 use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
 use SimpleXMLElement;
 use Symfony\Component\Filesystem\Filesystem;
 use Twig\Environment;
@@ -136,7 +136,7 @@ class SwordClient
      *
      * @throws Exception
      */
-    public function request(string $method, string $url, array $headers = [], string $xml = null, Deposit $deposit = null, array $options = []): Response
+    public function request(string $method, string $url, array $headers = [], string $xml = null, Deposit $deposit = null, array $options = []): ResponseInterface
     {
         try {
             $request = new Request($method, $url, $headers, $xml);

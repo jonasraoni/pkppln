@@ -235,34 +235,24 @@ class GenerateOnixCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->em->getConnection()->getConfiguration()->setSQLLogger(null);
         ini_set('memory_limit', '512M');
         $files = $input->getArgument('file');
         if (! $files || ! \count($files)) {
-            $files[] = $this->filePaths->getOnixPath('xml');
-            $files[] = $this->filePaths->getOnixPath('csv');
+            $files[] = $this->filePaths->getOnixPath();
         }
 
         foreach ($files as $file) {
             $this->logger->info("Writing {$file}");
-            $ext = pathinfo($file, \PATHINFO_EXTENSION);
-            switch ($ext) {
-                case 'xml':
-                    $this->generateXml($file);
-
-                    break;
-                case 'csv':
-                    $this->generateCsv($file);
-
-                    break;
-                default:
-                    $this->logger->error("Cannot generate {$ext} ONIX format.");
-
-                    break;
-            }
+            match ($ext = pathinfo($file, \PATHINFO_EXTENSION)) {
+                'xml' => $this->generateXml($file),
+                'csv' => $this->generateCsv($file),
+                default => $this->logger->error("Cannot generate {$ext} ONIX format.")
+            };
         }
+        return 0;
     }
 
     /**

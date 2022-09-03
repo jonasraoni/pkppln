@@ -12,6 +12,7 @@ namespace App\Tests\Controller;
 
 use App\DataFixtures\TermOfUseFixtures;
 use App\Entity\TermOfUse;
+use App\Repository\Repository;
 use Nines\UserBundle\DataFixtures\UserFixtures;
 use App\Tests\TestCase\BaseControllerTestCase;
 
@@ -160,7 +161,7 @@ class TermOfUseControllerTest extends BaseControllerTestCase
 
     public function testAdminDelete(): void
     {
-        $preCount = \count($this->em->getRepository(TermOfUse::class)->findAll());
+        $preCount = \count(Repository::TermOfUse()->findAll());
         $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/termofuse/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
@@ -169,7 +170,7 @@ class TermOfUseControllerTest extends BaseControllerTestCase
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
         $this->em->clear();
-        $postCount = \count($this->em->getRepository(TermOfUse::class)->findAll());
+        $postCount = \count(Repository::TermOfUse()->findAll());
         $this->assertSame($preCount - 1, $postCount);
     }
 }

@@ -102,7 +102,7 @@ class CleanupCommand extends Command
     /**
      * Execute the command.
      */
-    final protected function execute(InputInterface $input, OutputInterface $output): void
+    final protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $force = $input->getOption('force');
         $this->em->getConnection()->getConfiguration()->setSQLLogger(null);
@@ -121,5 +121,6 @@ class CleanupCommand extends Command
                 gc_collect_cycles();
             }
         }
+        return 0;
     }
 }

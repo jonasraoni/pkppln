@@ -10,7 +10,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\AuContainer;
+use App\Repository\Repository;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
 use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -35,6 +36,7 @@ class AuContainerController extends AbstractController implements PaginatorAware
      */
     public function indexAction(Request $request): array
     {
+        /** @var EntityManagerInterface */
         $em = $this->getDoctrine()->getManager();
         $dql = 'SELECT e FROM App:AuContainer e ORDER BY e.id';
         $query = $em->createQuery($dql);
@@ -45,8 +47,9 @@ class AuContainerController extends AbstractController implements PaginatorAware
             25
         );
 
-        $openContainer = $em->getRepository('App:AuContainer')->getOpenContainer();
-        $sizes = $em->getRepository(AuContainer::class)->getSizes();
+        $repo = Repository::AuContainer();
+        $openContainer = $repo->getOpenContainer();
+        $sizes = $repo->getSizes();
 
         return [
             'entities' => $entities,
@@ -63,10 +66,9 @@ class AuContainerController extends AbstractController implements PaginatorAware
      */
     public function showAction(string $id): array
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('App:AuContainer')->find($id);
-        $openContainer = $em->getRepository('App:AuContainer')->getOpenContainer();
+        $repo = Repository::AuContainer();
+        $entity = $repo->find($id);
+        $openContainer = $repo->getOpenContainer();
 
         if (! $entity) {
             throw $this->createNotFoundException('Unable to find AuContainer entity.');

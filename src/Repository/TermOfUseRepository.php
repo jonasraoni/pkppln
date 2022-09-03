@@ -28,7 +28,7 @@ class TermOfUseRepository extends ServiceEntityRepository
     /**
      * Get the terms of use, sorted by weight.
      *
-     * @return Collection|TermOfUse[]
+     * @return TermOfUse[]
      *                                The terms of use.
      */
     public function getTerms(): array

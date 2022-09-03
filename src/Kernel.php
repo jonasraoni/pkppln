@@ -31,7 +31,7 @@ class Kernel extends BaseKernel
         self::$instance = $this;
     }
 
-    public static function getInstance(): static
+    public static function getInstance(): Kernel
     {
         return self::$instance;
     }

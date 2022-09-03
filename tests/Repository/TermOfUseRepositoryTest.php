@@ -12,6 +12,7 @@ namespace App\Tests\Repository;
 
 use App\DataFixtures\TermOfUseFixtures;
 use App\Entity\TermOfUse;
+use App\Repository\Repository;
 use App\Repository\TermOfUseRepository;
 use App\Tests\TestCase\BaseControllerTestCase;
 
@@ -46,6 +47,6 @@ class TermOfUseRepositoryTest extends BaseControllerTestCase
     protected function setup(): void
     {
         parent::setUp();
-        $this->repo = $this->em->getRepository(TermOfUse::class);
+        $this->repo = Repository::TermOfUse();
     }
 }

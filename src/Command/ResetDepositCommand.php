@@ -46,14 +46,14 @@ class ResetDepositCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $ids = $input->getArgument('deposit-id');
         $clear = $input->getOption('clear');
         if (0 === \count($ids) && ! $input->getOption('all')) {
             $output->writeln('Either --all or one or more deposit UUIDs are required.');
 
-            return;
+            return 1;
         }
         $state = $input->getArgument('state');
         $iterator = $this->getDepositIterator($ids);
@@ -76,6 +76,7 @@ class ResetDepositCommand extends Command
         }
         $this->em->flush();
         $this->em->clear();
+        return 0;
     }
 
     /**

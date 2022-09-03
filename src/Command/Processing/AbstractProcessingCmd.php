@@ -74,7 +74,7 @@ abstract class AbstractProcessingCmd extends Command
     /**
      * {@inheritdoc}
      */
-    final protected function execute(InputInterface $input, OutputInterface $output): void
+    final protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->preExecute();
         $deposits = $this->getDeposits(
@@ -87,6 +87,7 @@ abstract class AbstractProcessingCmd extends Command
         foreach ($deposits as $deposit) {
             $this->runDeposit($deposit, $output, $input->getOption('dry-run'));
         }
+        return 0;
     }
 
     /**

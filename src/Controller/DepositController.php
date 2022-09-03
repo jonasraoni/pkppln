@@ -12,6 +12,8 @@ namespace App\Controller;
 
 use App\Entity\Deposit;
 use App\Entity\Journal;
+use App\Repository\Repository;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
 use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -41,6 +43,7 @@ class DepositController extends AbstractController implements PaginatorAwareInte
      */
     public function indexAction(Request $request, Journal $journal): array
     {
+        /** @var EntityManagerInterface */
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Deposit::class, 'e')->where('e.journal = :journal')->orderBy('e.id', 'ASC')->setParameter('journal', $journal);
@@ -68,8 +71,7 @@ class DepositController extends AbstractController implements PaginatorAwareInte
      */
     public function searchAction(Request $request, Journal $journal)
     {
-        $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository(Deposit::class);
+        $repo = Repository::Deposit();
         $q = $request->query->get('q');
 
         if ($q) {

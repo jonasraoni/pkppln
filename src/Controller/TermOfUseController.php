@@ -11,8 +11,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\TermOfUse;
-use App\Entity\TermOfUseHistory;
 use App\Form\TermOfUseType;
+use App\Repository\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
 use Nines\UtilBundle\Controller\PaginatorTrait;
@@ -42,6 +42,7 @@ class TermOfUseController extends AbstractController implements PaginatorAwareIn
      */
     public function indexAction(Request $request): array
     {
+        /** @var EntityManagerInterface */
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(TermOfUse::class, 'e')->orderBy('e.id', 'ASC');
@@ -91,11 +92,11 @@ class TermOfUseController extends AbstractController implements PaginatorAwareIn
      *
      * @Template
      */
-    public function showAction(EntityManagerInterface $em, TermOfUse $termOfUse): array
+    public function showAction(TermOfUse $termOfUse): array
     {
         // This can't just be $termOfUse->getHistory() or something because there
         // is no foreign key relationship - the history is preserved when a term is deleted.
-        $repo = $em->getRepository(TermOfUseHistory::class);
+        $repo = Repository::TermOfUseHistory();
         $history = $repo->findBy(['termId' => $termOfUse->getId()], ['id' => 'ASC']);
 
         return [

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\DataFixtures\AuContainerFixtures;
+use App\Repository\Repository;
 use App\Tests\TestCase\BaseControllerTestCase;
 
 class AuContainerRepositoryTest extends BaseControllerTestCase
@@ -38,6 +39,6 @@ class AuContainerRepositoryTest extends BaseControllerTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->repository = $this->em->getRepository('App:AuContainer');
+        $this->repository = Repository::AuContainer();
     }
 }
