@@ -43,6 +43,6 @@ class BlacklistRepositoryTest extends BaseControllerTestCase
     protected function setup(): void
     {
         parent::setUp();
-        $this->repo = Repository::Blacklist();
+        $this->repo = Repository::blacklist();
     }
 }

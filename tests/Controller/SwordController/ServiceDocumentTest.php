@@ -61,7 +61,7 @@ class ServiceDocumentTest extends AbstractSwordTestCase
 
     public function testServiceDocumentContentNewJournal(): void
     {
-        $count = \count(Repository::Journal()->findAll());
+        $count = \count(Repository::journal()->findAll());
 
         $this->client->request('GET', '/api/sword/2.0/sd-iri', [], [], [
             'HTTP_On-Behalf-Of' => '7AD045C9-89E6-4ACA-8363-56FE9A45C34F',
@@ -77,9 +77,9 @@ class ServiceDocumentTest extends AbstractSwordTestCase
         $this->assertSame('PKP PLN deposit for 7AD045C9-89E6-4ACA-8363-56FE9A45C34F', $this->getXmlValue($xml, '//atom:title'));
         $this->assertSame('http://localhost/api/sword/2.0/col-iri/7AD045C9-89E6-4ACA-8363-56FE9A45C34F', $this->getXmlValue($xml, '//app:collection/@href'));
 
-        $this->assertCount($count + 1, Repository::Journal()->findAll());
+        $this->assertCount($count + 1, Repository::journal()->findAll());
 
-        $journal = Repository::Journal()->findOneBy(['uuid' => '7AD045C9-89E6-4ACA-8363-56FE9A45C34F']);
+        $journal = Repository::journal()->findOneBy(['uuid' => '7AD045C9-89E6-4ACA-8363-56FE9A45C34F']);
         $this->assertNotNull($journal);
         $this->assertNull($journal->getTitle());
         $this->assertSame('http://example.com', $journal->getUrl());
@@ -88,7 +88,7 @@ class ServiceDocumentTest extends AbstractSwordTestCase
 
     public function testServiceDocumentContentWhitelistedJournal(): void
     {
-        $count = \count(Repository::Journal()->findAll());
+        $count = \count(Repository::journal()->findAll());
 
         $this->client->request('GET', '/api/sword/2.0/sd-iri', [], [], [
             'HTTP_On-Behalf-Of' => WhitelistFixtures::UUIDS[0],
@@ -105,8 +105,8 @@ class ServiceDocumentTest extends AbstractSwordTestCase
         $this->assertSame('http://localhost/api/sword/2.0/col-iri/' . WhitelistFixtures::UUIDS[0], $this->getXmlValue($xml, '//app:collection/@href'));
 
         $this->em->clear();
-        $this->assertCount($count, Repository::Journal()->findAll());
-        $journal = Repository::Journal()->findOneBy(['uuid' => WhitelistFixtures::UUIDS[0]]);
+        $this->assertCount($count, Repository::journal()->findAll());
+        $journal = Repository::journal()->findOneBy(['uuid' => WhitelistFixtures::UUIDS[0]]);
         $this->assertSame('http://example.com/journal/0', $journal->getUrl());
     }
 }

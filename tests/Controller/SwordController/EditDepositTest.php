@@ -49,7 +49,7 @@ ENDXML;
 
     public function testEditDepositNotWhitelisted(): void
     {
-        $depositCount = \count(Repository::Deposit()->findAll());
+        $depositCount = \count(Repository::deposit()->findAll());
         $this->client->request(
             'PUT',
             '/api/sword/2.0/cont-iri/04F2C06E-35B8-43C1-B60C-1934271B0B7E/F93A8108-B705-4763-A592-B718B00BD4EA/edit',
@@ -61,12 +61,12 @@ ENDXML;
         $this->em->clear();
         $response = $this->client->getResponse();
         $this->assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-        $this->assertSame($depositCount, \count(Repository::Deposit()->findAll()));
+        $this->assertSame($depositCount, \count(Repository::deposit()->findAll()));
     }
 
     public function testEditDepositDepositMissing(): void
     {
-        $depositCount = \count(Repository::Deposit()->findAll());
+        $depositCount = \count(Repository::deposit()->findAll());
         $this->client->request(
             'PUT',
             '/api/sword/2.0/cont-iri/44428B12-CDC4-453E-8157-319004CD8CE6/c0a65967-32bd-4ee8-96de-c469743e563a/edit',
@@ -78,12 +78,12 @@ ENDXML;
         $this->em->clear();
         $response = $this->client->getResponse();
         $this->assertSame(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-        $this->assertSame($depositCount, \count(Repository::Deposit()->findAll()));
+        $this->assertSame($depositCount, \count(Repository::deposit()->findAll()));
     }
 
     public function testEditDepositJournalMismatch(): void
     {
-        $depositCount = \count(Repository::Deposit()->findAll());
+        $depositCount = \count(Repository::deposit()->findAll());
         $this->client->request(
             'PUT',
             '/api/sword/2.0/cont-iri/44428B12-CDC4-453E-8157-319004CD8CE6/4ECC5D8B-ECC9-435C-A072-6DCF198ACD6D/edit',
@@ -95,7 +95,7 @@ ENDXML;
         $this->em->clear();
         $response = $this->client->getResponse();
         $this->assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-        $this->assertSame($depositCount, \count(Repository::Deposit()->findAll()));
+        $this->assertSame($depositCount, \count(Repository::deposit()->findAll()));
     }
 
     public function testEditDepositSuccess(): void
@@ -107,7 +107,7 @@ ENDXML;
         $this->em->flush();
         $this->em->clear();
 
-        $depositCount = \count(Repository::Deposit()->findAll());
+        $depositCount = \count(Repository::deposit()->findAll());
         $this->client->request(
             'PUT',
             '/api/sword/2.0/cont-iri/04F2C06E-35B8-43C1-B60C-1934271B0B7E/F93A8108-B705-4763-A592-B718B00BD4EA/edit',
@@ -119,9 +119,9 @@ ENDXML;
         $this->em->clear();
         $response = $this->client->getResponse();
         $this->assertSame(Response::HTTP_CREATED, $response->getStatusCode());
-        $this->assertSame($depositCount + 1, \count(Repository::Deposit()->findAll()));
+        $this->assertSame($depositCount + 1, \count(Repository::deposit()->findAll()));
 
-        $deposit = Repository::Deposit()->findOneBy([
+        $deposit = Repository::deposit()->findOneBy([
             'depositUuid' => strtoupper('d38e7ecb-7d7e-408d-94b0-b00d434fdbd2'),
         ]);
         $this->assertSame('55CA6286E3E4F4FBA5D0448333FA99FC5A404A73', $deposit->getChecksumValue());

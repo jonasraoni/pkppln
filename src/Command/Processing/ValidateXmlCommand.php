@@ -21,7 +21,6 @@ use Doctrine\ORM\EntityManagerInterface;
 class ValidateXmlCommand extends AbstractProcessingCmd
 {
     private XmlValidator $xmlValidator;
-    private SchemaValidator $schemaValidator;
 
     /**
      * Build the command.

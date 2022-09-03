@@ -39,11 +39,10 @@ class TermOfUseController extends AbstractController implements PaginatorAwareIn
      * @Route("/", name="termofuse_index", methods={"GET"})
      *
      * @Template
+     * @return array<string,mixed>
      */
-    public function indexAction(Request $request): array
+    public function indexAction(Request $request, EntityManagerInterface $em): array
     {
-        /** @var EntityManagerInterface */
-        $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(TermOfUse::class, 'e')->orderBy('e.id', 'ASC');
         $query = $qb->getQuery();
@@ -62,15 +61,15 @@ class TermOfUseController extends AbstractController implements PaginatorAwareIn
      * @Route("/new", name="termofuse_new", methods={"GET", "POST"})
      *
      * @Template
+     * @return array<string,mixed>|RedirectResponse
      */
-    public function newAction(Request $request): array|RedirectResponse
+    public function newAction(Request $request, EntityManagerInterface $em): array|RedirectResponse
     {
         $termOfUse = new TermOfUse();
         $form = $this->createForm(TermOfUseType::class, $termOfUse);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $em->persist($termOfUse);
             $em->flush();
 
@@ -91,12 +90,13 @@ class TermOfUseController extends AbstractController implements PaginatorAwareIn
      * @Route("/{id}", name="termofuse_show", methods={"GET"})
      *
      * @Template
+     * @return array<string,mixed>
      */
     public function showAction(TermOfUse $termOfUse): array
     {
         // This can't just be $termOfUse->getHistory() or something because there
         // is no foreign key relationship - the history is preserved when a term is deleted.
-        $repo = Repository::TermOfUseHistory();
+        $repo = Repository::termOfUseHistory();
         $history = $repo->findBy(['termId' => $termOfUse->getId()], ['id' => 'ASC']);
 
         return [
@@ -112,14 +112,14 @@ class TermOfUseController extends AbstractController implements PaginatorAwareIn
      * @Route("/{id}/edit", name="termofuse_edit", methods={"GET", "POST"})
      *
      * @Template
+     * @return array<string,mixed>|RedirectResponse
      */
-    public function editAction(Request $request, TermOfUse $termOfUse): array|RedirectResponse
+    public function editAction(Request $request, TermOfUse $termOfUse, EntityManagerInterface $em): array|RedirectResponse
     {
         $editForm = $this->createForm(TermOfUseType::class, $termOfUse);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The termOfUse has been updated.');
 
@@ -137,10 +137,10 @@ class TermOfUseController extends AbstractController implements PaginatorAwareIn
      *
      * @Security("is_granted('ROLE_ADMIN')")
      * @Route("/{id}/delete", name="termofuse_delete", methods={"GET"})
+     * @return RedirectResponse
      */
-    public function deleteAction(Request $request, TermOfUse $termOfUse): array|RedirectResponse
+    public function deleteAction(EntityManagerInterface $em, TermOfUse $termOfUse): RedirectResponse
     {
-        $em = $this->getDoctrine()->getManager();
         $em->remove($termOfUse);
         $em->flush();
         $this->addFlash('success', 'The termOfUse was deleted.');

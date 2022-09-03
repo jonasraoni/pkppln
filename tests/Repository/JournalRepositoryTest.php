@@ -92,6 +92,6 @@ class JournalRepositoryTest extends BaseControllerTestCase
     protected function setup(): void
     {
         parent::setUp();
-        $this->repo = Repository::Journal();
+        $this->repo = Repository::journal();
     }
 }

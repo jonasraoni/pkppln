@@ -93,14 +93,14 @@ class HealthReminderCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $days = $this->container->getParameter('days_reminder');
-        $journals = Repository::Journal()->findOverdue($days);
+        $journals = Repository::journal()->findOverdue($days);
         $count = \count($journals);
         $this->logger->notice("Found {$count} overdue journals.");
         if (0 === \count($journals)) {
             return 0;
         }
 
-        $users = Repository::User()->findUserToNotify();
+        $users = Repository::user()->findUserToNotify();
         if (0 === \count($users)) {
             $this->logger->error('No users to notify.');
 

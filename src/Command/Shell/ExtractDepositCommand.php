@@ -13,6 +13,7 @@ namespace App\Command\Shell;
 use Doctrine\ORM\EntityManagerInterface;
 use DOMDocument;
 use DOMNamedNodeMap;
+use DOMNode;
 use DOMXPath;
 use Exception;
 use Symfony\Component\Console\Command\Command;
@@ -77,8 +78,8 @@ class ExtractDepositCommand extends Command
         }
         $xp = new DOMXPath($dom);
         gc_enable();
+        /** @var DOMNode $embedded */
         foreach ($xp->query('//embed') as $embedded) {
-            /** @var DOMNamedNodeMap */
             $attrs = $embedded->attributes;
             if (! $attrs) {
                 $output->writeln('Embedded element has no attributes. Skipping.');

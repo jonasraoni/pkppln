@@ -102,7 +102,7 @@ class BagReserializer
         $deposit->setPackageChecksumType('sha1');
         $deposit->setPackageChecksumValue(hash_file('sha1', $path));
 
-        $auContainer = Repository::AuContainer()->getOpenContainer();
+        $auContainer = Repository::auContainer()->getOpenContainer();
         if (null === $auContainer) {
             $auContainer = new AuContainer();
             $this->em->persist($auContainer);

@@ -39,11 +39,10 @@ class JournalController extends AbstractController implements PaginatorAwareInte
      * @Route("/", name="journal_index", methods={"GET"})
      *
      * @Template
+     * @return array<string,mixed>
      */
-    public function indexAction(Request $request): array
+    public function indexAction(Request $request, EntityManagerInterface $em): array
     {
-        /** @var EntityManagerInterface */
-        $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Journal::class, 'e')->orderBy('e.id', 'ASC');
         if ($request->query->get('status', null)) {
@@ -65,13 +64,14 @@ class JournalController extends AbstractController implements PaginatorAwareInte
      * @Route("/search", name="journal_search", methods={"GET"})
      *
      * @Template
+     * @return array<string,mixed>
      */
     public function searchAction(Request $request)
     {
         $q = $request->query->get('q');
 
         if ($q) {
-            $query = Repository::Journal()->searchQuery($q);
+            $query = Repository::journal()->searchQuery($q);
             $journals = $this->paginator->paginate($query, $request->query->getInt('page', 1), 25);
         } else {
             $journals = $this->paginator->paginate([], $request->query->getInt('page', 1), 25);
@@ -89,6 +89,7 @@ class JournalController extends AbstractController implements PaginatorAwareInte
      * @Route("/{id}", name="journal_show", methods={"GET"})
      *
      * @Template
+     * @return array<string,mixed>
      */
     public function showAction(Journal $journal, BlackWhiteList $list): array
     {
@@ -104,6 +105,7 @@ class JournalController extends AbstractController implements PaginatorAwareInte
      * @Route("/{id}/ping", name="journal_ping", methods={"GET"})
      *
      * @Template
+     * @return array<string,mixed>
      */
     public function pingAction(Journal $journal, Ping $ping, EntityManagerInterface $em): array
     {

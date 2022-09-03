@@ -42,7 +42,7 @@ class JournalBuilder
      */
     public function fromXml(SimpleXMLElement $xml, string $uuid): Journal
     {
-        $journal = Repository::Journal()->findOneBy(['uuid' => strtoupper($uuid)]);
+        $journal = Repository::journal()->findOneBy(['uuid' => strtoupper($uuid)]);
         if (null === $journal) {
             $journal = new Journal();
         }
@@ -66,7 +66,7 @@ class JournalBuilder
      */
     public function fromRequest(string $uuid, string $url): Journal
     {
-        $journal = Repository::Journal()->findOneBy([
+        $journal = Repository::journal()->findOneBy([
             'uuid' => strtoupper($uuid),
         ]);
         if (null === $journal) {

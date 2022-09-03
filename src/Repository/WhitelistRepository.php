@@ -17,6 +17,7 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Whitelist repository for custom doctrine queries.
+ * @extends ServiceEntityRepository<Whitelist>
  */
 class WhitelistRepository extends ServiceEntityRepository
 {

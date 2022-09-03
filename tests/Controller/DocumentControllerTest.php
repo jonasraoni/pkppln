@@ -159,7 +159,7 @@ class DocumentControllerTest extends BaseControllerTestCase
 
     public function testAdminDelete(): void
     {
-        $preCount = \count(Repository::Document()->findAll());
+        $preCount = \count(Repository::document()->findAll());
         $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/document/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
@@ -168,7 +168,7 @@ class DocumentControllerTest extends BaseControllerTestCase
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
         $this->em->clear();
-        $postCount = \count(Repository::Document()->findAll());
+        $postCount = \count(Repository::document()->findAll());
         $this->assertSame($preCount - 1, $postCount);
     }
 }

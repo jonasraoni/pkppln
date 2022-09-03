@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Entity\Journal;
 use App\Repository\Repository;
 use App\Services\Ping;
 use Doctrine\ORM\EntityManagerInterface;
@@ -65,7 +66,7 @@ class PingCommand extends Command
         $journals = $this->findJournals($all);
         foreach ($journals as $journal) {
             $output->writeln($journal->getUuid());
-            $result = $this->ping->ping($journal);
+            $this->ping->ping($journal);
             $this->em->flush();
         }
         return 0;
@@ -73,10 +74,11 @@ class PingCommand extends Command
 
     /**
      * Find the journals that need to be binged.
+     * @return iterable<Journal>
      */
-    public function findJournals(bool $all)
+    public function findJournals(bool $all): iterable
     {
-        $repo = Repository::Journal();
+        $repo = Repository::journal();
         if ($all) {
             return $repo->findAll();
         }

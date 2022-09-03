@@ -62,6 +62,7 @@ class Deposit extends AbstractEntity
     /**
      * Serialized list of licensing terms as reported in the ATOM deposit.
      *
+     * @var array<string,string>
      * @ORM\Column(type="array")
      */
     private array $license;
@@ -152,8 +153,7 @@ class Deposit extends AbstractEntity
     /**
      * List of errors that occured while processing.
      *
-     * @todo Why is this an array? A text column should be fine here.
-     *
+     * @var string[]
      * @ORM\Column(type="array", nullable=false)
      */
     private array $errorLog;
@@ -257,6 +257,7 @@ class Deposit extends AbstractEntity
 
     /**
      * Set license.
+     * @param array<string,string> $license
      */
     public function setLicense(array $license): static
     {
@@ -279,6 +280,7 @@ class Deposit extends AbstractEntity
 
     /**
      * Get license.
+     * @return array<string,string>
      */
     public function getLicense(): array
     {
@@ -495,6 +497,7 @@ class Deposit extends AbstractEntity
 
     /**
      * Set errorLog.
+     * @param string[] $errorLog
      */
     public function setErrorLog(array $errorLog): static
     {
@@ -505,6 +508,7 @@ class Deposit extends AbstractEntity
 
     /**
      * Get errorLog.
+     * @return string[]
      */
     public function getErrorLog(?string $delim = null): array|string
     {

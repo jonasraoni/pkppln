@@ -47,6 +47,6 @@ class TermOfUseRepositoryTest extends BaseControllerTestCase
     protected function setup(): void
     {
         parent::setUp();
-        $this->repo = Repository::TermOfUse();
+        $this->repo = Repository::termOfUse();
     }
 }

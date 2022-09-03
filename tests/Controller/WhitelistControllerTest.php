@@ -187,7 +187,7 @@ class WhitelistControllerTest extends BaseControllerTestCase
 
     public function testAdminDelete(): void
     {
-        $preCount = \count(Repository::Whitelist()->findAll());
+        $preCount = \count(Repository::whitelist()->findAll());
         $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/whitelist/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
@@ -196,7 +196,7 @@ class WhitelistControllerTest extends BaseControllerTestCase
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
         $this->em->clear();
-        $postCount = \count(Repository::Whitelist()->findAll());
+        $postCount = \count(Repository::whitelist()->findAll());
         $this->assertSame($preCount - 1, $postCount);
     }
 }

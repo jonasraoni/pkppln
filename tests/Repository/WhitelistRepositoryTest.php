@@ -43,6 +43,6 @@ class WhitelistRepositoryTest extends BaseControllerTestCase
     protected function setup(): void
     {
         parent::setUp();
-        $this->repo = Repository::Whitelist();
+        $this->repo = Repository::whitelist();
     }
 }

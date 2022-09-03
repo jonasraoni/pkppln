@@ -35,7 +35,7 @@ class TermsOfUseListenerTest extends BaseControllerTestCase
         $this->em->persist($term);
         $this->em->flush();
 
-        $history = Repository::TermOfUseHistory()->findOneBy([
+        $history = Repository::termOfUseHistory()->findOneBy([
             'termId' => $term->getId(),
         ]);
         $this->assertNotNull($history);
@@ -62,7 +62,7 @@ class TermsOfUseListenerTest extends BaseControllerTestCase
         $term->setWeight(3);
         $this->em->flush();
 
-        $history = Repository::TermOfUseHistory()->findOneBy([
+        $history = Repository::termOfUseHistory()->findOneBy([
             'termId' => $term->getId(),
             'action' => 'update',
         ]);
@@ -91,7 +91,7 @@ class TermsOfUseListenerTest extends BaseControllerTestCase
         $this->em->remove($term);
         $this->em->flush();
 
-        $history = Repository::TermOfUseHistory()->findOneBy([
+        $history = Repository::termOfUseHistory()->findOneBy([
             'termId' => $termId,
             'action' => 'delete',
         ]);

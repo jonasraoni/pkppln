@@ -37,6 +37,7 @@ class TermsOfUseListener
 
     /**
      * Get an array describing the changes.
+     * @return array<string, ?mixed>
      */
     protected function getChangeSet(UnitOfWork $unitOfWork, TermOfUse $entity, string $action): array
     {

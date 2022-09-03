@@ -116,7 +116,7 @@
         ],
         "lint": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --diff --dry-run",
 		"lint-fix": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix",
-        "phpstan": "phpstan analyse -l 3 --memory-limit=-1 src migrations"
+        "phpstan": "phpstan analyse -l 7 --memory-limit=-1 src migrations"
     },
     "conflict": {
         "symfony/symfony": "*",

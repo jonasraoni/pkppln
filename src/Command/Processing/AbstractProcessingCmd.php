@@ -134,6 +134,7 @@ abstract class AbstractProcessingCmd extends Command
     /**
      * Get a list of deposits to process.
      *
+     * @param int[] $depositIds
      * @return Deposit[]
      */
     public function getDeposits(bool $retry = false, array $depositIds = [], ?int $limit = null): array

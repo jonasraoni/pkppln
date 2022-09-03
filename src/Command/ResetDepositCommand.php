@@ -101,11 +101,11 @@ class ResetDepositCommand extends Command
      * @return Deposit[][]|IterableResult
      *                                  Iterator for all the deposits to reset.
      */
-    public function getDepositIterator(array $ids = null): IterableResult
+    public function getDepositIterator(array $ids = []): IterableResult
     {
         $qb = $this->em->createQueryBuilder();
         $qb->select('d')->from('App:Deposit', 'd');
-        if ($ids && \count($ids)) {
+        if (\count($ids)) {
             $qb->andWhere('d.depositUuid IN (:ids)');
             $qb->setParameter('ids', $ids);
         }

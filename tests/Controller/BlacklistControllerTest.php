@@ -188,7 +188,7 @@ class BlacklistControllerTest extends BaseControllerTestCase
 
     public function testAdminDelete(): void
     {
-        $preCount = \count(Repository::Blacklist()->findAll());
+        $preCount = \count(Repository::blacklist()->findAll());
         $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/blacklist/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
@@ -197,7 +197,7 @@ class BlacklistControllerTest extends BaseControllerTestCase
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
         $this->em->clear();
-        $postCount = \count(Repository::Blacklist()->findAll());
+        $postCount = \count(Repository::blacklist()->findAll());
         $this->assertSame($preCount - 1, $postCount);
     }
 }

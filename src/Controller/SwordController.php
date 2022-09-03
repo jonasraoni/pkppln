@@ -161,6 +161,7 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
      *     defaults={"_format": "xml"},
      *     requirements={"_format": "xml"}
      * )
+     * @return array<string,mixed>
      */
     public function serviceDocumentAction(Request $request, JournalBuilder $builder): array
     {
@@ -180,7 +181,7 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
             $accepting = false;
         }
         $this->em->flush();
-        $termsRepo = Repository::TermOfUse();
+        $termsRepo = Repository::termOfUse();
 
         return [
             'onBehalfOf' => $obh,

@@ -17,6 +17,7 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * AuContainerRepository makes it easy to find AuContainers.
+ * @extends ServiceEntityRepository<AuContainer>
  */
 class AuContainerRepository extends ServiceEntityRepository
 {
@@ -30,7 +31,7 @@ class AuContainerRepository extends ServiceEntityRepository
      * ever be one open container, but finding the one with lowest database ID
      * guarantees it.
      */
-    public function getOpenContainer(): AuContainer
+    public function getOpenContainer(): ?AuContainer
     {
         return $this->findOneBy(
             ['open' => true],
@@ -38,13 +39,16 @@ class AuContainerRepository extends ServiceEntityRepository
         );
     }
 
-    public function getSizes()
+    /**
+     * Retrieve the sizes
+     * @return array<array{acid: int, size: int}>
+     */
+    public function getSizes(): array
     {
         $qb = $this->_em->createQueryBuilder()
             ->from(Deposit::class, 'd')
             ->select('identity(d.auContainer) as acid, sum(d.size) as size')
-            ->groupBy('acid')
-        ;
+            ->groupBy('acid');
 
         return $qb->getQuery()->execute();
     }

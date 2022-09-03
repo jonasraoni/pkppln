@@ -46,7 +46,7 @@ ENDXML;
 
     public function testCreateDepositWhitelisted(): void
     {
-        $depositCount = \count(Repository::Deposit()->findAll());
+        $depositCount = \count(Repository::deposit()->findAll());
         $this->client->request(
             'POST',
             '/api/sword/2.0/col-iri/44428B12-CDC4-453E-8157-319004CD8CE6',
@@ -58,14 +58,14 @@ ENDXML;
         $response = $this->client->getResponse();
         $this->assertSame(201, $response->getStatusCode());
         $this->assertSame('http://localhost/api/sword/2.0/cont-iri/44428B12-CDC4-453E-8157-319004CD8CE6/5F5C84B1-80BF-4071-8D3F-057AA3184FC9/state', $response->headers->get('Location'));
-        $this->assertSame($depositCount + 1, \count(Repository::Deposit()->findAll()));
+        $this->assertSame($depositCount + 1, \count(Repository::deposit()->findAll()));
         $xml = $this->getXml($this->client);
         $this->assertSame('depositedByJournal', $this->getXmlValue($xml, '//atom:category[@label="Processing State"]/@term'));
     }
 
     public function testCreateDepositNotWhitelisted(): void
     {
-        $depositCount = \count(Repository::Deposit()->findAll());
+        $depositCount = \count(Repository::deposit()->findAll());
         $this->client->request(
             'POST',
             '/api/sword/2.0/col-iri/04F2C06E-35B8-43C1-B60C-1934271B0B7E',
@@ -76,6 +76,6 @@ ENDXML;
         );
         $this->assertSame(400, $this->client->getResponse()->getStatusCode());
         $this->assertStringContainsStringIgnoringCase('Not authorized to create deposits.', $this->client->getResponse()->getContent());
-        $this->assertSame($depositCount, \count(Repository::Deposit()->findAll()));
+        $this->assertSame($depositCount, \count(Repository::deposit()->findAll()));
     }
 }

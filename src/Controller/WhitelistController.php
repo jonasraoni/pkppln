@@ -39,11 +39,10 @@ class WhitelistController extends AbstractController implements PaginatorAwareIn
      * @Route("/", name="whitelist_index", methods={"GET"})
      *
      * @Template
+     * @return array<string,mixed>
      */
-    public function indexAction(Request $request): array
+    public function indexAction(Request $request, EntityManagerInterface $em): array
     {
-        /** @var EntityManagerInterface */
-        $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Whitelist::class, 'e')->orderBy('e.id', 'ASC');
         $query = $qb->getQuery();
@@ -61,10 +60,11 @@ class WhitelistController extends AbstractController implements PaginatorAwareIn
      * @Route("/search", name="whitelist_search", methods={"GET"})
      *
      * @Template
+     * @return array<string,mixed>
      */
-    public function searchAction(Request $request)
+    public function searchAction(Request $request): array
     {
-        $repo = Repository::Whitelist();
+        $repo = Repository::whitelist();
         $q = $request->query->get('q');
 
         if ($q) {
@@ -87,15 +87,15 @@ class WhitelistController extends AbstractController implements PaginatorAwareIn
      * @Route("/new", name="whitelist_new", methods={"GET", "POST"})
      *
      * @Template
+     * @return array<string,mixed>|RedirectResponse
      */
-    public function newAction(Request $request): array|RedirectResponse
+    public function newAction(Request $request, EntityManagerInterface $em): array|RedirectResponse
     {
         $whitelist = new Whitelist();
         $form = $this->createForm(WhitelistType::class, $whitelist);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $em->persist($whitelist);
             $em->flush();
 
@@ -116,10 +116,11 @@ class WhitelistController extends AbstractController implements PaginatorAwareIn
      * @Route("/{id}", name="whitelist_show", methods={"GET"})
      *
      * @Template
+     * @return array<string,mixed>
      */
     public function showAction(Whitelist $whitelist): array
     {
-        $journal = Repository::Journal()->findOneBy(['uuid' => $whitelist->getUuid()]);
+        $journal = Repository::journal()->findOneBy(['uuid' => $whitelist->getUuid()]);
 
         return [
             'whitelist' => $whitelist,
@@ -134,14 +135,14 @@ class WhitelistController extends AbstractController implements PaginatorAwareIn
      * @Route("/{id}/edit", name="whitelist_edit", methods={"GET", "POST"})
      *
      * @Template
+     * @return array<string,mixed>|RedirectResponse
      */
-    public function editAction(Request $request, Whitelist $whitelist): array|RedirectResponse
+    public function editAction(Request $request, Whitelist $whitelist, EntityManagerInterface $em): array|RedirectResponse
     {
         $editForm = $this->createForm(WhitelistType::class, $whitelist);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The whitelist has been updated.');
 
@@ -160,9 +161,8 @@ class WhitelistController extends AbstractController implements PaginatorAwareIn
      * @Security("is_granted('ROLE_ADMIN')")
      * @Route("/{id}/delete", name="whitelist_delete", methods={"GET"})
      */
-    public function deleteAction(Request $request, Whitelist $whitelist): array|RedirectResponse
+    public function deleteAction(EntityManagerInterface $em, Whitelist $whitelist): RedirectResponse
     {
-        $em = $this->getDoctrine()->getManager();
         $em->remove($whitelist);
         $em->flush();
         $this->addFlash('success', 'The whitelist was deleted.');

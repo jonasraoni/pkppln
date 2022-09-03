@@ -37,7 +37,7 @@ class FetchContentCommand extends Command
     protected Filesystem $fs;
     protected FilePaths $filePaths;
     private SwordClient $swordClient;
-    private Client $httpClient;
+    private ?Client $httpClient = null;
 
     /**
      * Initialize the command.
@@ -76,11 +76,7 @@ class FetchContentCommand extends Command
      */
     public function getHttpClient(): Client
     {
-        if (! $this->httpClient) {
-            $this->httpClient = new Client(['verify' => false, 'connect_timeout' => 15]);
-        }
-
-        return $this->httpClient;
+        return $this->httpClient ??= new Client(['verify' => false, 'connect_timeout' => 15]);
     }
 
     /**
@@ -134,7 +130,7 @@ class FetchContentCommand extends Command
      */
     public function getJournals(array $journalIds): array
     {
-        return Repository::Journal()->findBy(['id' => $journalIds]);
+        return Repository::journal()->findBy(['id' => $journalIds]);
     }
 
     /**

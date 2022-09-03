@@ -14,6 +14,7 @@ use DOMDocument;
 
 abstract class AbstractValidator
 {
+    /** @var array<array{message: string,file: string,line: int}> */
     protected array $errors;
 
     /**
@@ -27,23 +28,15 @@ abstract class AbstractValidator
     /**
      * Callback for a validation or parsing error.
      */
-    public function validationError(int $n, string $message, string $file, int $line): void
+    public function validationError(int $n, string $message, string $file, int $line): bool
     {
         $lxml = libxml_get_last_error();
 
-        if ($lxml) {
-            $this->errors[] = [
-                'message' => $lxml->message,
-                'file' => $lxml->file,
-                'line' => $lxml->line,
-            ];
-        } else {
-            $this->errors[] = [
-                'message' => $message,
-                'file' => $file,
-                'line' => $line,
-            ];
-        }
+        $this->errors[] = $lxml
+            ? ['message' => $lxml->message, 'file' => $lxml->file, 'line' => $lxml->line]
+            : ['message' => $message, 'file' => $file, 'line' => $line];
+
+        return true;
     }
 
     abstract public function validate(DOMDocument $dom, string $path, bool $clearErrors = true): void;
@@ -66,6 +59,7 @@ abstract class AbstractValidator
 
     /**
      * Get a list of the errors.
+     * @return array<array{message: string,file: string,line: int}>
      */
     public function getErrors(): array
     {

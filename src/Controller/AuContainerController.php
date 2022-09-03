@@ -33,11 +33,10 @@ class AuContainerController extends AbstractController implements PaginatorAware
      *
      * @Route("/", name="aucontainer", methods={"GET"})
      * @Template
+     * @return array<string,mixed>
      */
-    public function indexAction(Request $request): array
+    public function indexAction(Request $request, EntityManagerInterface $em): array
     {
-        /** @var EntityManagerInterface */
-        $em = $this->getDoctrine()->getManager();
         $dql = 'SELECT e FROM App:AuContainer e ORDER BY e.id';
         $query = $em->createQuery($dql);
 
@@ -47,7 +46,7 @@ class AuContainerController extends AbstractController implements PaginatorAware
             25
         );
 
-        $repo = Repository::AuContainer();
+        $repo = Repository::auContainer();
         $openContainer = $repo->getOpenContainer();
         $sizes = $repo->getSizes();
 
@@ -63,10 +62,11 @@ class AuContainerController extends AbstractController implements PaginatorAware
      *
      * @Route("/{id}", name="aucontainer_show", methods={"GET"})
      * @Template
+     * @return array<string,mixed>
      */
     public function showAction(string $id): array
     {
-        $repo = Repository::AuContainer();
+        $repo = Repository::auContainer();
         $entity = $repo->find($id);
         $openContainer = $repo->getOpenContainer();
 

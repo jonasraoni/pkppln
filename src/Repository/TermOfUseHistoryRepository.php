@@ -16,6 +16,7 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Custom terms of use history queries.
+ * @extends ServiceEntityRepository<TermOfUseHistory>
  */
 class TermOfUseHistoryRepository extends ServiceEntityRepository
 {

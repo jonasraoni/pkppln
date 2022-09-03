@@ -26,7 +26,7 @@ class SchemaValidator extends AbstractValidator
             $this->clearErrors();
         }
         $xsd = $path . '/native.xsd';
-        $oldHandler = set_error_handler([$this, 'validationError']);
+        $oldHandler = set_error_handler($this->validationError(...));
         $dom->schemaValidate($xsd);
         set_error_handler($oldHandler);
     }

@@ -91,7 +91,7 @@ class PingResult
         return \count($this->errors) > 0;
     }
 
-    public function addError($error): void
+    public function addError(string $error): void
     {
         $this->errors[] = $error;
     }
@@ -139,6 +139,7 @@ class PingResult
 
     /**
      * Get an HTTP header.
+     * @return string[]
      */
     public function getHeader(string $name): array
     {
@@ -232,7 +233,7 @@ class PingResult
     /**
      * Get a list of article titles reported in the response.
      *
-     * @return array[]
+     * @return array<array{date: string, title: string}>
      *                 Array of associative array data.
      */
     public function getArticleTitles(): array

@@ -74,6 +74,6 @@ class DepositRepositoryTest extends BaseControllerTestCase
     protected function setup(): void
     {
         parent::setUp();
-        $this->repo = Repository::Deposit();
+        $this->repo = Repository::deposit();
     }
 }

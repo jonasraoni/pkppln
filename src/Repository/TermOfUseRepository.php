@@ -12,11 +12,11 @@ namespace App\Repository;
 
 use App\Entity\TermOfUse;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Custom doctrine queries for terms of use.
+ * @extends ServiceEntityRepository<TermOfUse>
  */
 class TermOfUseRepository extends ServiceEntityRepository
 {

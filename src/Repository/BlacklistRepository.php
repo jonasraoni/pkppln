@@ -17,6 +17,7 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Custom blacklist queries for doctrine.
+ * @extends ServiceEntityRepository<Blacklist>
  */
 class BlacklistRepository extends ServiceEntityRepository
 {

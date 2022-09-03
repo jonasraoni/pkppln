@@ -10,9 +10,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Blacklist;
 use App\Entity\Journal;
-use App\Entity\Whitelist;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -20,6 +18,7 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Custom journal queries for doctrine.
+ * @extends ServiceEntityRepository<Journal>
  */
 class JournalRepository extends ServiceEntityRepository
 {
@@ -31,16 +30,16 @@ class JournalRepository extends ServiceEntityRepository
     /**
      * Get a list of journals that need to be pinged.
      *
-     * @return Journal[]
+     * @return iterable<Journal>
      *                              List of journals.
      */
-    public function getJournalsToPing(): array
+    public function getJournalsToPing(): iterable
     {
-        $blacklist = Repository::Blacklist()
+        $blacklist = Repository::blacklist()
             ->createQueryBuilder('bl')
             ->select('bl.uuid');
 
-        $whitelist = Repository::Whitelist()
+        $whitelist = Repository::whitelist()
             ->createQueryBuilder('wl')
             ->select('wl.uuid');
 
@@ -70,14 +69,14 @@ class JournalRepository extends ServiceEntityRepository
 
     /**
      * Summarize the journal statuses, counting them by status.
+     * @return array<array{status: string, ct: int}>
      */
     public function statusSummary(): array
     {
         $qb = $this->createQueryBuilder('e');
         $qb->select('e.status, count(e) as ct')
             ->groupBy('e.status')
-            ->orderBy('e.status')
-        ;
+            ->orderBy('e.status');
 
         return $qb->getQuery()->getResult();
     }

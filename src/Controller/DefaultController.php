@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\Deposit;
 use App\Repository\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
@@ -46,8 +45,8 @@ class DefaultController extends AbstractController implements PaginatorAwareInte
             return $this->render('default/index_anon.html.twig');
         }
 
-        $journalRepo = Repository::Journal();
-        $depositRepo = Repository::Deposit();
+        $journalRepo = Repository::journal();
+        $depositRepo = Repository::deposit();
 
         return $this->render('default/index_user.html.twig', [
             'journals_new' => $journalRepo->findNew(),
@@ -62,10 +61,11 @@ class DefaultController extends AbstractController implements PaginatorAwareInte
      *
      * @Route("/browse/{state}", name="deposit_browse", methods={"GET"})
      * @Template
+     * @return array<string,mixed>
      */
-    public function browseAction(Request $request, EntityManagerInterface $em, string $state)
+    public function browseAction(Request $request, string $state): array
     {
-        $repo = Repository::Deposit();
+        $repo = Repository::deposit();
         $qb = $repo->createQueryBuilder('d');
         $qb->where('d.state = :state');
         $qb->setParameter('state', $state);
@@ -92,10 +92,11 @@ class DefaultController extends AbstractController implements PaginatorAwareInte
      *
      * @Security("is_granted('ROLE_USER')")
      * @Template
+     * @return array<string,mixed>
      */
     public function depositSearchAction(Request $request): array
     {
-        $repo = Repository::Deposit();
+        $repo = Repository::deposit();
         $q = $request->query->get('q');
 
         if ($q) {

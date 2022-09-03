@@ -30,7 +30,7 @@ class CleanupCommand extends Command
     use LoggerAwareTrait;
 
     protected EntityManagerInterface $em;
-    protected $filePaths;
+    protected FilePaths $filePaths;
 
     /**
      * {@inheritdoc}
@@ -53,7 +53,7 @@ class CleanupCommand extends Command
         }
         $this->logger->notice("Cleaning {$path}");
         if (! is_dir($path)) {
-            if (file_exists($path) && true === $force) {
+            if ($force) {
                 unlink($path);
             }
 

@@ -18,6 +18,7 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Custom doctrine queries for deposits.
+ * @extends ServiceEntityRepository<Deposit>
  */
 class DepositRepository extends ServiceEntityRepository
 {
@@ -46,6 +47,7 @@ class DepositRepository extends ServiceEntityRepository
 
     /**
      * Summarize deposits by counting them by state.
+     * @return array<array{state: string, ct: int}>
      */
     public function stateSummary(): array
     {

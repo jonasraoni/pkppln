@@ -156,7 +156,7 @@ class VirusScanner
         $phar = new PharData($harvestedPath);
 
         $r = $client->scanFile($harvestedPath);
-        $messages[] = [
+        $messages = [
             $this->getStatusMessage($r, $basename),
             ...$this->scanArchiveFiles($phar, $client, $deposit)
         ];

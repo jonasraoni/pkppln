@@ -40,11 +40,10 @@ class DepositController extends AbstractController implements PaginatorAwareInte
      * @Route("/", name="deposit_index", methods={"GET"})
      *
      * @Template
+     * @return array<string,mixed>
      */
-    public function indexAction(Request $request, Journal $journal): array
+    public function indexAction(Request $request, Journal $journal, EntityManagerInterface $em): array
     {
-        /** @var EntityManagerInterface */
-        $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Deposit::class, 'e')->where('e.journal = :journal')->orderBy('e.id', 'ASC')->setParameter('journal', $journal);
         $query = $qb->getQuery();
@@ -68,10 +67,11 @@ class DepositController extends AbstractController implements PaginatorAwareInte
      *
      * @Security("is_granted('ROLE_USER')")
      * @Template
+     * @return array<string,mixed>
      */
-    public function searchAction(Request $request, Journal $journal)
+    public function searchAction(Request $request, Journal $journal): array
     {
-        $repo = Repository::Deposit();
+        $repo = Repository::deposit();
         $q = $request->query->get('q');
 
         if ($q) {
@@ -94,6 +94,7 @@ class DepositController extends AbstractController implements PaginatorAwareInte
      * @Route("/{id}", name="deposit_show", methods={"GET"})
      *
      * @Template
+     * @return array<string,mixed>
      */
     public function showAction(Journal $journal, Deposit $deposit): array
     {

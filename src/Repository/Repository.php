@@ -19,84 +19,119 @@ use App\Entity\TermOfUse;
 use App\Entity\TermOfUseHistory;
 use App\Entity\Whitelist;
 use App\Kernel;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\Persistence\ObjectRepository;
 use Nines\UserBundle\Entity\User;
 use Nines\UserBundle\Repository\UserRepository;
+use Nines\UtilBundle\Entity\AbstractEntity;
 
 /**
  * Repository makes it easy to grab typed repositories.
  */
 class Repository
 {
+    /**
+     * @template T of AbstractEntity
+     * @param class-string<T> $className
+     * @return EntityRepository<T>
+     */
     public static function getRepository(string $className): EntityRepository
     {
         static $doctrine = null;
+        /** @var ?EntityManagerInterface $doctrine */
         $doctrine ??= Kernel::getInstance()->getContainer()->get('doctrine.orm.entity_manager');
-        /** @var EntityManagerInterface $doctrine */
         return $doctrine->getRepository($className);
     }
 
-    public static function AuContainer(): AuContainerRepository
+    /**
+     * Retrieves a AuContainer repository
+     */
+    public static function auContainer(): AuContainerRepository
     {
-        $repository = self::getRepository(AuContainer::class);
-        assert($repository instanceof AuContainer);
-        return $repository;
+        $repo = self::getRepository(AuContainer::class);
+        assert($repo instanceof AuContainerRepository);
+        return $repo;
     }
 
-    public static function Blacklist(): BlacklistRepository
+    /**
+     * Retrieves a Blacklist repository
+     */
+    public static function blacklist(): BlacklistRepository
     {
-        $repository = self::getRepository(Blacklist::class);
-        assert($repository instanceof Blacklist);
-        return $repository;
+        $repo = self::getRepository(Blacklist::class);
+        assert($repo instanceof BlacklistRepository);
+        return $repo;
     }
 
-    public static function Deposit(): DepositRepository
+    /**
+     * Retrieves a Deposit repository
+     */
+    public static function deposit(): DepositRepository
     {
-        $repository = self::getRepository(Deposit::class);
-        assert($repository instanceof Deposit);
-        return $repository;
+        $repo = self::getRepository(Deposit::class);
+        assert($repo instanceof DepositRepository);
+        return $repo;
     }
 
-    public static function Document(): DocumentRepository
+    /**
+     * Retrieves a Document repository
+     */
+    public static function document(): DocumentRepository
     {
-        $repository = self::getRepository(Document::class);
-        assert($repository instanceof Document);
-        return $repository;
+        $repo = self::getRepository(Document::class);
+        assert($repo instanceof DocumentRepository);
+        return $repo;
     }
 
-    public static function Journal(): JournalRepository
+    /**
+     * Retrieves a Journal repository
+     */
+    public static function journal(): JournalRepository
     {
-        $repository = self::getRepository(Journal::class);
-        assert($repository instanceof Journal);
-        return $repository;
+        $repo = self::getRepository(Journal::class);
+        assert($repo instanceof JournalRepository);
+        return $repo;
     }
 
-    public static function TermOfUseHistory(): TermOfUseHistoryRepository
+    /**
+     * Retrieves a TermOfUseHistory repository
+     */
+    public static function termOfUseHistory(): TermOfUseHistoryRepository
     {
-        $repository = self::getRepository(TermOfUseHistory::class);
-        assert($repository instanceof TermOfUseHistory);
-        return $repository;
+        $repo = self::getRepository(TermOfUseHistory::class);
+        assert($repo instanceof TermOfUseHistoryRepository);
+        return $repo;
     }
 
-    public static function TermOfUse(): TermOfUseRepository
+    /**
+     * Retrieves a TermOfUse repository
+     */
+    public static function termOfUse(): TermOfUseRepository
     {
-        $repository = self::getRepository(TermOfUse::class);
-        assert($repository instanceof TermOfUse);
-        return $repository;
+        $repo = self::getRepository(TermOfUse::class);
+        assert($repo instanceof TermOfUseRepository);
+        return $repo;
     }
 
-    public static function User(): UserRepository
+    /**
+     * Retrieves a User repository
+     */
+    public static function user(): UserRepository
     {
-        $repository = self::getRepository(User::class);
-        assert($repository instanceof User);
-        return $repository;
+        $repo = self::getRepository(User::class);
+        assert($repo instanceof UserRepository);
+        return $repo;
     }
 
-    public static function Whitelist(): WhitelistRepository
+    /**
+     * Retrieves a Whitelist repository
+     */
+    public static function whitelist(): WhitelistRepository
     {
-        $repository = self::getRepository(Whitelist::class);
-        assert($repository instanceof Whitelist);
-        return $repository;
+        $repo = self::getRepository(Whitelist::class);
+        assert($repo instanceof WhitelistRepository);
+        return $repo;
     }
 }

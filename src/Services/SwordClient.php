@@ -134,9 +134,11 @@ class SwordClient
     /**
      * Make a SWORD request.
      *
+     * @param array<string, string|string[]> $headers
+     * @param array<string, mixed> $options
      * @throws Exception
      */
-    public function request(string $method, string $url, array $headers = [], string $xml = null, Deposit $deposit = null, array $options = []): ResponseInterface
+    public function request(string $method, string $url, array $headers = [], string $xml = null, ?Deposit $deposit = null, array $options = []): ResponseInterface
     {
         try {
             $request = new Request($method, $url, $headers, $xml);

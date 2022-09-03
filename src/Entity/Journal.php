@@ -138,7 +138,7 @@ class Journal extends AbstractEntity
     /**
      * The journal's deposits.
      *
-     * @var Collection|Deposit[]
+     * @var Collection<int,Deposit>|Deposit[]
      * @ORM\OneToMany(targetEntity="Deposit", mappedBy="journal", fetch="EXTRA_LAZY")
      */
     private Collection $deposits;
@@ -407,7 +407,7 @@ class Journal extends AbstractEntity
 
     /**
      * Get deposits.
-     * @return (Collection & iterable<Deposit>)|PersistentCollection
+     * @return PersistentCollection<int,Deposit>|(Collection<int,Deposit> & iterable<Deposit>)
      */
     public function getDeposits(): Collection
     {
@@ -426,7 +426,8 @@ class Journal extends AbstractEntity
     public function getSentDeposits(): mixed
     {
         $criteria = Criteria::create()->where(Criteria::expr()->in('state', self::SENT_STATES));
-
-        return $this->getDeposits()->matching($criteria);
+        /** @var PersistentCollection<int,Deposit> */
+        $deposits = $this->getDeposits();
+        return $$deposits->matching($criteria);
     }
 }

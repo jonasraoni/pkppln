@@ -16,6 +16,7 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Document queries for doctrine.
+ * @extends ServiceEntityRepository<Document>
  */
 class DocumentRepository extends ServiceEntityRepository
 {

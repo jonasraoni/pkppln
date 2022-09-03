@@ -27,20 +27,21 @@ class Xpath
     public static function getXmlValue(SimpleXMLElement $xml, string $xpath, string $default = null): string
     {
         $data = $xml->xpath($xpath);
-        if (1 === \count($data)) {
-            return trim((string) $data[0]);
+        if (!is_countable($data)) {
+            throw new Exception("Failed to query '{$xpath}'");
         }
-        if (0 === \count($data)) {
-            return $default;
-        }
-
-        throw new Exception("Too many elements for '{$xpath}'");
+        return match (count($data)) {
+            1 => trim((string) $data[0]),
+            0 => $default,
+            default => throw new Exception("Too many elements for '{$xpath}'")
+        };
     }
 
     /**
      * Query an XML document.
+     * @return SimpleXMLElement[]|bool|null
      */
-    public static function query(SimpleXMLElement $xml, string $xpath): array
+    public static function query(SimpleXMLElement $xml, string $xpath): array|bool|null
     {
         return $xml->xpath($xpath);
     }

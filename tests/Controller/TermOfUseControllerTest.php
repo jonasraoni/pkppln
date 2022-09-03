@@ -161,7 +161,7 @@ class TermOfUseControllerTest extends BaseControllerTestCase
 
     public function testAdminDelete(): void
     {
-        $preCount = \count(Repository::TermOfUse()->findAll());
+        $preCount = \count(Repository::termOfUse()->findAll());
         $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/termofuse/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
@@ -170,7 +170,7 @@ class TermOfUseControllerTest extends BaseControllerTestCase
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
         $this->em->clear();
-        $postCount = \count(Repository::TermOfUse()->findAll());
+        $postCount = \count(Repository::termOfUse()->findAll());
         $this->assertSame($preCount - 1, $postCount);
     }
 }

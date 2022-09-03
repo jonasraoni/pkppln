@@ -30,6 +30,7 @@ class XmlParser
 
     /**
      * List of errors in parsing.
+     * @var string[]
      */
     private array $errors;
 

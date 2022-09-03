@@ -20,7 +20,6 @@ use Exception;
 use Psr\Log\LoggerAwareTrait;
 use SimpleXMLElement;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Description of DepositBuilder.
@@ -35,11 +34,6 @@ class DepositBuilder
     private EntityManagerInterface $em;
 
     /**
-     * URL generator.
-     */
-    private UrlGeneratorInterface $generator;
-
-    /**
      * File paths.
      */
     private FilePaths $filePaths;
@@ -47,10 +41,9 @@ class DepositBuilder
     /**
      * Build the service.
      */
-    public function __construct(EntityManagerInterface $em, UrlGeneratorInterface $generator, FilePaths $filePaths)
+    public function __construct(EntityManagerInterface $em, FilePaths $filePaths)
     {
         $this->em = $em;
-        $this->generator = $generator;
         $this->filePaths = $filePaths;
     }
 
@@ -59,8 +52,8 @@ class DepositBuilder
      */
     protected function findDeposit(string $uuid): Deposit
     {
-        /** @var Deposit */
-        $deposit = Repository::Deposit()->findOneBy(['depositUuid' => strtoupper($uuid)]);
+        /** @var ?Deposit */
+        $deposit = Repository::deposit()->findOneBy(['depositUuid' => strtoupper($uuid)]);
         if (!$deposit) {
             return (new Deposit())->setDepositUuid($uuid)
                 ->setAction('add')

@@ -38,11 +38,10 @@ class DocumentController extends AbstractController implements PaginatorAwareInt
      * @Route("/", name="document_index", methods={"GET"})
      *
      * @Template
+     * @return array<string,mixed>
      */
-    public function indexAction(Request $request): array
+    public function indexAction(Request $request, EntityManagerInterface $em): array
     {
-        /** @var EntityManagerInterface */
-        $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Document::class, 'e')->orderBy('e.id', 'ASC');
         $query = $qb->getQuery();
@@ -61,15 +60,15 @@ class DocumentController extends AbstractController implements PaginatorAwareInt
      * @Route("/new", name="document_new", methods={"GET", "POST"})
      *
      * @Template
+     * @return array<string,mixed>|RedirectResponse
      */
-    public function newAction(Request $request): array|RedirectResponse
+    public function newAction(Request $request, EntityManagerInterface $em): array|RedirectResponse
     {
         $document = new Document();
         $form = $this->createForm(DocumentType::class, $document);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $em->persist($document);
             $em->flush();
 
@@ -90,6 +89,7 @@ class DocumentController extends AbstractController implements PaginatorAwareInt
      * @Route("/{id}", name="document_show", methods={"GET"})
      *
      * @Template
+     * @return array<string,mixed>
      */
     public function showAction(Document $document): array
     {
@@ -105,14 +105,14 @@ class DocumentController extends AbstractController implements PaginatorAwareInt
      * @Route("/{id}/edit", name="document_edit", methods={"GET", "POST"})
      *
      * @Template
+     * @return array<string,mixed>|RedirectResponse
      */
-    public function editAction(Request $request, Document $document): array|RedirectResponse
+    public function editAction(Request $request, Document $document, EntityManagerInterface $em): array|RedirectResponse
     {
         $editForm = $this->createForm(DocumentType::class, $document);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The document has been updated.');
 
@@ -130,10 +130,10 @@ class DocumentController extends AbstractController implements PaginatorAwareInt
      *
      * @Security("is_granted('ROLE_ADMIN')")
      * @Route("/{id}/delete", name="document_delete", methods={"GET"})
+     * @return RedirectResponse
      */
-    public function deleteAction(Request $request, Document $document): array|RedirectResponse
+    public function deleteAction(EntityManagerInterface $em, Document $document): RedirectResponse
     {
-        $em = $this->getDoctrine()->getManager();
         $em->remove($document);
         $em->flush();
         $this->addFlash('success', 'The document was deleted.');

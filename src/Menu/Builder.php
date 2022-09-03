@@ -69,7 +69,7 @@ class Builder implements ContainerAwareInterface
     /**
      * Build the app's main navigation menu.
      */
-    public function mainMenu(array $options): ItemInterface
+    public function mainMenu(): ItemInterface
     {
         $menu = $this->factory->createItem('root');
         $menu->setChildrenAttributes([

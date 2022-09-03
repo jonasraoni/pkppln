@@ -15,6 +15,7 @@ use App\Repository\Repository;
 use App\Services\Ping;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Nines\UserBundle\Entity\User;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
@@ -69,12 +70,14 @@ class HealthCheckCommand extends Command
     /**
      * Send the notifications.
      *
+     * @param iterable<User> $users
+     * @param iterable<Journal> $journals
      * @throws \Twig\Error\Error
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    protected function sendNotifications(int $days, array $users, array $journals): void
+    protected function sendNotifications(int $days, iterable $users, iterable $journals): void
     {
         $notification = $this->templating->render('App:HealthCheck:notification.txt.twig', [
             'journals' => $journals,
@@ -112,7 +115,7 @@ class HealthCheckCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $days = $this->container->get('days_silent');
-        $journals = Repository::Journal()->findSilent($days);
+        $journals = Repository::journal()->findSilent($days);
         $count = \count($journals);
         $this->logger->notice("Found {$count} silent journals.");
         if (0 === \count($journals)) {
@@ -120,7 +123,7 @@ class HealthCheckCommand extends Command
         }
 
         /** @todo This method doesn't exist */
-        $users = Repository::User()->findUserToNotify();
+        $users = Repository::user()->findUserToNotify();
         if (0 === \count($users)) {
             $this->logger->error('No users to notify.');
 

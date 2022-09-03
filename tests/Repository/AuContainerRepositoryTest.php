@@ -39,6 +39,6 @@ class AuContainerRepositoryTest extends BaseControllerTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->repository = Repository::AuContainer();
+        $this->repository = Repository::auContainer();
     }
 }

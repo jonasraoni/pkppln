@@ -39,6 +39,7 @@ class TermOfUseHistory extends AbstractEntity
      * The change set, as computed by Doctrine.
      *
      * @ORM\Column(type="array")
+     * @var array<string, ?mixed>
      */
     private array $changeSet;
 
@@ -98,6 +99,7 @@ class TermOfUseHistory extends AbstractEntity
 
     /**
      * Set changeSet.
+     * @param array<string, ?mixed> $changeSet
      */
     public function setChangeSet(array $changeSet): self
     {
@@ -108,6 +110,7 @@ class TermOfUseHistory extends AbstractEntity
 
     /**
      * Get changeSet.
+     * @return array<string, ?mixed>
      */
     public function getChangeSet(): array
     {

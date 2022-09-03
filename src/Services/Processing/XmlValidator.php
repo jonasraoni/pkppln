@@ -84,6 +84,7 @@ class XmlValidator
 
     /**
      * Add any errors to the report.
+     * @param array<array{message: string,file: string,line: int}> $errors
      */
     public function reportErrors(array $errors, string &$report): void
     {

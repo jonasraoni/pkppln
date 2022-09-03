@@ -26,7 +26,7 @@ class BlackWhiteList
      */
     public function isWhitelisted(string $uuid): bool
     {
-        return null !== Repository::Whitelist()->findOneBy(['uuid' => strtoupper($uuid)]);
+        return null !== Repository::whitelist()->findOneBy(['uuid' => strtoupper($uuid)]);
     }
 
     /**
@@ -34,7 +34,7 @@ class BlackWhiteList
      */
     public function isBlacklisted(string $uuid): bool
     {
-        return null !== Repository::Blacklist()->findOneBy(['uuid' => strtoupper($uuid)]);
+        return null !== Repository::blacklist()->findOneBy(['uuid' => strtoupper($uuid)]);
     }
 
     /**
