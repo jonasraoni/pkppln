@@ -48,7 +48,7 @@ class DepositController extends AbstractController implements PaginatorAwareInte
         $qb->select('e')->from(Deposit::class, 'e')->where('e.journal = :journal')->orderBy('e.id', 'ASC')->setParameter('journal', $journal);
         $query = $qb->getQuery();
 
-        $deposits = $this->paginator->paginate($query, $request->query->getint('page', 1), 25);
+        $deposits = $this->paginator?->paginate($query, $request->query->getint('page', 1), 25);
 
         return [
             'deposits' => $deposits,
@@ -76,9 +76,9 @@ class DepositController extends AbstractController implements PaginatorAwareInte
 
         if ($q) {
             $query = $repo->searchQuery($q, $journal);
-            $deposits = $this->paginator->paginate($query, $request->query->getInt('page', 1), 25);
+            $deposits = $this->paginator?->paginate($query, $request->query->getInt('page', 1), 25);
         } else {
-            $deposits = $this->paginator->paginate([], $request->query->getInt('page', 1), 25);
+            $deposits = $this->paginator?->paginate([], $request->query->getInt('page', 1), 25);
         }
 
         return [

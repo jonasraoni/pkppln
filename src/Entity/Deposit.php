@@ -328,7 +328,7 @@ class Deposit extends AbstractEntity
     /**
      * Get received.
      */
-    public function getReceived(): DateTimeInterface
+    public function getReceived(): ?DateTimeInterface
     {
         return $this->created;
     }
@@ -691,7 +691,7 @@ class Deposit extends AbstractEntity
     /**
      * Set journal.
      */
-    public function setJournal(Journal $journal = null): static
+    public function setJournal(Journal $journal): static
     {
         $this->journal = $journal;
 
@@ -719,7 +719,7 @@ class Deposit extends AbstractEntity
     /**
      * Get auContainer.
      */
-    public function getAuContainer(): AuContainer
+    public function getAuContainer(): ?AuContainer
     {
         return $this->auContainer;
     }

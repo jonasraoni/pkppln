@@ -80,7 +80,7 @@ class HealthReminderCommand extends Command
         foreach ($users as $user) {
             $email = (new Email())
                 ->from('noreplies@pkp-pln.lib.sfu.ca')
-                ->to(new Address($user->getEmail(), $user->getFullname()))
+                ->to(new Address((string) $user->getEmail(), (string) $user->getFullname()))
                 ->subject('Automated notification from the PKP PLN')
                 ->text($notification);
             $this->mailer->send($email);
@@ -93,16 +93,17 @@ class HealthReminderCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $days = $this->container->getParameter('days_reminder');
+        assert(is_int($days));
         $journals = Repository::journal()->findOverdue($days);
         $count = \count($journals);
-        $this->logger->notice("Found {$count} overdue journals.");
+        $this->logger?->notice("Found {$count} overdue journals.");
         if (0 === \count($journals)) {
             return 0;
         }
 
         $users = Repository::user()->findUserToNotify();
         if (0 === \count($users)) {
-            $this->logger->error('No users to notify.');
+            $this->logger?->error('No users to notify.');
 
             return 0;
         }

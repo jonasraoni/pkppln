@@ -51,7 +51,7 @@ class CleanupCommand extends Command
         if (! file_exists($path)) {
             return;
         }
-        $this->logger->notice("Cleaning {$path}");
+        $this->logger?->notice("Cleaning {$path}");
         if (! is_dir($path)) {
             if ($force) {
                 unlink($path);

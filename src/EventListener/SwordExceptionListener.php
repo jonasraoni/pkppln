@@ -29,8 +29,10 @@ class SwordExceptionListener
 {
     /**
      * Controller that threw the exception.
+     *
+     * @var (callable():mixed)|ErrorController $controller
      */
-    private Closure|ErrorController $controller;
+    private mixed $controller;
 
     /**
      * Twig instance.
@@ -70,7 +72,7 @@ class SwordExceptionListener
      */
     public function onKernelException(ExceptionEvent $event): void
     {
-        if (! ($this->controller[0] ?? null) instanceof SwordController) {
+        if (!is_array($this->controller) || ! ($this->controller[0] ?? null) instanceof SwordController) {
             return;
         }
 

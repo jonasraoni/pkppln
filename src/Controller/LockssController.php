@@ -52,7 +52,7 @@ class LockssController extends AbstractController implements PaginatorAwareInter
      */
     public function fetchAction(Request $request, Journal $journal, Deposit $deposit, FilePaths $fp): BinaryFileResponse
     {
-        $this->logger->notice("{$request->getClientIp()} - fetch - {$journal->getUuid()} - {$deposit->getDepositUuid()}");
+        $this->logger?->notice("{$request->getClientIp()} - fetch - {$journal->getUuid()} - {$deposit->getDepositUuid()}");
         if ($deposit->getJournal() !== $journal) {
             throw new BadRequestHttpException("The requested Journal ID does not match the deposit's journal ID.");
         }
@@ -72,7 +72,7 @@ class LockssController extends AbstractController implements PaginatorAwareInter
      */
     public function permissionAction(Request $request): Response
     {
-        $this->logger->notice("{$request->getClientIp()} - permission");
+        $this->logger?->notice("{$request->getClientIp()} - permission");
 
         return new Response(self::PERMISSION_STMT, Response::HTTP_OK, [
             'content-type' => 'text/plain',

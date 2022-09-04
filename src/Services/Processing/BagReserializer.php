@@ -16,6 +16,7 @@ use App\Repository\Repository;
 use App\Services\FilePaths;
 use App\Utilities\BagReader;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use whikloj\BagItTools\Bag;
 
 /**
@@ -55,19 +56,19 @@ class BagReserializer
     {
         $bag->addBagInfoTag('External-Identifier', $deposit->getDepositUuid());
         $bag->addBagInfoTag('PKP-PLN-Deposit-UUID', $deposit->getDepositUuid());
-        $bag->addBagInfoTag('PKP-PLN-Deposit-Received', $deposit->getReceived()->format('c'));
+        $bag->addBagInfoTag('PKP-PLN-Deposit-Received', (string) $deposit->getReceived()?->format('c'));
         $bag->addBagInfoTag('PKP-PLN-Deposit-Volume', $deposit->getVolume());
         $bag->addBagInfoTag('PKP-PLN-Deposit-Issue', $deposit->getIssue());
         $bag->addBagInfoTag('PKP-PLN-Deposit-PubDate', $deposit->getPubDate()->format('c'));
 
         $journal = $deposit->getJournal();
         $bag->addBagInfoTag('PKP-PLN-Journal-UUID', $journal->getUuid());
-        $bag->addBagInfoTag('PKP-PLN-Journal-Title', $journal->getTitle());
-        $bag->addBagInfoTag('PKP-PLN-Journal-ISSN', $journal->getIssn());
+        $bag->addBagInfoTag('PKP-PLN-Journal-Title', (string) $journal->getTitle());
+        $bag->addBagInfoTag('PKP-PLN-Journal-ISSN', (string) $journal->getIssn());
         $bag->addBagInfoTag('PKP-PLN-Journal-URL', $journal->getUrl());
-        $bag->addBagInfoTag('PKP-PLN-Journal-Email', $journal->getEmail());
-        $bag->addBagInfoTag('PKP-PLN-Publisher-Name', $journal->getPublisherName());
-        $bag->addBagInfoTag('PKP-PLN-Publisher-URL', $journal->getPublisherUrl());
+        $bag->addBagInfoTag('PKP-PLN-Journal-Email', (string) $journal->getEmail());
+        $bag->addBagInfoTag('PKP-PLN-Publisher-Name', (string) $journal->getPublisherName());
+        $bag->addBagInfoTag('PKP-PLN-Publisher-URL', (string) $journal->getPublisherUrl());
 
         foreach ($deposit->getLicense() as $key => $value) {
             $bag->addBagInfoTag('PKP-PLN-' . $key, $value);
@@ -87,7 +88,9 @@ class BagReserializer
         $harvestedPath = $this->filePaths->getHarvestFile($deposit);
         $bag = $this->bagReader->readBag($harvestedPath);
         $bag->createFile($deposit->getProcessingLog(), 'data/processing-log.txt');
-        $bag->createFile($deposit->getErrorLog("\n\n"), 'data/error-log.txt');
+        $errorLog = $deposit->getErrorLog("\n\n");
+        assert(is_string($errorLog));
+        $bag->createFile($errorLog, 'data/error-log.txt');
         $this->addMetadata($bag, $deposit);
         $bag->update();
 
@@ -100,7 +103,7 @@ class BagReserializer
         // Bytes to kb.
         $deposit->setPackageSize((int) ceil(filesize($path) / 1000));
         $deposit->setPackageChecksumType('sha1');
-        $deposit->setPackageChecksumValue(hash_file('sha1', $path));
+        $deposit->setPackageChecksumValue(hash_file('sha1', $path) ?: throw new Exception("Failed to generate hash for {$path}"));
 
         $auContainer = Repository::auContainer()->getOpenContainer();
         if (null === $auContainer) {

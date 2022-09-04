@@ -10,7 +10,9 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
+use App\Entity\AuContainer;
 use App\Entity\Deposit;
+use App\Entity\Journal;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -51,8 +53,12 @@ class DepositFixtures extends Fixture implements DependentFixtureInterface
             $fixture->setErrorLog([]);
             $fixture->setDepositReceipt("http://example.com/receipt/{$i}");
             $fixture->setProcessingLog('');
-            $fixture->setJournal($this->getReference('journal.1'));
-            $fixture->setAuContainer($this->getReference('aucontainer'));
+            $journal = $this->getReference('journal.1');
+            assert($journal instanceof Journal);
+            $fixture->setJournal($journal);
+            $auContainer = $this->getReference('aucontainer');
+            assert($auContainer instanceof AuContainer);
+            $fixture->setAuContainer($auContainer);
 
             $em->persist($fixture);
             $this->setReference('deposit.' . $i, $fixture);

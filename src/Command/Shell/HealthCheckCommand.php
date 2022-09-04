@@ -86,7 +86,7 @@ class HealthCheckCommand extends Command
         foreach ($users as $user) {
             $email = (new Email())
                 ->from('noreplies@pkp-pln.lib.sfu.ca')
-                ->to(new Address($user->getEmail(), $user->getFullname()))
+                ->to(new Address((string) $user->getEmail(), (string) $user->getFullname()))
                 ->subject('Automated notification from the PKP PLN')
                 ->text($notification);
 
@@ -101,7 +101,7 @@ class HealthCheckCommand extends Command
     {
         $result = $this->ping->ping($journal);
         if ($result->hasError()) {
-            $this->logger->error($result->getError());
+            $this->logger?->error($result->getError());
         }
         return $result->areTermsAccepted() === 'yes';
     }
@@ -117,7 +117,7 @@ class HealthCheckCommand extends Command
         $days = $this->container->get('days_silent');
         $journals = Repository::journal()->findSilent($days);
         $count = \count($journals);
-        $this->logger->notice("Found {$count} silent journals.");
+        $this->logger?->notice("Found {$count} silent journals.");
         if (0 === \count($journals)) {
             return 0;
         }
@@ -125,7 +125,7 @@ class HealthCheckCommand extends Command
         /** @todo This method doesn't exist */
         $users = Repository::user()->findUserToNotify();
         if (0 === \count($users)) {
-            $this->logger->error('No users to notify.');
+            $this->logger?->error('No users to notify.');
 
             return 0;
         }
@@ -133,7 +133,7 @@ class HealthCheckCommand extends Command
 
         foreach ($journals as $journal) {
             if ($this->pingJournal($journal)) {
-                $this->logger->notice("Ping Success {$journal->getUrl()})");
+                $this->logger?->notice("Ping Success {$journal->getUrl()})");
                 $journal->setStatus('healthy');
                 $journal->setContacted(new DateTime());
             } else {

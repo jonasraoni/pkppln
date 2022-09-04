@@ -60,7 +60,7 @@ class ValidateBagCommand extends AbstractProcessingCmd
         $extractedPath = $this->filePaths->getProcessingBagPath($deposit);
         $fs = new Filesystem();
         if ($fs->exists($extractedPath)) {
-            $this->logger->info("Removing failed bag files {$extractedPath}.");
+            $this->logger?->info("Removing failed bag files {$extractedPath}.");
             $fs->remove($extractedPath);
         }
     }
@@ -73,7 +73,7 @@ class ValidateBagCommand extends AbstractProcessingCmd
         $harvestedPath = $this->filePaths->getHarvestFile($deposit);
         $fs = new Filesystem();
         if ($fs->exists($harvestedPath)) {
-            $this->logger->info("The bag is validated, removing initial harvested file {$harvestedPath}.");
+            $this->logger?->info("The bag is validated, removing initial harvested file {$harvestedPath}.");
             $fs->remove($harvestedPath);
         }
     }

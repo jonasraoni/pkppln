@@ -14,7 +14,9 @@ use DOMDocument;
 
 abstract class AbstractValidator
 {
-    /** @var array<array{message: string,file: string,line: int}> */
+    /**
+     * @var array<array{message: string,file: string,line: int}>
+     */
     protected array $errors;
 
     /**

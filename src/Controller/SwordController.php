@@ -110,7 +110,7 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
             return false;
         }
 
-        return $this->getParameter('pln.accepting');
+        return (bool) $this->getParameter('pln.accepting');
     }
 
     /**
@@ -119,13 +119,20 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
     private function getNetworkMessage(Journal $journal): string
     {
         if (null === $journal->getOjsVersion()) {
-            return $this->getParameter('pln.network_default');
+            $networkDefault = $this->getParameter('pln.network_default');
+            assert(is_string($networkDefault));
+            return $networkDefault;
         }
-        if (version_compare($journal->getOjsVersion(), $this->getParameter('pln.min_ojs_version'), '>=')) {
-            return $this->getParameter('pln.network_accepting');
+        $minVersion = $this->getParameter('pln.min_accepted_version');
+        assert(is_string($minVersion));
+        if (version_compare($journal->getOjsVersion(), $minVersion, '>=')) {
+            $networkAccepting = $this->getParameter('pln.network_accepting');
+            assert(is_string($networkAccepting));
+            return $networkAccepting;
         }
-
-        return $this->getParameter('pln.network_oldojs');
+        $oldVersionWarning = $this->getParameter('pln.network_old_version');
+        assert(is_string($oldVersionWarning));
+        return $oldVersionWarning;
     }
 
     /**
@@ -141,7 +148,7 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
         }
 
         try {
-            $xml = simplexml_load_string($content);
+            $xml = simplexml_load_string($content) ?: throw new Exception('Failed to load XML');
             Namespaces::registerNamespaces($xml);
 
             return $xml;
@@ -165,10 +172,10 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
      */
     public function serviceDocumentAction(Request $request, JournalBuilder $builder): array
     {
-        $obh = strtoupper($this->fetchHeader($request, 'On-Behalf-Of'));
+        $obh = strtoupper((string) $this->fetchHeader($request, 'On-Behalf-Of'));
         $journalUrl = $this->fetchHeader($request, 'Journal-Url');
         $accepting = $this->checkAccess($obh);
-        $this->logger->notice("{$request->getClientIp()} - service document - {$obh} - {$journalUrl} - accepting: " . ($accepting ? 'yes' : 'no'));
+        $this->logger?->notice("{$request->getClientIp()} - service document - {$obh} - {$journalUrl} - accepting: " . ($accepting ? 'yes' : 'no'));
         if (! $obh) {
             throw new BadRequestHttpException('Missing On-Behalf-Of header.', null, 400);
         }
@@ -209,7 +216,7 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
         if (! $journal->getTermsAccepted()) {
             $accepting = false;
         }
-        $this->logger->notice("{$request->getClientIp()} - create deposit - {$journal->getUuid()} - accepting: " . ($accepting ? 'yes' : 'no'));
+        $this->logger?->notice("{$request->getClientIp()} - create deposit - {$journal->getUuid()} - accepting: " . ($accepting ? 'yes' : 'no'));
 
         if (! $accepting) {
             throw new BadRequestHttpException('Not authorized to create deposits.', null, 400);
@@ -221,7 +228,6 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
         $deposit = $depositBuilder->fromXml($journal, $xml);
         $this->em->flush();
 
-        /** @var Response */
         $response = $this->statementAction($request, $journal, $deposit);
         $response->headers->set('Location', $this->generateUrl('sword_statement', [
             'journal_uuid' => $journal->getUuid(),
@@ -245,7 +251,7 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
     public function statementAction(Request $request, Journal $journal, Deposit $deposit): Response
     {
         $accepting = $this->checkAccess($journal->getUuid());
-        $this->logger->notice("{$request->getClientIp()} - statement - {$journal->getUuid()} - {$deposit->getDepositUuid()} - accepting: " . ($accepting ? 'yes' : 'no'));
+        $this->logger?->notice("{$request->getClientIp()} - statement - {$journal->getUuid()} - {$deposit->getDepositUuid()} - accepting: " . ($accepting ? 'yes' : 'no'));
         if (! $accepting && ! $this->isGranted('ROLE_USER')) {
             throw new BadRequestHttpException('Not authorized to request statements.', null, 400);
         }
@@ -276,7 +282,7 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
     public function editAction(Request $request, Journal $journal, Deposit $deposit, DepositBuilder $builder): Response
     {
         $accepting = $this->checkAccess($journal->getUuid());
-        $this->logger->notice("{$request->getClientIp()} - edit deposit - {$journal->getUuid()} - {$deposit->getDepositUuid()} - accepting: " . ($accepting ? 'yes' : 'no'));
+        $this->logger?->notice("{$request->getClientIp()} - edit deposit - {$journal->getUuid()} - {$deposit->getDepositUuid()} - accepting: " . ($accepting ? 'yes' : 'no'));
         if (! $accepting) {
             throw new BadRequestHttpException('Not authorized to create deposits.', null, 400);
         }
@@ -288,7 +294,6 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
         $newDeposit->setAction('edit');
         $this->em->flush();
 
-        /** @var Response */
         $response = $this->statementAction($request, $journal, $deposit);
         $response->headers->set('Location', $this->generateUrl('sword_statement', [
             'journal_uuid' => $journal->getUuid(),

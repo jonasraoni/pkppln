@@ -46,7 +46,7 @@ class BlacklistController extends AbstractController implements PaginatorAwareIn
         $qb->select('e')->from(Blacklist::class, 'e')->orderBy('e.id', 'ASC');
         $query = $qb->getQuery();
 
-        $blacklists = $this->paginator->paginate($query, $request->query->getint('page', 1), 25);
+        $blacklists = $this->paginator?->paginate($query, $request->query->getint('page', 1), 25);
 
         return [
             'blacklists' => $blacklists,
@@ -68,9 +68,9 @@ class BlacklistController extends AbstractController implements PaginatorAwareIn
 
         if ($q) {
             $query = $repo->searchQuery($q);
-            $blacklists = $this->paginator->paginate($query, $request->query->getInt('page', 1), 25);
+            $blacklists = $this->paginator?->paginate($query, $request->query->getInt('page', 1), 25);
         } else {
-            $blacklists = $this->paginator->paginate([], $request->query->getInt('page', 1), 25);
+            $blacklists = $this->paginator?->paginate([], $request->query->getInt('page', 1), 25);
         }
 
         return [

@@ -55,11 +55,14 @@ class XmlParser
      */
     public function filter(string $from, string $to): int
     {
-        $fromHandle = fopen($from, 'r');
-        $toHandle = fopen($to, 'w');
+        $fromHandle = fopen($from, 'r') ?: throw new Exception("Failed to open '{$from}'");
+        $toHandle = fopen($to, 'w') ?: throw new Exception("Failed to open '{$to}'");
         $changes = 0;
         while ($buffer = fread($fromHandle, self::BLOCKSIZE)) {
             $filtered = iconv('UTF-8', 'UTF-8//IGNORE', $buffer);
+            if (false === $filtered) {
+                throw new Exception('Failed to convert text to UTF-8');
+            }
             $changes += (\strlen($buffer) - \strlen($filtered));
             fwrite($toHandle, $filtered);
         }
@@ -87,10 +90,10 @@ class XmlParser
             return $dom;
         }
         $error = libxml_get_last_error();
-        if (false === strpos($error->message, 'Input is not proper UTF-8')) {
+        if ($error && false === strpos($error->message, 'Input is not proper UTF-8')) {
             throw new Exception("{$error->message} at {$error->file}:{$error->line}:{$error->column}.");
         }
-        $filteredFilename = tempnam(sys_get_temp_dir(), 'pkppln-');
+        $filteredFilename = tempnam(sys_get_temp_dir(), 'pkppln-') ?: throw new Exception('Failed to acquire temporary file');
         $changes = $this->filter($filename, $filteredFilename);
         $this->errors[] = basename($filename) . " contains {$changes} invalid "
         . 'UTF-8 characters, which have been removed.';
@@ -98,9 +101,9 @@ class XmlParser
         if (true === $filteredResult) {
             return $dom;
         }
-        $filteredError = libxml_get_last_error();
 
-        throw new Exception("Filtered XML cannot be parsed. {$filteredError->message} at "
-        . "{$filteredError->file}:{$filteredError->line}:{$filteredError->column}.");
+        $filteredError = ($error = libxml_get_last_error()) ? " {$error->message} at "
+            . "{$error->file}:{$error->line}:{$error->column}." : '';
+        throw new Exception("Filtered XML cannot be parsed.{$filteredError}");
     }
 }

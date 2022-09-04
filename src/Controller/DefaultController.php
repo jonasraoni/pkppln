@@ -11,8 +11,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Repository\Repository;
-use Doctrine\ORM\EntityManagerInterface;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
+use Nines\UserBundle\Entity\User;
 use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -40,8 +40,7 @@ class DefaultController extends AbstractController implements PaginatorAwareInte
     public function indexAction(): Response
     {
         $user = $this->getUser();
-
-        if (! $user || ! $user->hasRole('ROLE_USER')) {
+        if (! ($user instanceof User) || ! $user->hasRole('ROLE_USER')) {
             return $this->render('default/index_anon.html.twig');
         }
 
@@ -71,7 +70,7 @@ class DefaultController extends AbstractController implements PaginatorAwareInte
         $qb->setParameter('state', $state);
         $qb->orderBy('d.id');
 
-        $deposits = $this->paginator->paginate($qb->getQuery(), $request->query->getInt('page', 1), 25);
+        $deposits = $this->paginator?->paginate($qb->getQuery(), $request->query->getInt('page', 1), 25);
         $states = $repo->stateSummary();
 
         return [
@@ -101,9 +100,9 @@ class DefaultController extends AbstractController implements PaginatorAwareInte
 
         if ($q) {
             $query = $repo->searchQuery($q);
-            $deposits = $this->paginator->paginate($query, $request->query->getInt('page', 1), 25);
+            $deposits = $this->paginator?->paginate($query, $request->query->getInt('page', 1), 25);
         } else {
-            $deposits = $this->paginator->paginate([], $request->query->getInt('page', 1), 25);
+            $deposits = $this->paginator?->paginate([], $request->query->getInt('page', 1), 25);
         }
 
         return [

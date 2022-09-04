@@ -60,7 +60,7 @@ class ReserializeCommand extends AbstractProcessingCmd
         $extractedPath = $this->filePaths->getProcessingBagPath($deposit);
         $fs = new Filesystem();
         if ($fs->exists($extractedPath)) {
-            $this->logger->info("Bag was reserialized, removing extracted bag files {$extractedPath}.");
+            $this->logger?->info("Bag was reserialized, removing extracted bag files {$extractedPath}.");
             $fs->remove($extractedPath);
         }
     }

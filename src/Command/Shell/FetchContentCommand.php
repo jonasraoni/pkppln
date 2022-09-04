@@ -86,7 +86,7 @@ class FetchContentCommand extends Command
     {
         $client = $this->getHttpClient();
         $filepath = $this->filePaths->getRestoreDir($deposit->getJournal()) . '/' . basename($href);
-        $this->logger->notice("Saving {$deposit->getJournal()->getTitle()} vol. {$deposit->getVolume()} no. {$deposit->getIssue()} to {$filepath}");
+        $this->logger?->notice("Saving {$deposit->getJournal()->getTitle()} vol. {$deposit->getVolume()} no. {$deposit->getIssue()} to {$filepath}");
 
         try {
             $client->get($href, [
@@ -94,12 +94,12 @@ class FetchContentCommand extends Command
                 'decode_content' => false,
                 'save_to' => $filepath,
             ]);
-            $hash = strtoupper(hash_file($deposit->getPackageChecksumType(), $filepath));
+            $hash = strtoupper(hash_file($deposit->getPackageChecksumType() ?: throw new Exception('Invalid checksum type'), $filepath));
             if ($hash !== $deposit->getPackageChecksumValue()) {
-                $this->logger->warning("Package checksum failed. Expected {$deposit->getPackageChecksumValue()} but got {$hash}");
+                $this->logger?->warning("Package checksum failed. Expected {$deposit->getPackageChecksumValue()} but got {$hash}");
             }
         } catch (Exception $ex) {
-            $this->logger->error($ex->getMessage());
+            $this->logger?->error($ex->getMessage());
         }
     }
 
@@ -112,11 +112,10 @@ class FetchContentCommand extends Command
     public function downloadJournal(Journal $journal): void
     {
         foreach ($journal->getDeposits() as $deposit) {
-            $statement = $this->swordClient->statement($deposit);
-            $originals = $statement->xpath('//sword:originalDeposit');
-
+            $originals = $this->swordClient->statement($deposit)->xpath('//sword:originalDeposit');
+            assert(is_iterable($originals));
             foreach ($originals as $element) {
-                $this->fetch($deposit, $element['href']);
+                $this->fetch($deposit, (string) $element['href']);
             }
         }
     }

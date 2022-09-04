@@ -31,10 +31,7 @@ class Namespaces
      */
     public static function getNamespace(?string $prefix): ?string
     {
-        if (\array_key_exists($prefix, self::NS)) {
-            return self::NS[$prefix];
-        }
-        return null;
+        return self::NS[$prefix] ?? null;
     }
 
     /**

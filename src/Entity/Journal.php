@@ -426,8 +426,8 @@ class Journal extends AbstractEntity
     public function getSentDeposits(): mixed
     {
         $criteria = Criteria::create()->where(Criteria::expr()->in('state', self::SENT_STATES));
-        /** @var PersistentCollection<int,Deposit> */
         $deposits = $this->getDeposits();
+        assert($deposits instanceof PersistentCollection);
         return $$deposits->matching($criteria);
     }
 }

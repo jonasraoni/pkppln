@@ -146,8 +146,9 @@ class SwordClient
             return $this->client->send($request, $options);
         } catch (RequestException $e) {
             $message = Message::toString($e->getRequest());
-            if ($e->hasResponse()) {
-                $message .= "\n\n" . Message::toString($e->getResponse());
+            $response = $e->getResponse();
+            if ($response instanceof ResponseInterface) {
+                $message .= "\n\n" . Message::toString($response);
             }
             if ($deposit) {
                 $deposit->addErrorLog($message);
@@ -227,8 +228,10 @@ class SwordClient
      */
     public function statement(Deposit $deposit): SimpleXMLElement
     {
-        $receiptXml = $this->receipt($deposit);
-        $statementUrl = (string) $receiptXml->xpath('atom:link[@rel="http://purl.org/net/sword/terms/statement"]/@href')[0];
+        $receiptXml = $this->receipt($deposit) ?? throw new Exception('Failed to retrieve deposit receipt');
+        $statementNode = $receiptXml->xpath('atom:link[@rel="http://purl.org/net/sword/terms/statement"]/@href');
+        assert(is_iterable($statementNode));
+        $statementUrl = (string) ($statementNode[0] ?? null) ?: throw new Exception('Failed to retrieve statement URL');
         $response = $this->request('GET', $statementUrl, [], null, $deposit);
         $statementXml = new SimpleXMLElement($response->getBody()->getContents());
         Namespaces::registerNamespaces($statementXml);
@@ -244,8 +247,9 @@ class SwordClient
      */
     public function fetch(Deposit $deposit): string
     {
-        $statement = $this->statement($deposit);
-        $original = (string) $statement->xpath('//sword:originalDeposit/@href')[0];
+        $hrefNode = $this->statement($deposit)->xpath('//sword:originalDeposit/@href');
+        assert(is_iterable($hrefNode));
+        $original = (string) ($hrefNode[0] ?? null) ?: throw new Exception('Original deposit href is missing');
         $filepath = $this->fp->getRestoreFile($deposit);
 
         $this->request('GET', $original, [], null, $deposit, [

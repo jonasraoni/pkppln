@@ -46,7 +46,7 @@ class DocumentController extends AbstractController implements PaginatorAwareInt
         $qb->select('e')->from(Document::class, 'e')->orderBy('e.id', 'ASC');
         $query = $qb->getQuery();
 
-        $documents = $this->paginator->paginate($query, $request->query->getint('page', 1), 25);
+        $documents = $this->paginator?->paginate($query, $request->query->getint('page', 1), 25);
 
         return [
             'documents' => $documents,

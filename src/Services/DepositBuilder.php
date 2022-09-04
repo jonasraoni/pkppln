@@ -52,13 +52,13 @@ class DepositBuilder
      */
     protected function findDeposit(string $uuid): Deposit
     {
-        /** @var ?Deposit */
         $deposit = Repository::deposit()->findOneBy(['depositUuid' => strtoupper($uuid)]);
         if (!$deposit) {
             return (new Deposit())->setDepositUuid($uuid)
                 ->setAction('add')
                 ->addToProcessingLog('Deposit received.');
         }
+        assert($deposit instanceof Deposit);
 
         // Clear outdated files
         $fs = new Filesystem();
@@ -71,7 +71,7 @@ class DepositBuilder
             try {
                 $fs->remove($path);
             } catch (Exception $e) {
-                $this->logger->error($e->getMessage());
+                $this->logger?->error($e->getMessage());
             }
         }
         return $deposit->setAction('edit')
@@ -84,21 +84,23 @@ class DepositBuilder
      */
     public function fromXml(Journal $journal, SimpleXMLElement $xml): Deposit
     {
-        $id = Xpath::getXmlValue($xml, '//atom:id');
+        $id = Xpath::getXmlValue($xml, '//atom:id') ?: throw new Exception('Invalid ATOM ID');
         $deposit = $this->findDeposit(substr($id, 9, 36));
         $deposit->setState('depositedByJournal');
-        $deposit->setChecksumType(Xpath::getXmlValue($xml, 'pkp:content/@checksumType'));
-        $deposit->setChecksumValue(Xpath::getXmlValue($xml, 'pkp:content/@checksumValue'));
+        $deposit->setChecksumType((string) Xpath::getXmlValue($xml, 'pkp:content/@checksumType'));
+        $deposit->setChecksumValue((string) Xpath::getXmlValue($xml, 'pkp:content/@checksumValue'));
         $deposit->setFileType('');
-        $deposit->setIssue(Xpath::getXmlValue($xml, 'pkp:content/@issue'));
-        $deposit->setVolume(Xpath::getXmlValue($xml, 'pkp:content/@volume'));
-        $deposit->setPubDate(new DateTime(Xpath::getXmlValue($xml, 'pkp:content/@pubdate')));
+        $deposit->setIssue((string) Xpath::getXmlValue($xml, 'pkp:content/@issue'));
+        $deposit->setVolume((string) Xpath::getXmlValue($xml, 'pkp:content/@volume'));
+        $deposit->setPubDate(new DateTime((string) Xpath::getXmlValue($xml, 'pkp:content/@pubdate')));
         $deposit->setJournal($journal);
         $deposit->setSize((int) Xpath::getXmlValue($xml, 'pkp:content/@size'));
-        $deposit->setUrl(html_entity_decode(Xpath::getXmlValue($xml, 'pkp:content')));
+        $deposit->setUrl(html_entity_decode((string) Xpath::getXmlValue($xml, 'pkp:content')));
 
-        $deposit->setJournalVersion(Xpath::getXmlValue($xml, 'pkp:content/@ojsVersion', Deposit::DEFAULT_JOURNAL_VERSION));
-        foreach ($xml->xpath('//pkp:license/node()') as $node) {
+        $deposit->setJournalVersion((string) Xpath::getXmlValue($xml, 'pkp:content/@ojsVersion', Deposit::DEFAULT_JOURNAL_VERSION));
+        $nodes = $xml->xpath('//pkp:license/node()');
+        assert(is_iterable($nodes));
+        foreach ($nodes as $node) {
             $deposit->addLicense($node->getName(), (string) $node);
         }
         $this->em->persist($deposit);

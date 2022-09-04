@@ -53,15 +53,18 @@ class PayloadValidator
      */
     public function hashFile(string $algorithm, string $filepath): string
     {
-        $handle = fopen($filepath, 'r');
+        $handle = fopen($filepath, 'r') ?: throw new Exception("Failed to open file '{$filepath}'");
         $context = match (strtolower($algorithm)) {
             'sha1', 'sha-1' => hash_init('sha1'),
             'md5' => hash_init('md5'),
             default => throw new Exception("Unknown hash algorithm {$algorithm}")
         };
-        while (($data = fread($handle, self::BUFFER_SIZE))) {
+        do {
+            $data = fread($handle, self::BUFFER_SIZE);
+            $data !== false || throw new Exception("Failed to open file '{$filepath}'");
             hash_update($context, $data);
         }
+        while (strlen($data));
         $hash = hash_final($context);
         fclose($handle);
 

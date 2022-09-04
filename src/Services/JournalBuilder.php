@@ -49,12 +49,12 @@ class JournalBuilder
         $journal->setUuid($uuid);
         $journal->setTitle(Xpath::getXmlValue($xml, '//atom:title'));
         // &amp; -> &.
-        $journal->setUrl(html_entity_decode(Xpath::getXmlValue($xml, '//pkp:journal_url')));
+        $journal->setUrl(html_entity_decode(Xpath::getXmlValue($xml, '//pkp:journal_url') ?: ''));
         $journal->setEmail(Xpath::getXmlValue($xml, '//atom:email'));
         $journal->setIssn(Xpath::getXmlValue($xml, '//pkp:issn'));
         $journal->setPublisherName(Xpath::getXmlValue($xml, '//pkp:publisherName'));
         // &amp; -> &.
-        $journal->setPublisherUrl(html_entity_decode(Xpath::getXmlValue($xml, '//pkp:publisherUrl')));
+        $journal->setPublisherUrl(html_entity_decode(Xpath::getXmlValue($xml, '//pkp:publisherUrl') ?: ''));
         $journal->setContacted(new DateTime());
         $this->em->persist($journal);
 

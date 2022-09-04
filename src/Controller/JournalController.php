@@ -51,7 +51,7 @@ class JournalController extends AbstractController implements PaginatorAwareInte
         }
         $query = $qb->getQuery();
 
-        $journals = $this->paginator->paginate($query, $request->query->getint('page', 1), 25);
+        $journals = $this->paginator?->paginate($query, $request->query->getint('page', 1), 25);
 
         return [
             'journals' => $journals,
@@ -72,9 +72,9 @@ class JournalController extends AbstractController implements PaginatorAwareInte
 
         if ($q) {
             $query = Repository::journal()->searchQuery($q);
-            $journals = $this->paginator->paginate($query, $request->query->getInt('page', 1), 25);
+            $journals = $this->paginator?->paginate($query, $request->query->getInt('page', 1), 25);
         } else {
-            $journals = $this->paginator->paginate([], $request->query->getInt('page', 1), 25);
+            $journals = $this->paginator?->paginate([], $request->query->getInt('page', 1), 25);
         }
 
         return [

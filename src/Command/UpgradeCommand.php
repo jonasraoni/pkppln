@@ -223,7 +223,7 @@ class UpgradeCommand extends Command
         $callback = function ($row) {
             $history = new TermOfUseHistory();
             $termId = $this->getIdMap(TermOfUse::class, $row['term_id'], $row['term_id']);
-            $history->setTermId($termId);
+            $history->setTermId((int) $termId);
             $history->setAction($row['action']);
             $history->setUser($row['user']);
             $history->setChangeSet(unserialize($row['change_set']));

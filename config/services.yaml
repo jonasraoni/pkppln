@@ -21,9 +21,9 @@ parameters:
 
     pln.network_default: The PKP PLN does not know about this journal yet.
     pln.network_accepting: The PKP PLN can accept deposits from this journal.
-    pln.network_oldojs: This journal must be running OJS 2.4.8 to make deposits to the PKP PLN.
+    pln.network_old_ojs: This journal must be running OJS 2.4.8 to make deposits to the PKP PLN.
 
-    pln.min_ojs_version: 2.4.8.0
+    pln.min_accepted_version: 2.4.8.0
     pln.held_versions: ~
     pln.max_harvest_attempts: 5
     pln.max_au: 100000000
@@ -85,7 +85,7 @@ services:
 
     App\Services\Ping:
         arguments:
-            $minOjsVersion: '%pln.min_ojs_version%'
+            $minOjsVersion: '%pln.min_accepted_version%'
 
     App\Services\Processing\Depositor:
         arguments:

@@ -78,7 +78,7 @@ class TermsOfUseListener
         $changeSet = $this->getChangeSet($unitOfWork, $entity, $action);
 
         $history = new TermOfUseHistory();
-        $history->setTermId($entity->getId());
+        $history->setTermId((int) $entity->getId());
         $history->setAction($action);
         $history->setChangeSet($changeSet);
         $token = $this->tokenStorage->getToken();

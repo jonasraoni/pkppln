@@ -19,13 +19,10 @@ use App\Entity\TermOfUse;
 use App\Entity\TermOfUseHistory;
 use App\Entity\Whitelist;
 use App\Kernel;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\Persistence\ObjectRepository;
 use Nines\UserBundle\Entity\User;
 use Nines\UserBundle\Repository\UserRepository;
-use Nines\UtilBundle\Entity\AbstractEntity;
 
 /**
  * Repository makes it easy to grab typed repositories.
@@ -33,15 +30,15 @@ use Nines\UtilBundle\Entity\AbstractEntity;
 class Repository
 {
     /**
-     * @template T of AbstractEntity
+     * @template T of \Nines\UtilBundle\Entity\AbstractEntity
      * @param class-string<T> $className
      * @return EntityRepository<T>
      */
     public static function getRepository(string $className): EntityRepository
     {
         static $doctrine = null;
-        /** @var ?EntityManagerInterface $doctrine */
         $doctrine ??= Kernel::getInstance()->getContainer()->get('doctrine.orm.entity_manager');
+        assert($doctrine instanceof EntityManagerInterface);
         return $doctrine->getRepository($className);
     }
 

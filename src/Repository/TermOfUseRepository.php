@@ -46,6 +46,6 @@ class TermOfUseRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('t');
         $qb->select('MAX(t.updated)');
 
-        return $qb->getQuery()->getSingleScalarResult();
+        return (string) $qb->getQuery()->getSingleScalarResult();
     }
 }

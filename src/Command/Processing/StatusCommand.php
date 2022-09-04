@@ -55,8 +55,9 @@ class StatusCommand extends AbstractProcessingCmd
      */
     protected function processDeposit(Deposit $deposit): null|bool|string
     {
-        $statusXml = $this->client->statement($deposit);
-        $term = (string) $statusXml->xpath('//atom:category[@label="State"]/@term')[0];
+        $termNode = $this->client->statement($deposit)->xpath('//atom:category[@label="State"]/@term');
+        assert(is_iterable($termNode));
+        $term = (string) ($termNode[0] ?? null) ?: throw new Exception('Failed to retrieve term');
         $deposit->setPlnState($term);
 
         return 'agreement' === $term;
@@ -71,7 +72,7 @@ class StatusCommand extends AbstractProcessingCmd
             return;
         }
 
-        $this->logger->notice("Deposit complete. Removing processing files for deposit {$deposit->getId()}.");
+        $this->logger?->notice("Deposit complete. Removing processing files for deposit {$deposit->getId()}.");
 
         // Clear outdated files
         $fs = new Filesystem();
@@ -84,7 +85,7 @@ class StatusCommand extends AbstractProcessingCmd
             try {
                 $fs->remove($path);
             } catch (Exception $e) {
-                $this->logger->error($e->getMessage());
+                $this->logger?->error($e->getMessage());
             }
         }
     }

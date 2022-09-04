@@ -40,7 +40,7 @@ class AuContainerController extends AbstractController implements PaginatorAware
         $dql = 'SELECT e FROM App:AuContainer e ORDER BY e.id';
         $query = $em->createQuery($dql);
 
-        $entities = $this->paginator->paginate(
+        $entities = $this->paginator?->paginate(
             $query,
             $request->query->getInt('page', 1),
             25

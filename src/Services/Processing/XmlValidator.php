@@ -16,6 +16,7 @@ use App\Services\FilePaths;
 use App\Services\SchemaValidator;
 use App\Utilities\BagReader;
 use App\Utilities\XmlParser;
+use DOMElement;
 
 /**
  * Validate the OJS XML export.
@@ -102,6 +103,7 @@ class XmlValidator
         $issuePath = $bag->getBagRoot() . '/data/' . 'Issue' . $deposit->getDepositUuid() . '.xml';
         $dom = $this->xmlParser->fromFile($issuePath);
         $root = $dom->documentElement;
+        assert($root instanceof DOMElement);
         if ($root->hasAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 'schemaLocation')) {
             $this->schemaValidator->validate($dom, $bag->getBagRoot() . '/data/');
         } else {

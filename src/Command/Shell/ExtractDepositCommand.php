@@ -12,8 +12,6 @@ namespace App\Command\Shell;
 
 use Doctrine\ORM\EntityManagerInterface;
 use DOMDocument;
-use DOMNamedNodeMap;
-use DOMNode;
 use DOMXPath;
 use Exception;
 use Symfony\Component\Console\Command\Command;
@@ -78,15 +76,16 @@ class ExtractDepositCommand extends Command
         }
         $xp = new DOMXPath($dom);
         gc_enable();
-        /** @var DOMNode $embedded */
-        foreach ($xp->query('//embed') as $embedded) {
+        $embeddedList = $xp->query('//embed');
+        assert(is_iterable($embeddedList));
+        foreach ($embeddedList as $embedded) {
             $attrs = $embedded->attributes;
             if (! $attrs) {
                 $output->writeln('Embedded element has no attributes. Skipping.');
 
                 continue;
             }
-            $filename = $attrs->getNamedItem('filename')->nodeValue;
+            $filename = $attrs->getNamedItem('filename')?->nodeValue;
             if (! $filename) {
                 $output->writeln('Embedded element has no file name. Skipping.');
 
@@ -102,18 +101,19 @@ class ExtractDepositCommand extends Command
                 $tmpPath = $path . $filename;
                 $ext = '';
             } else {
-                $tmpPath = tempnam($path, 'pln-');
+                $tmpPath = tempnam($path, 'pln-') ?: throw new Exception('Failed to create temporary file');
             }
             $tmpName = basename($tmpPath);
             $output->writeln("Extracting {$filename} as {$path}{$tmpName}{$ext}.");
-            $fh = fopen($tmpPath, 'w');
+            $fh = fopen($tmpPath, 'w') ?: throw new Exception('Failed to open temporary file');
             $chunkSize = 1024 * 1024; // 1MB chunks.
             $length = $xp->evaluate('string-length(./text())', $embedded);
             $offset = 1; // xpath string offsets start at 1, not zero.
             while ($offset < $length) {
                 $end = $offset + $chunkSize;
-                $chunk = $xp->evaluate("substring(./text(), {$offset}, {$chunkSize})", $embedded);
-                fwrite($fh, base64_decode($chunk, true));
+                $chunk = base64_decode($xp->evaluate("substring(./text(), {$offset}, {$chunkSize})", $embedded), true);
+                assert(is_string($chunk));
+                fwrite($fh, $chunk);
                 $offset = $end;
                 $output->write('.');
             }

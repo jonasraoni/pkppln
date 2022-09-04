@@ -53,8 +53,8 @@ class RunAllCommand extends Command
     {
         foreach (self::COMMAND_LIST as $cmd) {
             $output->writeln("Running {$cmd}");
-            $command = $this->getApplication()->find($cmd);
-            $command->run($input, $output);
+            $command = $this->getApplication()?->find($cmd);
+            $command?->run($input, $output);
         }
         return 0;
     }

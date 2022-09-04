@@ -47,7 +47,7 @@ class WhitelistController extends AbstractController implements PaginatorAwareIn
         $qb->select('e')->from(Whitelist::class, 'e')->orderBy('e.id', 'ASC');
         $query = $qb->getQuery();
 
-        $whitelists = $this->paginator->paginate($query, $request->query->getint('page', 1), 25);
+        $whitelists = $this->paginator?->paginate($query, $request->query->getint('page', 1), 25);
 
         return [
             'whitelists' => $whitelists,
@@ -69,9 +69,9 @@ class WhitelistController extends AbstractController implements PaginatorAwareIn
 
         if ($q) {
             $query = $repo->searchQuery($q);
-            $whitelists = $this->paginator->paginate($query, $request->query->getInt('page', 1), 25);
+            $whitelists = $this->paginator?->paginate($query, $request->query->getInt('page', 1), 25);
         } else {
-            $whitelists = $this->paginator->paginate([], $request->query->getInt('page', 1), 25);
+            $whitelists = $this->paginator?->paginate([], $request->query->getInt('page', 1), 25);
         }
 
         return [

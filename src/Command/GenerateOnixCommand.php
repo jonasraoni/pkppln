@@ -14,6 +14,7 @@ use App\Entity\Journal;
 use App\Services\FilePaths;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Internal\Hydration\IterableResult;
+use Exception;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -64,7 +65,7 @@ class GenerateOnixCommand extends Command
      */
     protected function generateCsv(string $filePath): void
     {
-        $handle = fopen($filePath, 'w');
+        $handle = fopen($filePath, 'w') ?: throw new Exception("Failed to open file '{$filePath}'");
         $iterator = $this->getJournals();
         fputcsv($handle, ['Generated', date('Y-m-d')]);
         fputcsv($handle, [
@@ -245,11 +246,11 @@ class GenerateOnixCommand extends Command
         }
 
         foreach ($files as $file) {
-            $this->logger->info("Writing {$file}");
+            $this->logger?->info("Writing {$file}");
             match ($ext = pathinfo($file, \PATHINFO_EXTENSION)) {
                 'xml' => $this->generateXml($file),
                 'csv' => $this->generateCsv($file),
-                default => $this->logger->error("Cannot generate {$ext} ONIX format.")
+                default => $this->logger?->error("Cannot generate {$ext} ONIX format.")
             };
         }
         return 0;

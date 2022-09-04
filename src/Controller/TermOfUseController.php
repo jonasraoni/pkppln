@@ -47,7 +47,7 @@ class TermOfUseController extends AbstractController implements PaginatorAwareIn
         $qb->select('e')->from(TermOfUse::class, 'e')->orderBy('e.id', 'ASC');
         $query = $qb->getQuery();
 
-        $termOfUses = $this->paginator->paginate($query, $request->query->getint('page', 1), 25);
+        $termOfUses = $this->paginator?->paginate($query, $request->query->getint('page', 1), 25);
 
         return [
             'termOfUses' => $termOfUses,

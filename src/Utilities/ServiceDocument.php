@@ -37,7 +37,7 @@ class ServiceDocument
      */
     public function __toString(): string
     {
-        return $this->xml->asXML();
+        return $this->xml->asXML() ?: throw new Exception('Failed to generate XML');
     }
 
     /**
@@ -48,15 +48,12 @@ class ServiceDocument
      */
     public function getXpathValue(string $xpath): ?string
     {
-        $result = $this->xml->xpath($xpath);
-        if (0 === \count($result)) {
-            return null;
-        }
-        if (\count($result) > 1) {
-            throw new Exception('Too many values returned by xpath query.');
-        }
-
-        return (string) $result[0];
+        $result = $this->xml->xpath($xpath) ?: throw new Exception("Failed to query XPath '{$xpath}'");
+        return match(\count($result)) {
+            0 => null,
+            1 => (string) $result[0],
+            default => throw new Exception('Too many values returned by xpath query.')
+        };
     }
 
     /**
@@ -64,7 +61,7 @@ class ServiceDocument
      */
     public function getMaxUpload(): string
     {
-        return $this->getXpathValue('sword:maxUploadSize');
+        return $this->getXpathValue('sword:maxUploadSize') ?: throw new Exception('Empty max upload size');
     }
 
     /**
@@ -72,7 +69,7 @@ class ServiceDocument
      */
     public function getUploadChecksum(): string
     {
-        return $this->getXpathValue('lom:uploadChecksumType');
+        return $this->getXpathValue('lom:uploadChecksumType') ?: throw new Exception('Empty upload checksum type');
     }
 
     /**
@@ -80,6 +77,6 @@ class ServiceDocument
      */
     public function getCollectionUri(): string
     {
-        return $this->getXpathValue('.//app:collection/@href');
+        return $this->getXpathValue('.//app:collection/@href') ?: throw new Exception('Empty max upload size');
     }
 }

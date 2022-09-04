@@ -22,9 +22,9 @@ class Xpath
      * Get a single XML value as a string.
      *
      * @throws Exception
-     *                   If there are more than one result.
+     *                   If there is more than one result.
      */
-    public static function getXmlValue(SimpleXMLElement $xml, string $xpath, string $default = null): string
+    public static function getXmlValue(SimpleXMLElement $xml, string $xpath, ?string $default = null): ?string
     {
         $data = $xml->xpath($xpath);
         if (!is_countable($data)) {
