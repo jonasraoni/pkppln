@@ -48,7 +48,7 @@ class ServiceDocument
      */
     public function getXpathValue(string $xpath): ?string
     {
-        $result = $this->xml->xpath($xpath) ?: throw new Exception("Failed to query XPath '{$xpath}'");
+        $result = $this->xml->xpath($xpath) ?: [];
         return match(\count($result)) {
             0 => null,
             1 => (string) $result[0],
