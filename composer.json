@@ -115,8 +115,9 @@
             "Fuz\\Symfony\\Collection\\ScriptHandler::postUpdate"
         ],
         "lint": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --diff --dry-run",
-		"lint-fix": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix",
-        "phpstan": "phpstan analyse -l 8 --memory-limit=-1 src migrations"
+        "lint-fix": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix",
+        "phpstan": "phpstan analyse -l 8 --memory-limit=-1 --error-format=table src migrations",
+        "phpunit": "phpunit --coverage-text"
     },
     "conflict": {
         "symfony/symfony": "*",

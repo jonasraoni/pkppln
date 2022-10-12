@@ -70,4 +70,7 @@ jobs:
           SYMFONY_ENV: test
           CLAMSCAN_BIN: "/usr/bin/clamdscan"
           COMPOSER_DISABLE_XDEBUG_WARN: 1
-        run: ./vendor/bin/phpunit --coverage-text
+        run: composer phpunit
+
+      - name: Run PHPStan
+        run: composer phpstan

@@ -56,7 +56,7 @@ class DefaultController extends AbstractController implements PaginatorAwareInte
     }
 
     /**
-     * Browse deposits across all jouurnals by state.
+     * Browse deposits across all journals by state.
      *
      * @Route("/browse/{state}", name="deposit_browse", methods={"GET"})
      * @Template
