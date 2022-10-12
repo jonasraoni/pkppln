@@ -36,10 +36,9 @@ class Repository
      */
     public static function getRepository(string $className): EntityRepository
     {
-        static $doctrine = null;
-        $doctrine ??= Kernel::getInstance()->getContainer()->get('doctrine.orm.entity_manager');
-        assert($doctrine instanceof EntityManagerInterface);
-        return $doctrine->getRepository($className);
+        $em = Kernel::getInstance()->getContainer()->get('doctrine.orm.entity_manager');
+        assert($em instanceof EntityManagerInterface);
+        return $em->getRepository($className);
     }
 
     /**

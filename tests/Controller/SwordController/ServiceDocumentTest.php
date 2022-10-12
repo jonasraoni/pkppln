@@ -92,7 +92,7 @@ class ServiceDocumentTest extends AbstractSwordTestCase
 
         $this->client->request('GET', '/api/sword/2.0/sd-iri', [], [], [
             'HTTP_On-Behalf-Of' => WhitelistFixtures::UUIDS[0],
-            'HTTP_Journal-Url' => 'http://example.com',
+            'HTTP_Journal-Url' => 'http://example.com/journal/0',
         ]);
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $xml = $this->getXml($this->client);
