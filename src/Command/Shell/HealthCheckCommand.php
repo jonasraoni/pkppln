@@ -122,8 +122,8 @@ class HealthCheckCommand extends Command
             return 0;
         }
 
-        /** @todo This method doesn't exist */
-        $users = Repository::user()->findUserToNotify();
+        /** @todo The method Repository::user()->findUserToNotify() and the "notify" field have been dropped */
+        $users = Repository::user()->findBy(['email' => 'admin@pkp.sfu.ca']);
         if (0 === \count($users)) {
             $this->logger?->error('No users to notify.');
 

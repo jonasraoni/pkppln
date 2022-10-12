@@ -48,13 +48,9 @@ class UpgradeCommand extends Command
      *
      * Something like this if the old user ID was three and the new one was 5.
      * $idMapping[User::class][3] = 5
+     * @var array<string, array<int, int>>
      */
     private array $idMapping;
-
-    /**
-     * If true the changes will be flushed to the new database.
-     */
-    private bool $force;
 
     /**
      * Construct the command instance.
@@ -75,7 +71,6 @@ class UpgradeCommand extends Command
         $this->source = $oldEm;
         $this->em = $em;
         $this->idMapping = [];
-        $this->force = false;
         gc_enable();
     }
 
