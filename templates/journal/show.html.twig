@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Journal{% endblock %}
+
+{% block pageheader %}
+    <h1>Journal Details</h1>
+{% endblock %}
+
+{% block body %}
+    <div class="btn-toolbar">
+        <div class="btn-group pull-right">
+            <a href="{{ path('journal_index') }}" class="btn btn-default">
+                <span class="glyphicon glyphicon-arrow-left"></span> Back
+            </a>
+            <a href="{{ path('journal_ping', {'id': journal.id}) }}" class="btn btn-default ping">
+                <span class="glyphicon glyphicon-refresh"></span> Ping
+            </a>
+        </div>
+    </div>
+    <table class="table table-bordered table-condensed table-hover table-striped">
+        <tbody>
+            <tr>
+                <th>Uuid</th>
+                <td>{{ journal.uuid }}</td>
+            </tr>
+            <tr>
+                <th>Contacted</th>
+                <td>{% if journal.contacted %}{{ journal.contacted|date }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Service Document</th>
+                <td><a href='{{ url('sword_service_document', {'On-Behalf-Of': journal.uuid, 'Journal-Url': journal.url}) }}'>Full URL</a>
+                </td>
+            </tr>
+            <tr>
+                <th>Ojs Version</th>
+                <td>{{ journal.ojsVersion }}</td>
+            </tr>
+            <tr>
+                <th>Notified</th>
+                <td>{% if journal.notified %}{{ journal.notified|date }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ journal.title }}</td>
+            </tr>
+            <tr>
+                <th>Issn</th>
+                <td>{{ journal.issn }}</td>
+            </tr>
+            <tr>
+                <th>Url</th>
+                <td>
+                    <a href="{{ journal.url }}">
+                        {{ journal.url }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <th>Permissions</th>
+                <td>
+                    {% if list.isWhitelisted(journal.uuid) %}
+                        Whitelisted
+                    {% elseif list.isBlacklisted(journal.uuid) %}
+                        Blacklisted
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Ping Url</th>
+                <td>
+                    <a href="{{ journal.getGatewayUrl }}">
+                        {{ journal.getGatewayUrl }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ journal.status }}</td>
+            </tr>
+            <tr>
+                <th>Terms Accepted</th>
+                <td>{% if journal.termsAccepted %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>
+                    {% if journal.email %}
+                        <a href='mailto:{{ journal.email }}'>{{ journal.email }}</a>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Publisher Name</th>
+                <td>{{ journal.publisherName }}</td>
+            </tr>
+            <tr>
+                <th>Publisher Url</th>
+                <td>
+                    {% if journal.publisherUrl %}
+                        <a href='{{ journal.publisherUrl }}'>
+                            {{ journal.publisherUrl }}
+                        </a>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Created</th>
+                <td>{% if journal.created %}{{ journal.created|date }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Updated</th>
+                <td>{% if journal.updated %}{{ journal.updated|date }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Journal Deposits</th>
+                <td>
+                    <a href="{{ path('deposit_index', {'journalId': journal.id}) }}">
+                        {{ journal.deposits | length }}
+                    </a>
+                </td>
+        </tbody>
+    </table>
+{% endblock %}

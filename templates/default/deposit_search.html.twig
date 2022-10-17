@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Deposit Search{% endblock %}
+
+{% block pageheader %}
+    <h1>Deposit Search</h1>
+    {% if q %}
+    <p class="count">
+        Displaying {{ deposits|length }} search results for <i>{{ q }}</i> of {{ deposits.getTotalItemCount }} total.
+    </p>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+
+    {% include 'partial/search-form.html.twig' with {
+        'path': path('all_deposit_search')
+    } %}
+
+    <table class="table table-bordered table-condensed table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Deposit Uuid</th>
+                <th>Received</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for deposit in deposits %}
+                <tr>
+                    <td>
+                        <a href="{{ path('deposit_show', { 'id': deposit.id, 'journalId': deposit.journal.id }) }}">
+                            {{ deposit.depositUuid }}
+                        </a>
+                    </td>
+                    <td>{% if deposit.received %}{{ deposit.received|date('Y-m-d H:i:s') }}{% endif %}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(deposits) }}
+    </div>
+
+{% endblock %}

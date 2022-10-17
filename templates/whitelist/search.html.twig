@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Whitelist List{% endblock %}
+
+{% block pageheader %}
+    <h1>Whitelist List</h1>
+    <p class="count">
+        Displaying {{ whitelists|length }} whitelists of {{ whitelists.getTotalItemCount }} total.
+    </p>
+ {% endblock %}
+
+{% block body %}
+
+    {% include 'partial/search-form.html.twig' with {
+        'path': path('whitelist_search')
+    } %}
+
+    <table class="table table-bordered table-condensed table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Uuid</th>
+                <th>Comment</th>
+                </tr>
+        </thead>
+        <tbody>
+        {% for whitelist in whitelists %}
+            <tr>
+                <td>
+                    <a href="{{ path('whitelist_show', { 'id': whitelist.id }) }}">
+                        {{ whitelist.uuid }}
+                    </a>
+                </td>
+                <td>{{ whitelist.comment }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(whitelists) }}
+    </div>
+
+{% endblock %}

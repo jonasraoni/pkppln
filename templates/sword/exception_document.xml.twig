@@ -1,0 +1,9 @@
+<sword:error xmlns="http://www.w3.org/2005/Atom" 
+             xmlns:sword="http://purl.org/net/sword/">    
+    <summary code='{{ exception.code }}'>{{ exception.message }}</summary>
+    {%- if env in ['dev', 'test'] %} 
+    <detail>
+{{ exception.getTraceAsString() }}
+    </detail>
+    {% endif -%}
+</sword:error>

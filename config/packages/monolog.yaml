@@ -1,0 +1,21 @@
+monolog:
+    channels: [ 'sword', 'lockss' ]
+    handlers:
+        main:
+            type: rotating_file
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
+            level: warning
+            channels: ["!event", "!doctrine", "!console", "!lockss", "!sword"]
+            max_files: 30
+        lockss:
+            level: notice
+            type: rotating_file
+            path: '%kernel.logs_dir%/lockss-%kernel.environment%.log'
+            channels: [ 'lockss' ]
+            max_files: 30
+        sword:
+            level: notice
+            type: rotating_file
+            path: '%kernel.logs_dir%/sword-%kernel.environment%.log'
+            channels: [ 'sword' ]
+            max_files: 30

@@ -1,0 +1,20 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    exception_controller: null
+    form_themes:
+        - 'bootstrap_3_horizontal_layout.html.twig'
+        - '@NinesUtil/form/fields.html.twig'
+        - '@TetranzSelect2Entity/Form/fields.html.twig'
+        - 'jquery.collection.html.twig'
+    date:
+        timezone: America/Vancouver
+        format: Y-m-d g:i:s A
+        interval_format: '%%d days'
+    globals:
+        blackwhitelist: "@blackwhitelist"
+        pln_accepting: "%pln.accepting%"
+        pln_maxUploadSize: "%pln.max_upload%"
+        pln_maxAuSize: "%pln.max_au%"
+        pln_uploadChecksumType: "%pln.checksum_type%"

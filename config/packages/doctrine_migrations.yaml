@@ -1,0 +1,7 @@
+doctrine_migrations:
+    migrations_paths:
+        'DoctrineMigrations': 'migrations'
+    organize_migrations: BY_YEAR_AND_MONTH
+    storage:
+        table_storage:
+            table_name: 'migration_versions'

@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Document List{% endblock %}
+
+{% block pageheader %}
+    <h1>Document List</h1>
+    <p class="count">
+        Displaying {{ documents|length }} documents of {{ documents.getTotalItemCount }} total.
+    </p>
+{% endblock %} 
+
+{% block body %}
+
+    <div class='btn-toolbar pull-right'>
+        <div class='btn-group'>
+            {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('document_new') }}" class="btn btn-default">
+                    <span class="glyphicon glyphicon-plus"></span> New
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <table class="table table-bordered table-condensed table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Path</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for document in documents %}
+                <tr>
+                    <td>
+                        <a href="{{ path('document_show', { 'id': document.id }) }}">
+                            {{ document.title }}
+                        </a>
+                    </td>
+                    <td>{{ document.path }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(documents) }}
+    </div>
+
+{% endblock %}
