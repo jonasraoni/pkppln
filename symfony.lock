@@ -264,9 +264,6 @@
     "symfony/css-selector": {
         "version": "v4.4.10"
     },
-    "symfony/debug": {
-        "version": "v4.4.10"
-    },
     "symfony/debug-bundle": {
         "version": "4.1",
         "recipe": {
@@ -357,9 +354,6 @@
         "version": "v4.4.10"
     },
     "symfony/http-kernel": {
-        "version": "v4.4.10"
-    },
-    "symfony/inflector": {
         "version": "v4.4.10"
     },
     "symfony/intl": {
