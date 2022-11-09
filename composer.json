@@ -49,7 +49,7 @@
         "twig/string-extra": "^3.0",
         "twig/twig": "^2.12|^3.0",
         "ubermichael/nines": "dev-4.x-up",
-        "whikloj/bagittools": "^1.4",
+        "whikloj/bagittools": "^4.2",
         "xenolope/quahog": "^3"
     },
     "require-dev": {
