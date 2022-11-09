@@ -18,6 +18,7 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  *
  * @ORM\Table(name="term_of_use")
  * @ORM\Entity(repositoryClass="App\Repository\TermOfUseRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class TermOfUse extends AbstractEntity
 {

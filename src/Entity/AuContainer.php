@@ -22,6 +22,7 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * @ORM\Table
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="App\Repository\AuContainerRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class AuContainer extends AbstractEntity
 {

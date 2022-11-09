@@ -18,6 +18,7 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  *
  * @ORM\Table(name="document")
  * @ORM\Entity(repositoryClass="App\Repository\DocumentRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Document extends AbstractEntity
 {
