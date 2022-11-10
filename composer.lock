@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "690ce65eae120fd1570da92200a7fae9",
+    "content-hash": "c61164553b2fc014d5eda8842f70d385",
     "packages": [
         {
             "name": "brick/math",
@@ -9508,16 +9508,16 @@
         },
         {
             "name": "whikloj/bagittools",
-            "version": "1.4.1",
+            "version": "4.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/whikloj/BagItTools.git",
-                "reference": "c50a0114a5f48152e3d523e91db34408cba57b27"
+                "reference": "c6d0be5adc7fbc61547bb982f36ab6e3c8979f90"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/whikloj/BagItTools/zipball/c50a0114a5f48152e3d523e91db34408cba57b27",
-                "reference": "c50a0114a5f48152e3d523e91db34408cba57b27",
+                "url": "https://api.github.com/repos/whikloj/BagItTools/zipball/c6d0be5adc7fbc61547bb982f36ab6e3c8979f90",
+                "reference": "c6d0be5adc7fbc61547bb982f36ab6e3c8979f90",
                 "shasum": ""
             },
             "require": {
@@ -9525,17 +9525,23 @@
                 "ext-intl": "*",
                 "ext-mbstring": "*",
                 "ext-zip": "*",
-                "pear/archive_tar": "^1.4",
-                "php": ">=5.6"
+                "pear/archive_tar": "^1.4.14",
+                "php": ">=7.3",
+                "symfony/console": "^5.4"
             },
             "require-dev": {
                 "donatj/mock-webserver": "^2.1",
-                "phpdocumentor/phpdocumentor": "^2.0",
-                "phpunit/phpunit": "~5.7",
-                "sebastian/phpcpd": "^3.0",
+                "phpstan/phpstan": "^1.4",
+                "phpunit/phpunit": "^9.0",
+                "sebastian/phpcpd": "^6.0",
                 "squizlabs/php_codesniffer": "^3.5"
             },
             "type": "library",
+            "extra": {
+                "symfony": {
+                    "allow-contrib": false
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "whikloj\\BagItTools\\": "src/"
@@ -9563,9 +9569,9 @@
             ],
             "support": {
                 "issues": "https://github.com/whikloj/BagItTools/issues",
-                "source": "https://github.com/whikloj/BagItTools/tree/1.4.1"
+                "source": "https://github.com/whikloj/BagItTools/tree/4.2.1"
             },
-            "time": "2020-10-27T14:15:21+00:00"
+            "time": "2022-08-02T15:01:19+00:00"
         },
         {
             "name": "xenolope/quahog",
