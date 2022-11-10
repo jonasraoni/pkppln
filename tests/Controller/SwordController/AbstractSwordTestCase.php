@@ -19,7 +19,6 @@ use App\Utilities\Namespaces;
 use Exception;
 use App\Tests\TestCase\BaseControllerTestCase;
 use SimpleXMLElement;
-use Symfony\Component\BrowserKit\Client;
 
 abstract class AbstractSwordTestCase extends BaseControllerTestCase
 {

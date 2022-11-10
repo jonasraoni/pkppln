@@ -1,4 +1,6 @@
 security:
+    enable_authenticator_manager: true
+
     encoders:
         Nines\UserBundle\Entity\User:
             algorithm: auto
@@ -15,7 +17,7 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            anonymous: lazy
+            lazy: true
             guard:
                 authenticators:
                     - Nines\UserBundle\Security\LoginFormAuthenticator
@@ -39,13 +41,13 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         # Default controller stuff - open to the public
-        - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/privacy$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/$, roles: PUBLIC_ACCESS }
+        - { path: ^/privacy$, roles: PUBLIC_ACCESS }
 
         # user controller stuff - open to the public
-        - { path: ^/request$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/request$, roles: PUBLIC_ACCESS }
+        - { path: ^/reset, roles: PUBLIC_ACCESS }
+        - { path: ^/login$, roles: PUBLIC_ACCESS }
 
         # Other controllers that should never be public
         - { path: ^/dublin_core/element, roles: ROLE_USER }
@@ -53,8 +55,8 @@ security:
         - { path: ^/feedback/comment_status, roles: ROLE_USER }
 
         # Journal access via SWORD API
-        - { path: ^/api, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api, role: PUBLIC_ACCESS }
 
         # LOCKSS access
-        - { path: ^/fetch, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/permission, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/fetch, role: PUBLIC_ACCESS }
+        - { path: ^/permission, role: PUBLIC_ACCESS }

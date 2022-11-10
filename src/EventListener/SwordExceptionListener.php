@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace App\EventListener;
 
 use App\Controller\SwordController;
-use Closure;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ErrorController;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
@@ -32,7 +31,7 @@ class SwordExceptionListener
      *
      * @var (callable():mixed)|ErrorController $controller
      */
-    private mixed $controller;
+    private mixed $controller = null;
 
     /**
      * Twig instance.

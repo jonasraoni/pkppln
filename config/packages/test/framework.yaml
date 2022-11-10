@@ -1,7 +1,7 @@
 framework:
     test: true
     session:
-        storage_id: session.storage.mock_file
+        storage_id: session.storage.factory.mock_file
 
 liip_test_fixtures:
     cache_db:
