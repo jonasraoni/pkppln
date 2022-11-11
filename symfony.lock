@@ -120,6 +120,9 @@
     "guzzlehttp/psr7": {
         "version": "1.6.1"
     },
+    "jonasraoni/nines": {
+        "version": "5.4.0"
+    },
     "knplabs/knp-components": {
         "version": "v2.3.6"
     },
@@ -585,9 +588,6 @@
     },
     "twig/twig": {
         "version": "v3.0.3"
-    },
-    "ubermichael/nines": {
-        "version": "4.x-dev"
     },
     "webmozart/assert": {
         "version": "1.9.0"
