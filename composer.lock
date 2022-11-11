@@ -1985,12 +1985,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jonasraoni/nines.git",
-                "reference": "8c343b47bed24b2ca87054c79a28fd99f795a6b5"
+                "reference": "a93727589b06a2dc3b2a1d51e079b11719b2f550"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jonasraoni/nines/zipball/8c343b47bed24b2ca87054c79a28fd99f795a6b5",
-                "reference": "8c343b47bed24b2ca87054c79a28fd99f795a6b5",
+                "url": "https://api.github.com/repos/jonasraoni/nines/zipball/a93727589b06a2dc3b2a1d51e079b11719b2f550",
+                "reference": "a93727589b06a2dc3b2a1d51e079b11719b2f550",
                 "shasum": ""
             },
             "require": {
@@ -2047,7 +2047,7 @@
                 "issues": "https://github.com/jonasraoni/nines/issues",
                 "source": "https://github.com/jonasraoni/nines/tree/5.4.0"
             },
-            "time": "2022-11-11T21:00:28+00:00"
+            "time": "2022-11-11T21:52:10+00:00"
         },
         {
             "name": "knplabs/knp-components",
