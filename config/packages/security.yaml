@@ -1,6 +1,4 @@
 security:
-    enable_authenticator_manager: true
-
     encoders:
         Nines\UserBundle\Entity\User:
             algorithm: auto
@@ -17,7 +15,7 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            lazy: true
+            anonymous: lazy
             guard:
                 authenticators:
                     - Nines\UserBundle\Security\LoginFormAuthenticator
