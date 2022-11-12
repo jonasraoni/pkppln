@@ -46,7 +46,7 @@ class BagValidatorTest extends BaseControllerTestCase
 
         $bag = $this->createMock(Bag::class);
         $bag->method('validate')->willReturn(true);
-        $bag->method('getBagInfoData')->willReturn($deposit->getJournalVersion());
+        $bag->method('getBagInfoData')->willReturn([$deposit->getJournalVersion()]);
         $reader = $this->createMock(BagReader::class);
         $reader->method('readBag')->willReturn($bag);
         $this->validator->setBagReader($reader);
@@ -61,7 +61,7 @@ class BagValidatorTest extends BaseControllerTestCase
 
         $bag = $this->createMock(Bag::class);
         $bag->method('validate')->willReturn(false);
-        $bag->method('getBagInfoData')->willReturn('2.0.0.0');
+        $bag->method('getBagInfoData')->willReturn(['2.0.0.0']);
         $bag->method('getErrors')->willReturn([['file' => 'foo', 'message' => 'An error.']]);
         $reader = $this->createMock(BagReader::class);
         $reader->method('readBag')->willReturn($bag);

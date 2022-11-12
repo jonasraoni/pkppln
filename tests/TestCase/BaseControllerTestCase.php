@@ -18,7 +18,7 @@ use Nines\UtilBundle\TestCase\ControllerTestCase;
 use SplFileInfo;
 
 /**
- * Description of AbstractProcessingCmdTest.
+ * Description of BaseControllerTestCase.
  *
  * @author michael
  */

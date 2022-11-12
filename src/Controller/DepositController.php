@@ -72,7 +72,7 @@ class DepositController extends AbstractController implements PaginatorAwareInte
     public function searchAction(Request $request, Journal $journal): array
     {
         $repo = Repository::deposit();
-        $q = $request->query->get('q');
+        $q = (string) $request->query->get('q');
 
         if ($q) {
             $query = $repo->searchQuery($q, $journal);

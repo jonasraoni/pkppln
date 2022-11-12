@@ -27,6 +27,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     @ORM\Index(columns={"uuid", "title", "issn", "url", "email", "publisher_name", "publisher_url"}, flags={"fulltext"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\JournalRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Journal extends AbstractEntity
 {

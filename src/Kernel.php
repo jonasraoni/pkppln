@@ -17,8 +17,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\RouteCollectionBuilder;
+use Symfony\Contracts\Service\ResetInterface;
 
-class Kernel extends BaseKernel
+class Kernel extends BaseKernel implements ResetInterface
 {
     use MicroKernelTrait;
 
@@ -74,5 +75,10 @@ class Kernel extends BaseKernel
     public function getProjectDir(): string
     {
         return \dirname(__DIR__);
+    }
+
+    public function reset(): void
+    {
+        $this->reboot(null);
     }
 }

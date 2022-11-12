@@ -65,7 +65,7 @@ class WhitelistController extends AbstractController implements PaginatorAwareIn
     public function searchAction(Request $request): array
     {
         $repo = Repository::whitelist();
-        $q = $request->query->get('q');
+        $q = (string) $request->query->get('q');
 
         if ($q) {
             $query = $repo->searchQuery($q);

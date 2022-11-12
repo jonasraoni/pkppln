@@ -80,7 +80,7 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
             return $request->headers->get($key);
         }
         if ('dev' === $this->getParameter('kernel.environment') && $request->query->has($key)) {
-            return $request->query->get($key);
+            return (string) $request->query->get($key);
         }
         if ($required) {
             throw new BadRequestHttpException("HTTP header {$key} is required.", null, Response::HTTP_BAD_REQUEST);

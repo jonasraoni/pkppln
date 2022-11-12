@@ -21,6 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     @ORM\Index(columns={"uuid"}, flags={"fulltext"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\WhitelistRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Whitelist extends AbstractEntity
 {

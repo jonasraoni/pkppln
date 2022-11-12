@@ -22,6 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     @ORM\Index(columns={"deposit_uuid", "url"}, flags={"fulltext"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\DepositRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Deposit extends AbstractEntity
 {

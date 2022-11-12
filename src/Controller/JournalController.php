@@ -68,7 +68,7 @@ class JournalController extends AbstractController implements PaginatorAwareInte
      */
     public function searchAction(Request $request)
     {
-        $q = $request->query->get('q');
+        $q = (string) $request->query->get('q');
 
         if ($q) {
             $query = Repository::journal()->searchQuery($q);

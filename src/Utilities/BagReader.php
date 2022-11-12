@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Utilities;
 
+use Throwable;
 use whikloj\BagItTools\Bag;
 use whikloj\BagItTools\BagItException;
 
@@ -21,7 +22,7 @@ class BagReader
     /**
      * Read a bag from the file system.
      *
-     * @throws BagItException
+     * @throws BagItException&Throwable
      */
     public function readBag(string $path): Bag
     {
