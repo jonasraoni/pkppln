@@ -106,10 +106,12 @@ class XmlValidator
         assert($root instanceof DOMElement);
         if ($root->hasAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 'schemaLocation')) {
             $this->schemaValidator->validate($dom, $bag->getBagRoot() . '/data/');
+            $errors = $this->schemaValidator->getErrors();
         } else {
             $this->dtdValidator->validate($dom, $bag->getBagRoot() . '/data/');
+            $errors = $this->dtdValidator->getErrors();
         }
-        $this->reportErrors($this->dtdValidator->getErrors(), $report);
+        $this->reportErrors($errors, $report);
         if (trim($report)) {
             $deposit->addToProcessingLog($report);
 
