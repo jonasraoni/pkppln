@@ -77,6 +77,6 @@ class ServiceDocument
      */
     public function getCollectionUri(): string
     {
-        return $this->getXpathValue('.//app:collection/@href') ?: throw new Exception('Empty max upload size');
+        return $this->getXpathValue('.//app:collection/@href') ?: throw new Exception('Empty collection URI');
     }
 }
