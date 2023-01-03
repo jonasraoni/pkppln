@@ -77,7 +77,7 @@ class ExtractDepositCommand extends Command
         $xp = new DOMXPath($dom);
         gc_enable();
         $embeddedList = $xp->query('//embed');
-        assert(is_iterable($embeddedList));
+        \assert(is_iterable($embeddedList));
         foreach ($embeddedList as $embedded) {
             $attrs = $embedded->attributes;
             if (! $attrs) {
@@ -112,7 +112,7 @@ class ExtractDepositCommand extends Command
             while ($offset < $length) {
                 $end = $offset + $chunkSize;
                 $chunk = base64_decode($xp->evaluate("substring(./text(), {$offset}, {$chunkSize})", $embedded), true);
-                assert(is_string($chunk));
+                \assert(\is_string($chunk));
                 fwrite($fh, $chunk);
                 $offset = $end;
                 $output->write('.');

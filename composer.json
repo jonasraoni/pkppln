@@ -92,17 +92,19 @@
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
         "post-install-cmd": [
+            "Composer\\Config::disableProcessTimeout",
             "@auto-scripts",
             "Fuz\\Symfony\\Collection\\ScriptHandler::postInstall"
         ],
         "post-update-cmd": [
+            "Composer\\Config::disableProcessTimeout",
             "@auto-scripts",
             "Fuz\\Symfony\\Collection\\ScriptHandler::postUpdate"
         ],
         "lint": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --diff --dry-run",
         "lint-fix": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix",
         "phpstan": "phpstan analyse -l 8 --memory-limit=-1 --error-format=table src migrations",
-        "phpunit": "phpunit --coverage-text"
+        "phpunit": "XDEBUG_MODE=coverage phpunit --coverage-text"
     },
     "conflict": {
         "symfony/symfony": "5",

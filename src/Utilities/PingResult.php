@@ -243,7 +243,7 @@ class PingResult
         }
         $articles = [];
         $nodes = Xpath::query($this->xml, '//articles/article');
-        assert(is_iterable($nodes));
+        \assert(is_iterable($nodes));
         foreach ($nodes as $node) {
             $articles[] = [
                 'date' => (string) $node['pubDate'],

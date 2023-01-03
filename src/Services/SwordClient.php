@@ -230,7 +230,7 @@ class SwordClient
     {
         $receiptXml = $this->receipt($deposit) ?? throw new Exception('Failed to retrieve deposit receipt');
         $statementNode = $receiptXml->xpath('atom:link[@rel="http://purl.org/net/sword/terms/statement"]/@href');
-        assert(is_iterable($statementNode));
+        \assert(is_iterable($statementNode));
         $statementUrl = (string) ($statementNode[0] ?? null) ?: throw new Exception('Failed to retrieve statement URL');
         $response = $this->request('GET', $statementUrl, [], null, $deposit);
         $statementXml = new SimpleXMLElement($response->getBody()->getContents());
@@ -248,7 +248,7 @@ class SwordClient
     public function fetch(Deposit $deposit): string
     {
         $hrefNode = $this->statement($deposit)->xpath('//sword:originalDeposit/@href');
-        assert(is_iterable($hrefNode));
+        \assert(is_iterable($hrefNode));
         $original = (string) ($hrefNode[0] ?? null) ?: throw new Exception('Original deposit href is missing');
         $filepath = $this->fp->getRestoreFile($deposit);
 

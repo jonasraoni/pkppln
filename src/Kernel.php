@@ -33,7 +33,7 @@ class Kernel extends BaseKernel implements ResetInterface
         self::$instance = $this;
     }
 
-    public static function getInstance(): Kernel
+    public static function getInstance(): self
     {
         return self::$instance;
     }
@@ -66,7 +66,7 @@ class Kernel extends BaseKernel implements ResetInterface
         foreach ($contents as $class => $envs) {
             if ($envs[$this->environment] ?? $envs['all'] ?? false) {
                 $instance = new $class();
-                assert($instance instanceof BundleInterface);
+                \assert($instance instanceof BundleInterface);
                 yield $instance;
             }
         }

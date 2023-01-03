@@ -30,7 +30,7 @@ class Xpath
         if (!is_countable($data)) {
             throw new Exception("Failed to query '{$xpath}'");
         }
-        return match (count($data)) {
+        return match (\count($data)) {
             1 => trim((string) $data[0]),
             0 => $default,
             default => throw new Exception("Too many elements for '{$xpath}'")

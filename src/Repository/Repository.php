@@ -37,7 +37,7 @@ class Repository
     public static function getRepository(string $className): EntityRepository
     {
         $em = Kernel::getInstance()->getContainer()->get('doctrine.orm.entity_manager');
-        assert($em instanceof EntityManagerInterface);
+        \assert($em instanceof EntityManagerInterface);
         return $em->getRepository($className);
     }
 
@@ -47,7 +47,7 @@ class Repository
     public static function auContainer(): AuContainerRepository
     {
         $repo = self::getRepository(AuContainer::class);
-        assert($repo instanceof AuContainerRepository);
+        \assert($repo instanceof AuContainerRepository);
         return $repo;
     }
 
@@ -57,7 +57,7 @@ class Repository
     public static function blacklist(): BlacklistRepository
     {
         $repo = self::getRepository(Blacklist::class);
-        assert($repo instanceof BlacklistRepository);
+        \assert($repo instanceof BlacklistRepository);
         return $repo;
     }
 
@@ -67,7 +67,7 @@ class Repository
     public static function deposit(): DepositRepository
     {
         $repo = self::getRepository(Deposit::class);
-        assert($repo instanceof DepositRepository);
+        \assert($repo instanceof DepositRepository);
         return $repo;
     }
 
@@ -77,7 +77,7 @@ class Repository
     public static function document(): DocumentRepository
     {
         $repo = self::getRepository(Document::class);
-        assert($repo instanceof DocumentRepository);
+        \assert($repo instanceof DocumentRepository);
         return $repo;
     }
 
@@ -87,7 +87,7 @@ class Repository
     public static function journal(): JournalRepository
     {
         $repo = self::getRepository(Journal::class);
-        assert($repo instanceof JournalRepository);
+        \assert($repo instanceof JournalRepository);
         return $repo;
     }
 
@@ -97,7 +97,7 @@ class Repository
     public static function termOfUseHistory(): TermOfUseHistoryRepository
     {
         $repo = self::getRepository(TermOfUseHistory::class);
-        assert($repo instanceof TermOfUseHistoryRepository);
+        \assert($repo instanceof TermOfUseHistoryRepository);
         return $repo;
     }
 
@@ -107,7 +107,7 @@ class Repository
     public static function termOfUse(): TermOfUseRepository
     {
         $repo = self::getRepository(TermOfUse::class);
-        assert($repo instanceof TermOfUseRepository);
+        \assert($repo instanceof TermOfUseRepository);
         return $repo;
     }
 
@@ -117,7 +117,7 @@ class Repository
     public static function user(): UserRepository
     {
         $repo = self::getRepository(User::class);
-        assert($repo instanceof UserRepository);
+        \assert($repo instanceof UserRepository);
         return $repo;
     }
 
@@ -127,7 +127,7 @@ class Repository
     public static function whitelist(): WhitelistRepository
     {
         $repo = self::getRepository(Whitelist::class);
-        assert($repo instanceof WhitelistRepository);
+        \assert($repo instanceof WhitelistRepository);
         return $repo;
     }
 }

@@ -90,7 +90,7 @@ class BagReserializer
         $bag = $this->bagReader->readBag($processingPath);
         $bag->createFile($deposit->getProcessingLog(), 'data/processing-log.txt');
         $errorLog = $deposit->getErrorLog("\n\n");
-        assert(is_string($errorLog));
+        \assert(\is_string($errorLog));
         $bag->createFile($errorLog, 'data/error-log.txt');
         $this->addMetadata($bag, $deposit);
         $bag->update();

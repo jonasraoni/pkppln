@@ -56,7 +56,7 @@ class StatusCommand extends AbstractProcessingCmd
     protected function processDeposit(Deposit $deposit): null|bool|string
     {
         $termNode = $this->client->statement($deposit)->xpath('//atom:category[@label="State"]/@term');
-        assert(is_iterable($termNode));
+        \assert(is_iterable($termNode));
         $term = (string) ($termNode[0] ?? null) ?: throw new Exception('Failed to retrieve term');
         $deposit->setPlnState($term);
 

@@ -40,7 +40,7 @@ class BagReader
         return $bag;
     }
 
-        /**
+    /**
      * Read a bag from the file system.
      *
      * @throws BagItException&Throwable

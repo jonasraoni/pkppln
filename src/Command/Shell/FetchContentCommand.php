@@ -113,7 +113,7 @@ class FetchContentCommand extends Command
     {
         foreach ($journal->getDeposits() as $deposit) {
             $originals = $this->swordClient->statement($deposit)->xpath('//sword:originalDeposit');
-            assert(is_iterable($originals));
+            \assert(is_iterable($originals));
             foreach ($originals as $element) {
                 $this->fetch($deposit, (string) $element['href']);
             }

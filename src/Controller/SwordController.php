@@ -120,18 +120,18 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
     {
         if (null === $journal->getOjsVersion()) {
             $networkDefault = $this->getParameter('pln.network_default');
-            assert(is_string($networkDefault));
+            \assert(\is_string($networkDefault));
             return $networkDefault;
         }
         $minVersion = $this->getParameter('pln.min_accepted_version');
-        assert(is_string($minVersion));
+        \assert(\is_string($minVersion));
         if (version_compare($journal->getOjsVersion(), $minVersion, '>=')) {
             $networkAccepting = $this->getParameter('pln.network_accepting');
-            assert(is_string($networkAccepting));
+            \assert(\is_string($networkAccepting));
             return $networkAccepting;
         }
         $oldVersionWarning = $this->getParameter('pln.network_old_version');
-        assert(is_string($oldVersionWarning));
+        \assert(\is_string($oldVersionWarning));
         return $oldVersionWarning;
     }
 

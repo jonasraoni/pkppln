@@ -54,10 +54,10 @@ class DepositFixtures extends Fixture implements DependentFixtureInterface
             $fixture->setDepositReceipt("http://example.com/receipt/{$i}");
             $fixture->setProcessingLog('');
             $journal = $this->getReference('journal.1');
-            assert($journal instanceof Journal);
+            \assert($journal instanceof Journal);
             $fixture->setJournal($journal);
             $auContainer = $this->getReference('aucontainer');
-            assert($auContainer instanceof AuContainer);
+            \assert($auContainer instanceof AuContainer);
             $fixture->setAuContainer($auContainer);
 
             $em->persist($fixture);

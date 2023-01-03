@@ -71,7 +71,7 @@ class SwordExceptionListener
      */
     public function onKernelException(ExceptionEvent $event): void
     {
-        if (!is_array($this->controller) || ! ($this->controller[0] ?? null) instanceof SwordController) {
+        if (!\is_array($this->controller) || ! ($this->controller[0] ?? null) instanceof SwordController) {
             return;
         }
 
