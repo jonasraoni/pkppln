@@ -12,7 +12,6 @@ namespace App\Command\Processing;
 
 use App\Entity\Deposit;
 use App\Services\Processing\XmlValidator;
-use App\Services\SchemaValidator;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**

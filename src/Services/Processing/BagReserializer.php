@@ -17,6 +17,7 @@ use App\Services\FilePaths;
 use App\Utilities\BagReader;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Symfony\Component\Filesystem\Filesystem;
 use whikloj\BagItTools\Bag;
 
 /**
@@ -85,8 +86,8 @@ class BagReserializer
 
     public function processDeposit(Deposit $deposit): bool
     {
-        $harvestedPath = $this->filePaths->getHarvestFile($deposit);
-        $bag = $this->bagReader->readBag($harvestedPath);
+        $processingPath = $this->filePaths->getProcessingBagPath($deposit);
+        $bag = $this->bagReader->readBag($processingPath);
         $bag->createFile($deposit->getProcessingLog(), 'data/processing-log.txt');
         $errorLog = $deposit->getErrorLog("\n\n");
         assert(is_string($errorLog));
@@ -95,9 +96,7 @@ class BagReserializer
         $bag->update();
 
         $path = $this->filePaths->getStagingBagPath($deposit);
-        if (file_exists($path)) {
-            unlink($path);
-        }
+        (new Filesystem())->remove($path);
 
         $bag->package($path);
         // Bytes to kb.

@@ -31,7 +31,7 @@ class RunAllCommand extends Command
         'pln:scan',
         'pln:reserialize',
         'pln:deposit',
-        // 'pln:status',.
+        'pln:status',
     ];
 
     /**

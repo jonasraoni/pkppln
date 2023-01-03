@@ -20,11 +20,6 @@ use Exception;
 class PayloadValidator
 {
     /**
-     * Buffer size for the hashing.
-     */
-    public const BUFFER_SIZE = 64 * 1024;
-
-    /**
      * File path service.
      */
     private FilePaths $fp;
@@ -51,24 +46,14 @@ class PayloadValidator
      * @throws Exception
      *                   If the algorithm is unknown.
      */
-    public function hashFile(string $algorithm, string $filepath): string
+    public function hashFile(string $algorithm, string $filePath): string
     {
-        $handle = fopen($filepath, 'r') ?: throw new Exception("Failed to open file '{$filepath}'");
-        $context = match (strtolower($algorithm)) {
-            'sha1', 'sha-1' => hash_init('sha1'),
-            'md5' => hash_init('md5'),
+        $hash = match (strtolower($algorithm)) {
+            'sha1', 'sha-1' => sha1_file($filePath),
+            'md5' => md5_file($filePath),
             default => throw new Exception("Unknown hash algorithm {$algorithm}")
         };
-        do {
-            $data = fread($handle, self::BUFFER_SIZE);
-            $data !== false || throw new Exception("Failed to open file '{$filepath}'");
-            hash_update($context, $data);
-        }
-        while (strlen($data));
-        $hash = hash_final($context);
-        fclose($handle);
-
-        return strtoupper($hash);
+        return $hash !== false ? strtoupper($hash) : throw new Exception("Failed to compute hash for file {$filePath}");
     }
 
     /**
@@ -88,7 +73,6 @@ class PayloadValidator
             return true;
         } catch (Exception $e) {
             $deposit->addToProcessingLog($e->getMessage());
-
             return false;
         }
     }

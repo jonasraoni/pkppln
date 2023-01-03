@@ -96,8 +96,8 @@ class XmlValidator
 
     public function processDeposit(Deposit $deposit): bool
     {
-        $harvestedPath = $this->filePaths->getHarvestFile($deposit);
-        $bag = $bag = $this->bagReader->readBag($harvestedPath);
+        $processingPath = $this->filePaths->getProcessingBagPath($deposit);
+        $bag = $this->bagReader->readBag($processingPath);
         $report = '';
 
         $issuePath = $bag->getBagRoot() . '/data/' . 'Issue' . $deposit->getDepositUuid() . '.xml';
