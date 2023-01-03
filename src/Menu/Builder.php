@@ -77,18 +77,13 @@ class Builder implements ContainerAwareInterface
         ]);
 
         $menu->addChild('home', [
-            'label' => 'Home',
+            'label' => 'PKP | Preservation Network',
             'route' => 'homepage',
         ]);
 
         if (! $this->hasRole('ROLE_USER')) {
             return $menu;
         }
-
-        $menu->addChild('terms', [
-            'label' => 'Terms of Use',
-            'route' => 'termofuse_index',
-        ]);
 
         $journals = $menu->addChild('journals', [
             'uri' => '#',
@@ -103,6 +98,15 @@ class Builder implements ContainerAwareInterface
         $journals->addChild('Search Journals', ['route' => 'journal_search']);
         $journals->addChild('Whitelist', ['route' => 'whitelist_index']);
         $journals->addChild('Blacklist', ['route' => 'blacklist_index']);
+
+        $menu->addChild('Deposits', ['route' => 'all_deposit_search']);
+
+        $menu->addChild('Containers', ['route' => 'aucontainer']);
+
+        $menu->addChild('terms', [
+            'label' => 'Terms of Use',
+            'route' => 'termofuse_index',
+        ]);
 
         $menu->addChild('Docs', ['route' => 'document_index']);
 
