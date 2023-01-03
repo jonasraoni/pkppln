@@ -44,7 +44,7 @@ class Depositor
      */
     public function processDeposit(Deposit $deposit): null|bool|string
     {
-        if ($this->heldVersions && version_compare($deposit->getJournalVersion(), $this->heldVersions, '>=')) {
+        if ($this->heldVersions && version_compare($deposit->getJournalVersion(), $this->heldVersions, '>')) {
             return 'hold';
         }
 
