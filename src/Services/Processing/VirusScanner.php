@@ -17,10 +17,11 @@ use DOMNode;
 use DOMNodeList;
 use DOMXPath;
 use Exception;
-use PharData;
+use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Socket\Raw\Factory;
 use SplFileInfo;
+use Traversable;
 use Xenolope\Quahog\Client;
 use Xenolope\Quahog\Result;
 
@@ -132,19 +133,18 @@ class VirusScanner
     /**
      * Scan an archive.
      *
+     * @param Traversable<SplFileInfo> $fileIterator
      * @return string[]
      */
-    public function scanArchiveFiles(PharData $phar, Client $client, Deposit $deposit): array
+    public function scanArchiveFiles(Traversable $fileIterator, Client $client, Deposit $deposit): array
     {
-        $depositXML = '/data/' . 'Issue' . $deposit->getDepositUuid() . '.xml';
+        $depositXML = "Issue{$deposit->getDepositUuid()}.xml";
         $results = [];
-        foreach (new RecursiveIteratorIterator($phar) as $file) {
+        foreach ($fileIterator as $file) {
             assert($file instanceof SplFileInfo);
-            $fh = fopen($file->getPathname(), 'r') ?: throw new Exception("Failed to open file '{$file->getPathname()}'");
-            $r = $client->scanResourceStream($fh);
-            fclose($fh);
+            $r = $client->scanFile($file->getPathname());
             $results[] = $this->getStatusMessage($r, $file->getFileName());
-            if ($file->getFileName() === $depositXML) {
+            if (str_ends_with($file->getFileName(), $depositXML)) {
                 $results = array_merge($this->scanXmlFile($file->getPathname(), $client), $results);
             }
         }
@@ -160,14 +160,14 @@ class VirusScanner
         if (null === $client) {
             $client = $this->getClient();
         }
-        $harvestedPath = $this->filePaths->getHarvestFile($deposit);
-        $basename = basename($harvestedPath);
-        $phar = new PharData($harvestedPath);
+        $processingPath = $this->filePaths->getProcessingBagPath($deposit);
+        $basename = basename($processingPath);
 
-        $r = $client->scanFile($harvestedPath);
+        $r = $client->scanFile($processingPath);
+        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($processingPath, RecursiveDirectoryIterator::SKIP_DOTS | RecursiveDirectoryIterator::CURRENT_AS_FILEINFO));
         $messages = [
             $this->getStatusMessage($r, $basename),
-            ...$this->scanArchiveFiles($phar, $client, $deposit)
+            ...$this->scanArchiveFiles($iterator, $client, $deposit)
         ];
         $deposit->addToProcessingLog(implode("\n", $messages));
 

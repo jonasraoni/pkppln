@@ -49,17 +49,18 @@ class BagValidator
     public function processDeposit(Deposit $deposit): bool
     {
         $harvestedPath = $this->filePaths->getHarvestFile($deposit);
-        $bag = $this->bagReader->readBag($harvestedPath);
-        if (! $bag->validate()) {
+        $processingPath = $this->filePaths->getProcessingBagPath($deposit);
+        $bag = $this->bagReader->readCompressedBag($harvestedPath, $processingPath);
+        if (! $bag->isValid()) {
             foreach ($bag->getErrors() as $error) {
                 $deposit->addErrorLog("Bag validation error for {$error['file']} - {$error['message']}");
             }
 
             return false;
         }
-        $journalVersion = $bag->getBagInfoByTag('PKP-PLN-OJS-Version');
+        $journalVersion = implode('', $bag->getBagInfoByTag('PKP-PLN-OJS-Version'));
         if ($journalVersion && $journalVersion !== $deposit->getJournalVersion()) {
-            $deposit->addErrorLog("Bag journal version tag {$journalVersion[0]} does not match deposit journal version {$deposit->getJournalVersion()}");
+            $deposit->addErrorLog("Bag journal version tag {$journalVersion} does not match deposit journal version {$deposit->getJournalVersion()}");
         }
 
         return true;
