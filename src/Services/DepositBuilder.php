@@ -58,7 +58,7 @@ class DepositBuilder
                 ->setAction('add')
                 ->addToProcessingLog('Deposit received.');
         }
-        assert($deposit instanceof Deposit);
+        \assert($deposit instanceof Deposit);
 
         // Clear outdated files
         $fs = new Filesystem();
@@ -99,7 +99,7 @@ class DepositBuilder
 
         $deposit->setJournalVersion((string) Xpath::getXmlValue($xml, 'pkp:content/@ojsVersion', Deposit::DEFAULT_JOURNAL_VERSION));
         $nodes = $xml->xpath('//pkp:license/node()');
-        assert(is_iterable($nodes));
+        \assert(is_iterable($nodes));
         foreach ($nodes as $node) {
             $deposit->addLicense($node->getName(), (string) $node);
         }

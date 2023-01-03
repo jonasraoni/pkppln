@@ -428,7 +428,7 @@ class Journal extends AbstractEntity
     {
         $criteria = Criteria::create()->where(Criteria::expr()->in('state', self::SENT_STATES));
         $deposits = $this->getDeposits();
-        assert($deposits instanceof PersistentCollection);
+        \assert($deposits instanceof PersistentCollection);
         return $deposits->matching($criteria);
     }
 }

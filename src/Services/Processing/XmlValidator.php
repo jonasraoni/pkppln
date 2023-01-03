@@ -103,7 +103,7 @@ class XmlValidator
         $issuePath = $bag->getBagRoot() . '/data/' . 'Issue' . $deposit->getDepositUuid() . '.xml';
         $dom = $this->xmlParser->fromFile($issuePath);
         $root = $dom->documentElement;
-        assert($root instanceof DOMElement);
+        \assert($root instanceof DOMElement);
         if ($root->hasAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 'schemaLocation')) {
             $this->schemaValidator->validate($dom, $bag->getBagRoot() . '/data/');
             $errors = $this->schemaValidator->getErrors();

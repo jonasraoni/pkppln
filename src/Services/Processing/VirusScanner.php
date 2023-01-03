@@ -119,9 +119,9 @@ class VirusScanner
         $xp = new DOMXPath($dom);
         $results = [];
         $embeds = $xp->query('//embed');
-        assert($embeds instanceof DOMNodeList);
+        \assert($embeds instanceof DOMNodeList);
         foreach ($embeds as $embed) {
-            assert($embed instanceof DOMNode);
+            \assert($embed instanceof DOMNode);
             $filename = (string) $embed->attributes?->getNamedItem('filename')?->nodeValue ?: throw new Exception('Filename attribute not found');
             $r = $this->scanEmbed($embed, $xp, $client);
             $results[] = $this->getStatusMessage($r, $filename);
@@ -141,7 +141,7 @@ class VirusScanner
         $depositXML = "Issue{$deposit->getDepositUuid()}.xml";
         $results = [];
         foreach ($fileIterator as $file) {
-            assert($file instanceof SplFileInfo);
+            \assert($file instanceof SplFileInfo);
             $r = $client->scanFile($file->getPathname());
             $results[] = $this->getStatusMessage($r, $file->getFileName());
             if (str_ends_with($file->getFileName(), $depositXML)) {

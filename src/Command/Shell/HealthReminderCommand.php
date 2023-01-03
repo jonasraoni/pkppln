@@ -93,7 +93,7 @@ class HealthReminderCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $days = $this->container->getParameter('days_reminder');
-        assert(is_int($days));
+        \assert(\is_int($days));
         $journals = Repository::journal()->findOverdue($days);
         $count = \count($journals);
         $this->logger?->notice("Found {$count} overdue journals.");
