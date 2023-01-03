@@ -21,6 +21,9 @@ final class Version20230101180249 extends AbstractMigration
     {
         $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on MySQL.');
 
+        $hasActiveColumn = $this->connection->executeQuery("SHOW COLUMNS FROM appuser WHERE field = 'active'")->fetch();
+        $this->skipIf((bool) $hasActiveColumn, 'Not needed to apply the migration');
+
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('DROP INDEX UNIQ_EE8A7C7492FC23A8 ON appuser');
         $this->addSql('DROP INDEX UNIQ_EE8A7C74A0D96FBF ON appuser');
