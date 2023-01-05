@@ -7,7 +7,7 @@
     <updated>{{ deposit.received|date('Y-m-d') }}</updated>
     <author><name>{{ deposit.journal.title }}</name></author>
     <summary type="text">
-        Content deposited to LOCKSS-O-Matic via the PKP PLN Staging Server.
+        Content deposited to LOCKSS-O-Matic via the PKP Preservation Network Staging Server.
     </summary>
     <!-- @size is the file size in kB (1,000 bytes) -->
     <lom:content
@@ -17,7 +17,7 @@
         pkp:volume="{{deposit.volume}}"
         pkp:issue="{{deposit.issue}}"
         pkp:pubDate="{{deposit.pubDate|date}}"
-        pkp:journalTitle="PKP PLN Preservation"
+        pkp:journalTitle="PKP Preservation Network"
         pkp:journalUrl="{{deposit.journal.url}}"
         pkp:issn="{{deposit.journal.issn}}"
         pkp:publisher="Public Knowledge Project Staging Server"

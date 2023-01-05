@@ -1,9 +1,9 @@
 {
-  "name": "pkppln-44",
+  "name": "pkp-preservation-network",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git@git.lib.sfu.ca:mjoyce/pkppln-v2.git",
-  "author": "Michael Joyce <ubermichael@gmail.com>",
+  "repository": "git@github.com:pkp/pkppln.git",
+  "author": "PKP <pkp.contact@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "bootstrap3": "^3.3.5",

@@ -38,8 +38,8 @@ class ValidatePayloadCommand extends AbstractProcessingCmd
      */
     protected function configure(): void
     {
-        $this->setName('pln:validate:payload');
-        $this->setDescription('Validate PLN deposit packages.');
+        $this->setName('pn:validate:payload');
+        $this->setDescription('Validate deposit packages.');
         parent::configure();
     }
 

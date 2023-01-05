@@ -14,7 +14,7 @@ twig:
         interval_format: '%%d days'
     globals:
         blackwhitelist: "@blackwhitelist"
-        pln_accepting: "%pln.accepting%"
-        pln_maxUploadSize: "%pln.max_upload%"
-        pln_maxAuSize: "%pln.max_au%"
-        pln_uploadChecksumType: "%pln.checksum_type%"
+        pn_accepting: "%pn.accepting%"
+        pn_maxUploadSize: "%pn.max_upload%"
+        pn_maxAuSize: "%pn.max_au%"
+        pn_uploadChecksumType: "%pn.checksum_type%"

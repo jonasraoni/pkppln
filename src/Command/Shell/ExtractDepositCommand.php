@@ -42,7 +42,7 @@ class ExtractDepositCommand extends Command
      */
     public function configure(): void
     {
-        $this->setName('pln:extract');
+        $this->setName('pn:extract');
         $this->setDescription('Extract the content of an OJS deposit XML file.');
         $this->addArgument('file', InputArgument::REQUIRED, 'UUID of the deposit to extract.');
         $this->addArgument('path', InputArgument::OPTIONAL, 'Path to extract to. Defaults to current directory.', getcwd());
@@ -101,7 +101,7 @@ class ExtractDepositCommand extends Command
                 $tmpPath = $path . $filename;
                 $ext = '';
             } else {
-                $tmpPath = tempnam($path, 'pln-') ?: throw new Exception('Failed to create temporary file');
+                $tmpPath = tempnam($path, 'pn-') ?: throw new Exception('Failed to create temporary file');
             }
             $tmpName = basename($tmpPath);
             $output->writeln("Extracting {$filename} as {$path}{$tmpName}{$ext}.");

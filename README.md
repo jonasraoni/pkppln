@@ -18,22 +18,22 @@ prerequisites listed above.
 
 Fetch the most recent code and leave it 
 somewhere accessible to the web. The instructions below assume that the application
-will be accessed at https://localhost/pkppln
+will be accessed at https://localhost/pn
 
 ```bash
-$ git clone -b https://github.com/pkp/pkppln
-$ mv pkppln /var/www/html/pkppln
-$ cd /var/www/html/pkppln
+$ git clone -b https://github.com/pkp/pn
+$ mv pn /var/www/html/pn
+$ cd /var/www/html/pn
 $ git submodule update --init
 ```
 
 Create a MySQL user and database, and give the user access to the database.
 
 ```sql
-CREATE DATABASE IF NOT EXISTS pkppln;
-CREATE USER IF NOT EXISTS pkppln@localhost;
-GRANT ALL ON pkppln.* TO pkppln@localhost;
-SET PASSWORD FOR pkppln@localhost = PASSWORD('abc123');
+CREATE DATABASE IF NOT EXISTS pn;
+CREATE USER IF NOT EXISTS pn@localhost;
+GRANT ALL ON pn.* TO pn@localhost;
+SET PASSWORD FOR pn@localhost = PASSWORD('abc123');
 ```
 
 Install the yarn and composer dependencies. The `composer install` step 
@@ -74,7 +74,7 @@ $ ./bin/console nines:user:activate
 ```
 
 
-You should be able to login at https://localhost/pkppln/public
+You should be able to login at https://localhost/pn/public
 
 ## Quality Tools
 
@@ -97,15 +97,15 @@ PHP CS Fixer
 
 - To avoid handling permission requirements from the Symfony framework, it's advised to deploy the files in the home folder of an user.
 - Install the ClamAv antivirus (e.g. `apt-get install clamav clamav-daemon -y`).
-- Create a MySQL database (the system has been tested against MySQL 7.4, but higher versions, as well as MariaDB, should work fine).
+- Create a MySQL database (the system has been tested against MySQL 8.0, but higher versions, as well as MariaDB, should work fine).
 - Setup the settings below at the `.env` file:
-  - `PLN_CLAMD_SOCKET`: The path to ClamAV UNIX socket (e.g. `/var/run/clamav/clamd.ctl`).
+  - `PN_CLAMD_SOCKET`: The path to ClamAV UNIX socket (e.g. `/var/run/clamav/clamd.ctl`).
   - `DATABASE_URL`: Database URL (e.g. `mysql://user:password@localhost:3306/database?serverVersion=8.0`).
   - `APP_ENV`: Must be changed to `prod`.
   - `ROUTE_PROTOCOL`, `ROUTE_HOST` and `ROUTE_BASE`: Change the values based on the hostname.
-  - `PLN_DATA_DIR`: Valid and writable directory path, this is where the deposits will be stored.
-  - `PLN_SERVICE_URI`: The `LOCKSS-O-MATIC` service URL.
-  - `PLN_UUID`: The secret ID from the `LOCKSS-O-MATIC` service.
+  - `PN_DATA_DIR`: Valid and writable directory path, this is where the deposits will be stored.
+  - `PN_SERVICE_URI`: The `LOCKSS-O-MATIC` service URL.
+  - `PN_UUID`: The secret ID from the `LOCKSS-O-MATIC` service.
   - `MAILER_DSN`: Mail configuration (see: https://symfony.com/doc/current/mailer.html#transport-setup).
   - `APP_SECRET`, `SYMFONY_DECRYPTION_SECRET`: Ensure they have a good entropy for extra security (e.g. http://nux.net/secret).
-- The staging server is also able to hold deposits made by applications above the version `pln.held_versions` (located at the `config\services.yaml`).
+- The staging server is also able to hold deposits made by applications above the version `pn.held_versions` (located at the `config\services.yaml`).

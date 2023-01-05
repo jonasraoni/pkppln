@@ -18,7 +18,7 @@ use Exception;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * PlnStatusCommand command.
+ * StatusCommand command.
  */
 class StatusCommand extends AbstractProcessingCmd
 {
@@ -45,7 +45,7 @@ class StatusCommand extends AbstractProcessingCmd
      */
     protected function configure(): void
     {
-        $this->setName('pln:status');
+        $this->setName('pn:status');
         $this->setDescription('Check status of deposits.');
         parent::configure();
     }
@@ -58,7 +58,7 @@ class StatusCommand extends AbstractProcessingCmd
         $termNode = $this->client->statement($deposit)->xpath('//atom:category[@label="State"]/@term');
         \assert(is_iterable($termNode));
         $term = (string) ($termNode[0] ?? null) ?: throw new Exception('Failed to retrieve term');
-        $deposit->setPlnState($term);
+        $deposit->setLockssState($term);
 
         return 'agreement' === $term;
     }

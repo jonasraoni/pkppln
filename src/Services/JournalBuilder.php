@@ -62,7 +62,7 @@ class JournalBuilder
     }
 
     /**
-     * The journal with UUID $uuid has contacted the PLN.
+     * The journal with UUID $uuid has contacted the PKP Preservation Network.
      */
     public function fromRequest(string $uuid, string $url): Journal
     {

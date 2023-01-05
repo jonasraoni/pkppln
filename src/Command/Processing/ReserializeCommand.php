@@ -39,7 +39,7 @@ class ReserializeCommand extends AbstractProcessingCmd
      */
     protected function configure(): void
     {
-        $this->setName('pln:reserialize');
+        $this->setName('pn:reserialize');
         $this->setDescription('Reserialize the deposit bag.');
         parent::configure();
     }

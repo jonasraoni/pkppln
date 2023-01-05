@@ -84,7 +84,7 @@ class ResetDepositCommand extends Command
      */
     public function configure(): void
     {
-        $this->setName('pln:reset');
+        $this->setName('pn:reset');
         $this->setDescription('Reset the processing status on one or more deposits.');
         $this->addOption('all', null, InputOption::VALUE_NONE, 'Update all deposits. Use with caution.');
         $this->addOption('clear', null, InputOption::VALUE_NONE, 'Clear the error and processing log for the deposits Use with caution.');

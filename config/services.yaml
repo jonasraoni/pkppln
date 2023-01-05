@@ -11,24 +11,24 @@ parameters:
     asset.request_context.base_path: '%env(string:ROUTE_BASE)%'
     asset.request_context.secure: auto
 
-    pln.data_dir: '%env(string:PLN_DATA_DIR)%'
-    pln.clamd_socket: '%env(string:PLN_CLAMD_SOCKET)%'
-    pln.uuid: '%env(string:PLN_UUID)%'
-    pln.remove_completed_deposits: '%env(string:PLN_REMOVE_COMPLETE_DEPOSIT)%'
-    pln.save_deposit_xml: '%env(string:PLN_SAVE_XML)%'
-    pln.service_uri: '%env(string:PLN_SERVICE_URI)%'
-    pln.accepting: '%env(bool:PLN_ACCEPTING)%'
+    pn.data_dir: '%env(string:PN_DATA_DIR)%'
+    pn.clamd_socket: '%env(string:PN_CLAMD_SOCKET)%'
+    pn.uuid: '%env(string:PN_UUID)%'
+    pn.remove_completed_deposits: '%env(string:PN_REMOVE_COMPLETE_DEPOSIT)%'
+    pn.save_deposit_xml: '%env(string:PN_SAVE_XML)%'
+    pn.service_uri: '%env(string:PN_SERVICE_URI)%'
+    pn.accepting: '%env(bool:PN_ACCEPTING)%'
 
-    pln.network_default: The PKP PLN does not know about this journal yet.
-    pln.network_accepting: The PKP PLN can accept deposits from this journal.
-    pln.network_old_ojs: This journal must be running OJS 2.4.8 to make deposits to the PKP PLN.
+    pn.network_default: The PKP Preservation Network does not know about this journal yet.
+    pn.network_accepting: The PKP Preservation Network can accept deposits from this journal.
+    pn.network_old_ojs: This journal must be running at least OJS 2.4.8 to make deposits to the PKP Preservation Network.
 
-    pln.min_accepted_version: 2.4.8.0
-    pln.held_versions: ~
-    pln.max_harvest_attempts: 5
-    pln.max_au: 100000000
-    pln.max_upload: 1000000
-    pln.checksum_type: SHA-1
+    pn.min_accepted_version: 2.4.8.0
+    pn.held_versions: ~
+    pn.max_harvest_attempts: 5
+    pn.max_au: 100000000
+    pn.max_upload: 1000000
+    pn.checksum_type: SHA-1
 
 services:
     # default configuration for services in *this* file
@@ -80,35 +80,35 @@ services:
 
     App\Services\FilePaths:
         arguments:
-            $root: '%pln.data_dir%'
+            $root: '%pn.data_dir%'
             $projectDir: '%kernel.project_dir%'
 
     App\Services\Ping:
         arguments:
-            $minOjsVersion: '%pln.min_accepted_version%'
+            $minOjsVersion: '%pn.min_accepted_version%'
 
     App\Services\Processing\Depositor:
         arguments:
-            $heldVersions: '%pln.held_versions%'
+            $heldVersions: '%pn.held_versions%'
 
     App\Services\Processing\Harvester:
         arguments:
-            $maxHarvestAttempts: '%pln.max_harvest_attempts%'
+            $maxHarvestAttempts: '%pn.max_harvest_attempts%'
 
     App\Services\Processing\VirusScanner:
         arguments:
-            $socketPath: '%pln.clamd_socket%'
+            $socketPath: '%pn.clamd_socket%'
 
     App\Command\Processing\StatusCommand:
         arguments:
-            $cleanup: '%pln.remove_completed_deposits%'
+            $cleanup: '%pn.remove_completed_deposits%'
 
     App\Services\Processing\BagReserializer:
         arguments:
-            $maxAuSize: '%pln.max_au%'
+            $maxAuSize: '%pn.max_au%'
 
     App\Services\SwordClient:
         arguments:
-            $serviceUri: '%pln.service_uri%'
-            $uuid: '%pln.uuid%'
-            $saveXml: '%pln.save_deposit_xml%'
+            $serviceUri: '%pn.service_uri%'
+            $uuid: '%pn.uuid%'
+            $saveXml: '%pn.save_deposit_xml%'

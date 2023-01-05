@@ -24,14 +24,14 @@ class RunAllCommand extends Command
      * List of commands to run, in order.
      */
     public const COMMAND_LIST = [
-        'pln:harvest',
-        'pln:validate:payload',
-        'pln:validate:bag',
-        'pln:validate:xml',
-        'pln:scan',
-        'pln:reserialize',
-        'pln:deposit',
-        'pln:status',
+        'pn:harvest',
+        'pn:validate:payload',
+        'pn:validate:bag',
+        'pn:validate:xml',
+        'pn:scan',
+        'pn:reserialize',
+        'pn:deposit',
+        'pn:status',
     ];
 
     /**
@@ -39,7 +39,7 @@ class RunAllCommand extends Command
      */
     protected function configure(): void
     {
-        $this->setName('pln:run-all');
+        $this->setName('pn:run-all');
         $this->setDescription('Run all processing commands.');
         $this->addOption('force', 'f', InputOption::VALUE_NONE, 'Force the processing state to be updated');
         $this->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Only process $limit deposits.');

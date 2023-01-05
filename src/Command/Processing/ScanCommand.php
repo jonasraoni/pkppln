@@ -38,7 +38,7 @@ class ScanCommand extends AbstractProcessingCmd
      */
     protected function configure(): void
     {
-        $this->setName('pln:scan');
+        $this->setName('pn:scan');
         $this->setDescription('Scan deposit packages for viruses.');
         parent::configure();
     }

@@ -42,7 +42,7 @@ class PingTest extends BaseControllerTestCase
     {
         return <<<'ENDXML'
 <?xml version="1.0" ?>
-<plnplugin>
+<pnPlugin>
   <ojsInfo>
     <release>2.4.8.1</release>
   </ojsInfo>
@@ -75,7 +75,7 @@ class PingTest extends BaseControllerTestCase
       </article>
     </articles>
   </journalInfo>
-</plnplugin>
+</pnPlugin>
 ENDXML;
     }
 

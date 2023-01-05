@@ -93,7 +93,7 @@ class XmlParser
         if ($error && false === strpos($error->message, 'Input is not proper UTF-8')) {
             throw new Exception("{$error->message} at {$error->file}:{$error->line}:{$error->column}.");
         }
-        $filteredFilename = tempnam(sys_get_temp_dir(), 'pkppln-') ?: throw new Exception('Failed to acquire temporary file');
+        $filteredFilename = tempnam(sys_get_temp_dir(), 'pn-') ?: throw new Exception('Failed to acquire temporary file');
         $changes = $this->filter($filename, $filteredFilename);
         $this->errors[] = basename($filename) . " contains {$changes} invalid "
         . 'UTF-8 characters, which have been removed.';

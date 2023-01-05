@@ -96,7 +96,7 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
      *
      * If the journal uuid is whitelisted, return true
      * If the journal uuid is blacklisted, return false
-     * Return the pln_accepting parameter from parameters.yml
+     * Return the pn_accepting parameter from parameters.yml
      */
     private function checkAccess(string $uuid): bool
     {
@@ -110,7 +110,7 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
             return false;
         }
 
-        return (bool) $this->getParameter('pln.accepting');
+        return (bool) $this->getParameter('pn.accepting');
     }
 
     /**
@@ -119,18 +119,18 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
     private function getNetworkMessage(Journal $journal): string
     {
         if (null === $journal->getOjsVersion()) {
-            $networkDefault = $this->getParameter('pln.network_default');
+            $networkDefault = $this->getParameter('pn.network_default');
             \assert(\is_string($networkDefault));
             return $networkDefault;
         }
-        $minVersion = $this->getParameter('pln.min_accepted_version');
+        $minVersion = $this->getParameter('pn.min_accepted_version');
         \assert(\is_string($minVersion));
         if (version_compare($journal->getOjsVersion(), $minVersion, '>=')) {
-            $networkAccepting = $this->getParameter('pln.network_accepting');
+            $networkAccepting = $this->getParameter('pn.network_accepting');
             \assert(\is_string($networkAccepting));
             return $networkAccepting;
         }
-        $oldVersionWarning = $this->getParameter('pln.network_old_version');
+        $oldVersionWarning = $this->getParameter('pn.network_old_version');
         \assert(\is_string($oldVersionWarning));
         return $oldVersionWarning;
     }
@@ -193,8 +193,8 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
         return [
             'onBehalfOf' => $obh,
             'accepting' => $accepting ? 'Yes' : 'No',
-            'maxUpload' => $this->getParameter('pln.max_upload'),
-            'checksumType' => $this->getParameter('pln.checksum_type'),
+            'maxUpload' => $this->getParameter('pn.max_upload'),
+            'checksumType' => $this->getParameter('pn.checksum_type'),
             'message' => $this->getNetworkMessage($journal),
             'journal' => $journal,
             'terms' => $termsRepo->getTerms(),
