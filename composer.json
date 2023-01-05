@@ -1,7 +1,7 @@
 {
     "type": "project",
-    "name": "pkp/pkppln",
-    "description": "Public Knowledge Project Preservation Network Staging Server",
+    "name": "pkp/preservation-network",
+    "description": "Public Knowledge Project - Preservation Network Staging Server",
     "license": "MIT",
     "require": {
         "php": ">=8.1",

@@ -82,7 +82,7 @@ class JournalRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find journals that haven't contacted the PLN in $days.
+     * Find journals that haven't contacted the PKP Preservation Network in $days.
      *
      * @return Journal[]
      */
@@ -115,7 +115,7 @@ class JournalRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find the $limit most recent journals to contact the PLN for the first time.
+     * Find the $limit most recent journals to contact the PKP Preservation Network for the first time.
      *
      * @return Journal[]
      */

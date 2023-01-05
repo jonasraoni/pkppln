@@ -61,6 +61,7 @@ final class Version20230101180249 extends AbstractMigration
         $this->addSql('CREATE FULLTEXT INDEX IDX_3B175385D17F50A6 ON blacklist (uuid)');
         $this->addSql(
             'ALTER TABLE deposit CHANGE received created DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\',
+            RENAME COLUMN pln_state TO lockss_state,
             ADD updated DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\',
             DROP package_path,
             DROP error_count,

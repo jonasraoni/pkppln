@@ -29,7 +29,7 @@ class Ping
     public const CONF = [
         'allow_redirects' => true,
         'headers' => [
-            'User-Agent' => 'PkpPlnBot 1.0; http://pkp.sfu.ca',
+            'User-Agent' => 'PreservationNetwork/1.0 https://pkp.sfu.ca/pkp-pn',
             'Accept' => 'application/xml,text/xml,*/*;q=0.1',
         ],
     ];

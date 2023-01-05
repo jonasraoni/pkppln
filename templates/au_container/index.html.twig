@@ -5,7 +5,7 @@
     <h1>AuContainer List</h1>
     <p class="count">
         Displaying {{ entities|length }} records of {{ entities.getTotalItemCount }} total.<br/>
-        The maximum deposit size is {{ pln_maxUploadSize }}kb, and the maximum AU size is {{ pln_maxAuSize }}kb.<br/>
+        The maximum deposit size is {{ pn_maxUploadSize }}kb, and the maximum AU size is {{ pn_maxAuSize }}kb.<br/>
 		{% if openContainer is not null %}
 			The current open container is <a href='{{ path("aucontainer_show", {"id": openContainer.id}) }}'>
 				{{ openContainer.id }} ({{openContainer.countDeposits()}} deposits/{{ openContainer.getSize() }}kb)</a>.

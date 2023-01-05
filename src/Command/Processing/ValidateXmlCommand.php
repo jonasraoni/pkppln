@@ -35,7 +35,7 @@ class ValidateXmlCommand extends AbstractProcessingCmd
      */
     protected function configure(): void
     {
-        $this->setName('pln:validate:xml');
+        $this->setName('pn:validate:xml');
         $this->setDescription('Validate OJS XML export files.');
         parent::configure();
     }

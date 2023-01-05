@@ -71,10 +71,10 @@ class ServiceDocumentTest extends AbstractSwordTestCase
         $xml = $this->getXml($this->client);
         $this->assertSame('service', $xml->getName());
         $this->assertSame('2.0', $this->getXmlValue($xml, '//sword:version'));
-        $this->assertSame('No', $this->getXmlValue($xml, '//pkp:pln_accepting/@is_accepting'));
-        $this->assertSame('The PKP PLN does not know about this journal yet.', $this->getXmlValue($xml, '//pkp:pln_accepting'));
+        $this->assertSame('No', $this->getXmlValue($xml, '//pkp:accepting/@is_accepting'));
+        $this->assertSame('The PKP Preservation Network does not know about this journal yet.', $this->getXmlValue($xml, '//pkp:accepting'));
         $this->assertCount(4, $xml->xpath('//pkp:terms_of_use/*'));
-        $this->assertSame('PKP PLN deposit for 7AD045C9-89E6-4ACA-8363-56FE9A45C34F', $this->getXmlValue($xml, '//atom:title'));
+        $this->assertSame('PKP Preservation Network deposit for 7AD045C9-89E6-4ACA-8363-56FE9A45C34F', $this->getXmlValue($xml, '//atom:title'));
         $this->assertSame('http://localhost/api/sword/2.0/col-iri/7AD045C9-89E6-4ACA-8363-56FE9A45C34F', $this->getXmlValue($xml, '//app:collection/@href'));
 
         $this->assertCount($count + 1, Repository::journal()->findAll());
@@ -98,10 +98,10 @@ class ServiceDocumentTest extends AbstractSwordTestCase
         $xml = $this->getXml($this->client);
         $this->assertSame('service', $xml->getName());
         $this->assertSame('2.0', $this->getXmlValue($xml, '//sword:version'));
-        $this->assertSame('Yes', $this->getXmlValue($xml, '//pkp:pln_accepting/@is_accepting'));
-        $this->assertSame('The PKP PLN can accept deposits from this journal.', $this->getXmlValue($xml, '//pkp:pln_accepting'));
+        $this->assertSame('Yes', $this->getXmlValue($xml, '//pkp:accepting/@is_accepting'));
+        $this->assertSame('The PKP Preservation Network can accept deposits from this journal.', $this->getXmlValue($xml, '//pkp:accepting'));
         $this->assertCount(4, $xml->xpath('//pkp:terms_of_use/*'));
-        $this->assertSame('PKP PLN deposit for ' . WhitelistFixtures::UUIDS[0], $this->getXmlValue($xml, '//atom:title'));
+        $this->assertSame('PKP Preservation Network deposit for ' . WhitelistFixtures::UUIDS[0], $this->getXmlValue($xml, '//atom:title'));
         $this->assertSame('http://localhost/api/sword/2.0/col-iri/' . WhitelistFixtures::UUIDS[0], $this->getXmlValue($xml, '//app:collection/@href'));
 
         $this->em->clear();

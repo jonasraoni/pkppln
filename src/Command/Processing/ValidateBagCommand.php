@@ -39,8 +39,8 @@ class ValidateBagCommand extends AbstractProcessingCmd
      */
     protected function configure(): void
     {
-        $this->setName('pln:validate:bag');
-        $this->setDescription('Validate PLN deposit packages.');
+        $this->setName('pn:validate:bag');
+        $this->setDescription('Validate deposit packages.');
         parent::configure();
     }
 

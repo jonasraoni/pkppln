@@ -24,7 +24,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use XMLWriter;
 
 /**
- * Generate an ONIX-PH feed for all the deposits in the PLN.
+ * Generate an ONIX-PH feed for all the deposits in the PKP Preservation Network.
  *
  * @see http://www.editeur.org/127/ONIX-PH/
  */
@@ -126,7 +126,7 @@ class GenerateOnixCommand extends Command
 
         $writer->startElement('Header');
         $writer->startElement('Sender');
-        $writer->writeElement('SenderName', 'Public Knowledge Project PLN');
+        $writer->writeElement('SenderName', 'Public Knowledge Project - Preservation Network');
         $writer->endElement(); // Sender
         $writer->writeElement('SentDateTime', date('Ymd'));
         $writer->writeElement('CompleteFile');
@@ -134,7 +134,7 @@ class GenerateOnixCommand extends Command
 
         $writer->startElement('HoldingsList');
         $writer->startElement('PreservationAgency');
-        $writer->writeElement('PreservationAgencyName', 'Public Knowledge Project PLN');
+        $writer->writeElement('PreservationAgencyName', 'Public Knowledge Project - Preservation Network');
         $writer->endElement(); // PreservationAgency
 
         foreach ($iterator as $row) {
@@ -261,7 +261,7 @@ class GenerateOnixCommand extends Command
      */
     public function configure(): void
     {
-        $this->setName('pln:onix');
+        $this->setName('pn:onix');
         $this->setDescription('Generate ONIX-PH feed.');
         $this->addArgument('file', InputArgument::IS_ARRAY, 'File(s) to write the feed to.');
     }

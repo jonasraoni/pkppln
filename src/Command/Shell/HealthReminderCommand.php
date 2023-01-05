@@ -28,7 +28,7 @@ use Symfony\Component\Mime\Email;
 use Twig\Environment;
 
 /**
- * Send reminders about journals that haven't contacted the PLN in a while.
+ * Send reminders about journals that haven't contacted the PKP Preservation Network in a while.
  */
 class HealthReminderCommand extends Command
 {
@@ -54,7 +54,7 @@ class HealthReminderCommand extends Command
      */
     protected function configure(): void
     {
-        $this->setName('pln:health:reminder');
+        $this->setName('pn:health:reminder');
         $this->setDescription('Remind admins about silent journals.');
         $this->addOption(
             'dry-run',
@@ -79,9 +79,9 @@ class HealthReminderCommand extends Command
         ]);
         foreach ($users as $user) {
             $email = (new Email())
-                ->from('noreplies@pkp-pln.lib.sfu.ca')
+                ->from('noreplies@pkp-pn.lib.sfu.ca')
                 ->to(new Address((string) $user->getEmail(), (string) $user->getFullname()))
-                ->subject('Automated notification from the PKP PLN')
+                ->subject('Automated notification from the PKP Preservation Network')
                 ->text($notification);
             $this->mailer->send($email);
         }

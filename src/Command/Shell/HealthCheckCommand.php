@@ -29,7 +29,7 @@ use Symfony\Component\Mime\Email;
 use Twig\Environment;
 
 /**
- * Ping all the journals that haven't contacted the PLN in a while, and send
+ * Ping all the journals that haven't contacted the PKP Preservation Network in a while, and send
  * notifications to interested users.
  */
 class HealthCheckCommand extends Command
@@ -61,7 +61,7 @@ class HealthCheckCommand extends Command
      */
     protected function configure(): void
     {
-        $this->setName('pln:health:check');
+        $this->setName('pn:health:check');
         $this->setDescription('Find journals that have gone silent.');
         $this->addOption('dry-run', 'd', InputOption::VALUE_NONE, 'Do not update journal status');
         parent::configure();
@@ -85,9 +85,9 @@ class HealthCheckCommand extends Command
         ]);
         foreach ($users as $user) {
             $email = (new Email())
-                ->from('noreplies@pkp-pln.lib.sfu.ca')
+                ->from('noreplies@pkp-pn.lib.sfu.ca')
                 ->to(new Address((string) $user->getEmail(), (string) $user->getFullname()))
-                ->subject('Automated notification from the PKP PLN')
+                ->subject('Automated notification from the PKP Preservation Network')
                 ->text($notification);
 
             $this->mailer->send($email);

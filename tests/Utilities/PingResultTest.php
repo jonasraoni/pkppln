@@ -29,7 +29,7 @@ class PingResultTest extends TestCase
     {
         return <<<'ENDXML'
 <?xml version="1.0" ?>
-<plnplugin>
+<pnPlugin>
   <ojsInfo>
     <release>2.4.8.1</release>
   </ojsInfo>
@@ -62,7 +62,7 @@ class PingResultTest extends TestCase
       </article>
     </articles>
   </journalInfo>
-</plnplugin>
+</pnPlugin>
 ENDXML;
     }
 

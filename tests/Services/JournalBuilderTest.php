@@ -47,7 +47,7 @@ class JournalBuilderTest extends BaseControllerTestCase
     <updated>1996-12-31T16:00:00Z</updated>
     <pkp:content size="3613" volume="44" issue="4" pubdate="2015-07-14"
             checksumType="SHA-1" checksumValue="25b0bd51bb05c145672617fced484c9e71ec553b">
-            http://ojs.dv/index.php/ijt/pln/deposits/00FD6D96-0155-43A4-97F7-2C6EE8EBFF09
+            http://ojs.dv/index.php/ijt/pn/deposits/00FD6D96-0155-43A4-97F7-2C6EE8EBFF09
         </pkp:content>
     <pkp:license>
             <pkp:openAccessPolicy>Yes.</pkp:openAccessPolicy>

@@ -82,7 +82,7 @@ class CleanupCommand extends Command
      */
     protected function configure(): void
     {
-        $this->setName('pln:clean');
+        $this->setName('pn:clean');
         $this->setDescription('Clean processed deposits from the data directory.');
         $this->addOption('force', '-f', InputOption::VALUE_NONE, 'Delete files.');
     }
@@ -92,7 +92,7 @@ class CleanupCommand extends Command
      */
     protected function processDeposit(Deposit $deposit, bool $force = false): void
     {
-        if ('agreement' === $deposit->getPlnState()) {
+        if ('agreement' === $deposit->getLockssState()) {
             $this->delFileTree($this->filePaths->getHarvestFile($deposit), $force);
             $this->delFileTree($this->filePaths->getProcessingBagPath($deposit), $force);
             $this->delFileTree($this->filePaths->getStagingBagPath($deposit), $force);
@@ -106,7 +106,7 @@ class CleanupCommand extends Command
     {
         $force = $input->getOption('force');
         $this->em->getConnection()->getConfiguration()->setSQLLogger(null);
-        $q = $this->em->createQuery('SELECT d FROM App\Entity\Deposit d where d.plnState = :state');
+        $q = $this->em->createQuery('SELECT d FROM App\Entity\Deposit d where d.lockssState = :state');
         $q->setParameter('state', 'agreement');
         $iterator = $q->iterate();
 

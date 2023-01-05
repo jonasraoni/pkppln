@@ -110,7 +110,7 @@ ENDXML;
             [3613, 'getSize'],
             ['depositedByJournal', 'getState'],
             [[], 'getErrorLog'],
-            [null, 'getPlnState'],
+            [null, 'getLockssState'],
             [null, 'getPackageChecksumType'],
             [null, 'getPackageChecksumValue'],
             [null, 'getDepositDate'],

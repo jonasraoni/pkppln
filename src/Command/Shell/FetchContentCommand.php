@@ -57,7 +57,7 @@ class FetchContentCommand extends Command
      */
     public function configure(): void
     {
-        $this->setName('pln:fetch');
+        $this->setName('pn:fetch');
         $this->setDescription('Download the archived content for one or more journals.');
         $this->addArgument('journals', InputArgument::IS_ARRAY, 'The database ID of one or more journals.');
     }

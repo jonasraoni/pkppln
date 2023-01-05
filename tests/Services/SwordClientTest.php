@@ -87,7 +87,7 @@ ENDXML;
 <entry xmlns="http://www.w3.org/2005/Atom"
        xmlns:sword="http://purl.org/net/sword/">
 
-    <sword:treatment>Content URLs deposited to TestPLN.</sword:treatment>
+    <sword:treatment>Content URLs deposited to TestPN.</sword:treatment>
     <content src="http://path/to/statement"/>
     <link rel="edit-media" href="http://path/to/collection" />
     <link rel="http://purl.org/net/sword/terms/add" href="http://path/to/receipt" />

@@ -38,7 +38,7 @@ class DepositCommand extends AbstractProcessingCmd
      */
     protected function configure(): void
     {
-        $this->setName('pln:deposit');
+        $this->setName('pn:deposit');
         $this->setDescription('Send deposits to LockssOMatic.');
         parent::configure();
     }
