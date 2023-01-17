@@ -95,7 +95,7 @@ class StatusCommand extends AbstractProcessingCmd
      */
     public function errorState(): string
     {
-        return 'deposited';
+        return 'status-error';
     }
 
     /**
