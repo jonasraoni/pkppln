@@ -34,11 +34,15 @@ jobs:
 
       # Docs: https://github.com/shivammathur/setup-php
       - name: Setup PHP
+        id: setup-php
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
           coverage: xdebug
           extensions: sockets, bz2, mbstring, xml, ctype, iconv, intl, pdo_sqlite, mysql
+
+      - name: Skip composer.lock on PHP 8.2
+        run: version=${{ steps.setup-php.outputs.php-version }}; if [ "8.2" = ${version:0:3} ]; then printf "!!! COMPOSER.LOCK IGNORED FOR PHP 8.2 !!!\nWe're currently working under PHP 8.1, due to package conflicts we have to generate the composer.lock"; rm composer.lock; fi
 
       - name: Get composer cache directory
         id: composer-cache
