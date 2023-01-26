@@ -112,3 +112,11 @@ services:
             $serviceUri: '%pn.service_uri%'
             $uuid: '%pn.uuid%'
             $saveXml: '%pn.save_deposit_xml%'
+
+    App\Services\DepositBuilder:
+        arguments:
+            $hostname: '%router.request_context.host%'
+
+    App\Services\JournalBuilder:
+        arguments:
+            $hostname: '%router.request_context.host%'

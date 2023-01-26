@@ -49,11 +49,11 @@ class DepositBuilder
     /**
      * Build the service.
      */
-    public function __construct(EntityManagerInterface $em, FilePaths $filePaths, ParameterBag $parameterBag)
+    public function __construct(EntityManagerInterface $em, FilePaths $filePaths, string $hostname)
     {
         $this->em = $em;
         $this->filePaths = $filePaths;
-        $this->hostname = $parameterBag->get('router.request_context.host');
+        $this->hostname = $hostname;
     }
 
     /**

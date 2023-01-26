@@ -38,10 +38,10 @@ class JournalBuilder
     /**
      * Construct the builder.
      */
-    public function __construct(EntityManagerInterface $em, ParameterBag $parameterBag)
+    public function __construct(EntityManagerInterface $em, string $hostname)
     {
         $this->em = $em;
-        $this->hostname = $parameterBag->get('router.request_context.host');
+        $this->hostname = $hostname;
     }
 
     /**
