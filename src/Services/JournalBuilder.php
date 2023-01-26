@@ -58,19 +58,28 @@ class JournalBuilder
 
         /** @var Journal */
         $journal = Repository::journal()->findOneBy(['uuid' => strtoupper($uuid)]);
-        if (null === $journal) {
+        if (!$journal) {
             $journal = new Journal();
+            $journal->setUuid($uuid);
+            $journal->setStatus('new');
+            $journal->setEmail('');
+            $this->em->persist($journal);
         }
         $journal->setUuid($uuid);
         $journal->setTitle(Xpath::getXmlValue($xml, '//atom:title'));
         // &amp; -> &.
-        $journal->setUrl(html_entity_decode(Xpath::getXmlValue($xml, '//pkp:journal_url') ?: ''));
+        $journal->setUrl($url);
         $journal->setEmail(Xpath::getXmlValue($xml, '//atom:email'));
         $journal->setIssn(Xpath::getXmlValue($xml, '//pkp:issn'));
         $journal->setPublisherName(Xpath::getXmlValue($xml, '//pkp:publisherName'));
         // &amp; -> &.
         $journal->setPublisherUrl(html_entity_decode(Xpath::getXmlValue($xml, '//pkp:publisherUrl') ?: ''));
         $journal->setContacted(new DateTime());
+
+        if ('new' !== $journal->getStatus()) {
+            $journal->setStatus('healthy');
+        }
+
         $this->em->persist($journal);
 
         return $journal;
@@ -89,11 +98,11 @@ class JournalBuilder
         $journal = Repository::journal()->findOneBy([
             'uuid' => strtoupper($uuid),
         ]);
-        if (null === $journal) {
+        if (!$journal) {
             $journal = new Journal();
             $journal->setUuid($uuid);
             $journal->setStatus('new');
-            $journal->setEmail('unknown@unknown.com');
+            $journal->setEmail('');
             $this->em->persist($journal);
         }
         $journal->setUrl($url);
