@@ -18,7 +18,6 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use DomainException;
 use SimpleXMLElement;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Journal builder service.
@@ -56,7 +55,7 @@ class JournalBuilder
             throw new DomainException("Invalid journal URL \"{$url}\".");
         }
 
-        /** @var Journal */
+        /** @var ?Journal */
         $journal = Repository::journal()->findOneBy(['uuid' => strtoupper($uuid)]);
         if (!$journal) {
             $journal = new Journal();
@@ -94,7 +93,7 @@ class JournalBuilder
             throw new DomainException("Invalid journal URL \"{$url}\".");
         }
 
-        /** @var Journal */
+        /** @var ?Journal */
         $journal = Repository::journal()->findOneBy([
             'uuid' => strtoupper($uuid),
         ]);

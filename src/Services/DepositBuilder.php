@@ -22,7 +22,6 @@ use Exception;
 use Psr\Log\LoggerAwareTrait;
 use SimpleXMLElement;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Description of DepositBuilder.

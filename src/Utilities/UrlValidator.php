@@ -19,6 +19,7 @@ class UrlValidator
 {
     /**
      * Retrieves whether the URL is acceptable by the system
+     * @param string[] $forbiddenHosts
      */
     public static function isValid(?string $url, array $forbiddenHosts = []): bool
     {
