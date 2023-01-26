@@ -16,6 +16,7 @@ use App\Repository\Repository;
 use App\Services\BlackWhiteList;
 use App\Services\DepositBuilder;
 use App\Services\JournalBuilder;
+use App\Services\Ping;
 use App\Utilities\Namespaces;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -171,7 +172,7 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
      * )
      * @return array<string,mixed>
      */
-    public function serviceDocumentAction(Request $request, JournalBuilder $builder): array
+    public function serviceDocumentAction(Request $request, JournalBuilder $builder, Ping $ping): array
     {
         $obh = strtoupper((string) $this->fetchHeader($request, 'On-Behalf-Of'));
         $journalUrl = $this->fetchHeader($request, 'Journal-Url');
@@ -192,10 +193,15 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
             throw new BadRequestHttpException($e->getMessage(), null, 400);
         }
 
+        $this->em->flush();
+
+        // Attempts to ping (whitelist the journal), in order to enable the client to start depositing right away
+        $ping->ping($journal);
+
         if (! $journal->getTermsAccepted()) {
             $accepting = false;
         }
-        $this->em->flush();
+
         $termsRepo = Repository::termOfUse();
 
         return [
