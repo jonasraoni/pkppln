@@ -103,7 +103,7 @@ ENDXML;
             ['Intl J Test', 'getTitle'],
             ['0000-0000', 'getIssn'],
             ['http://example.com/ijt', 'getUrl'],
-            ['healthy', 'getStatus'],
+            ['new', 'getStatus'],
             [false, 'getTermsAccepted'],
             ['user@example.com', 'getEmail'],
             ['Publisher institution', 'getPublisherName'],
@@ -134,7 +134,7 @@ ENDXML;
             ['http://example.com/journal', 'getUrl'],
             ['new', 'getStatus'],
             [false, 'getTermsAccepted'],
-            ['unknown@unknown.com', 'getEmail'],
+            ['', 'getEmail'],
             [null, 'getPublisherName'],
             [null, 'getPublisherUrl'],
         ];
