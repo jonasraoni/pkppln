@@ -12,10 +12,13 @@ namespace App\Services;
 
 use App\Entity\Journal;
 use App\Repository\Repository;
+use App\Utilities\UrlValidator;
 use App\Utilities\Xpath;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use DomainException;
 use SimpleXMLElement;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Journal builder service.
@@ -28,11 +31,17 @@ class JournalBuilder
     private EntityManagerInterface $em;
 
     /**
+     * Local hostname
+     */
+    private string $hostname;
+
+    /**
      * Construct the builder.
      */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, ParameterBag $parameterBag)
     {
         $this->em = $em;
+        $this->hostname = $parameterBag->get('router.request_context.host');
     }
 
     /**
@@ -42,6 +51,12 @@ class JournalBuilder
      */
     public function fromXml(SimpleXMLElement $xml, string $uuid): Journal
     {
+        $url = html_entity_decode(Xpath::getXmlValue($xml, '//pkp:journal_url') ?: '');
+        if (!UrlValidator::isValid($url, [$this->hostname])) {
+            throw new DomainException("Invalid journal URL \"{$url}\".");
+        }
+
+        /** @var Journal */
         $journal = Repository::journal()->findOneBy(['uuid' => strtoupper($uuid)]);
         if (null === $journal) {
             $journal = new Journal();
@@ -66,6 +81,11 @@ class JournalBuilder
      */
     public function fromRequest(string $uuid, string $url): Journal
     {
+        if (!UrlValidator::isValid($url, [$this->hostname])) {
+            throw new DomainException("Invalid journal URL \"{$url}\".");
+        }
+
+        /** @var Journal */
         $journal = Repository::journal()->findOneBy([
             'uuid' => strtoupper($uuid),
         ]);

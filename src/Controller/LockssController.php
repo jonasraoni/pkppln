@@ -35,7 +35,7 @@ class LockssController extends AbstractController implements PaginatorAwareInter
     use PaginatorTrait;
 
     /**
-     * The LOCKSS permision statement.
+     * The LOCKSS permission statement.
      */
     public const PERMISSION_STMT = 'LOCKSS system has permission to collect, preserve, and serve this Archival Unit.';
 

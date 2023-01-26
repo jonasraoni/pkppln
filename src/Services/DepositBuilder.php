@@ -13,13 +13,16 @@ namespace App\Services;
 use App\Entity\Deposit;
 use App\Entity\Journal;
 use App\Repository\Repository;
+use App\Utilities\UrlValidator;
 use App\Utilities\Xpath;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use DomainException;
 use Exception;
 use Psr\Log\LoggerAwareTrait;
 use SimpleXMLElement;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Description of DepositBuilder.
@@ -39,12 +42,18 @@ class DepositBuilder
     private FilePaths $filePaths;
 
     /**
+     * Local hostname
+     */
+    private string $hostname;
+
+    /**
      * Build the service.
      */
-    public function __construct(EntityManagerInterface $em, FilePaths $filePaths)
+    public function __construct(EntityManagerInterface $em, FilePaths $filePaths, ParameterBag $parameterBag)
     {
         $this->em = $em;
         $this->filePaths = $filePaths;
+        $this->hostname = $parameterBag->get('router.request_context.host');
     }
 
     /**
@@ -85,6 +94,11 @@ class DepositBuilder
     public function fromXml(Journal $journal, SimpleXMLElement $xml): Deposit
     {
         $id = Xpath::getXmlValue($xml, '//atom:id') ?: throw new Exception('Invalid ATOM ID');
+        $url = html_entity_decode((string) Xpath::getXmlValue($xml, 'pkp:content'));
+        if (!UrlValidator::isValid($url, [$this->hostname])) {
+            throw new DomainException("Invalid journal URL \"{$url}\".");
+        }
+
         $deposit = $this->findDeposit(substr($id, 9, 36));
         $deposit->setState('depositedByJournal');
         $deposit->setChecksumType((string) Xpath::getXmlValue($xml, 'pkp:content/@checksumType'));
@@ -95,7 +109,7 @@ class DepositBuilder
         $deposit->setPubDate(new DateTime((string) Xpath::getXmlValue($xml, 'pkp:content/@pubdate')));
         $deposit->setJournal($journal);
         $deposit->setSize((int) Xpath::getXmlValue($xml, 'pkp:content/@size'));
-        $deposit->setUrl(html_entity_decode((string) Xpath::getXmlValue($xml, 'pkp:content')));
+        $deposit->setUrl($url);
 
         $deposit->setJournalVersion((string) Xpath::getXmlValue($xml, 'pkp:content/@ojsVersion', Deposit::DEFAULT_JOURNAL_VERSION));
         $nodes = $xml->xpath('//pkp:license/node()');
