@@ -19,6 +19,7 @@ use App\Services\JournalBuilder;
 use App\Utilities\Namespaces;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use DomainException;
 use Exception;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
 use Nines\UtilBundle\Controller\PaginatorTrait;
@@ -183,7 +184,14 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
             throw new BadRequestHttpException('Missing Journal-Url header.', null, 400);
         }
 
-        $journal = $builder->fromRequest($obh, $journalUrl);
+        $journal = null;
+        try {
+            $journal = $builder->fromRequest($obh, $journalUrl);
+        }
+        catch (DomainException $e) {
+            throw new BadRequestHttpException($e->getMessage(), null, 400);
+        }
+
         if (! $journal->getTermsAccepted()) {
             $accepting = false;
         }
@@ -223,9 +231,17 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
         }
 
         $xml = $this->getXml($request);
-        // Update the journal metadata.
-        $journalBuilder->fromXml($xml, $journal->getUuid());
-        $deposit = $depositBuilder->fromXml($journal, $xml);
+
+        $deposit = null;
+        try {
+            // Update the journal metadata.
+            $journalBuilder->fromXml($xml, $journal->getUuid());
+            $deposit = $depositBuilder->fromXml($journal, $xml);
+        }
+        catch (DomainException $e) {
+            throw new BadRequestHttpException($e->getMessage(), null, 400);
+        }
+
         $this->em->flush();
 
         $response = $this->statementAction($request, $journal, $deposit);
