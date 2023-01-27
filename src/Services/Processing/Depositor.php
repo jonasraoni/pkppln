@@ -28,15 +28,15 @@ class Depositor
     /**
      * Maximum supported application version or null.
      */
-    private ?string $heldVersions;
+    private ?string $maxAcceptedVersion;
 
     /**
      * Build the service.
      */
-    public function __construct(SwordClient $client, ?string $heldVersions)
+    public function __construct(SwordClient $client, ?string $maxAcceptedVersion)
     {
         $this->client = $client;
-        $this->heldVersions = $heldVersions;
+        $this->maxAcceptedVersion = $maxAcceptedVersion;
     }
 
     /**
@@ -44,7 +44,7 @@ class Depositor
      */
     public function processDeposit(Deposit $deposit): null|bool|string
     {
-        if ($this->heldVersions && version_compare($deposit->getVersion(), $this->heldVersions, '>')) {
+        if ($this->maxAcceptedVersion && version_compare($deposit->getVersion(), $this->maxAcceptedVersion, '>')) {
             return 'hold';
         }
 

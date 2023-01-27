@@ -24,7 +24,7 @@ parameters:
     pn.network_unsupported_version: The journal must be running at least OJS %s to make deposits to the PKP Preservation Network.
 
     pn.min_accepted_version: 2.4.8.0
-    pn.held_versions: ~
+    pn.max_accepted_version: ~
     pn.max_harvest_attempts: 5
     pn.max_au: 100000000
     pn.max_upload: 1000000
@@ -89,7 +89,7 @@ services:
 
     App\Services\Processing\Depositor:
         arguments:
-            $heldVersions: '%pn.held_versions%'
+            $maxAcceptedVersion: '%pn.max_accepted_version%'
 
     App\Services\Processing\Harvester:
         arguments:
