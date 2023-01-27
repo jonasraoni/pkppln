@@ -19,9 +19,9 @@ parameters:
     pn.service_uri: '%env(string:PN_SERVICE_URI)%'
     pn.accepting: '%env(bool:PN_ACCEPTING)%'
 
-    pn.network_default: The PKP Preservation Network does not know about this journal yet.
-    pn.network_accepting: The PKP Preservation Network can accept deposits from this journal.
-    pn.network_old_ojs: This journal must be running at least OJS 2.4.8 to make deposits to the PKP Preservation Network.
+    pn.network_default: The PKP Preservation Network failed to communicate with your journal.
+    pn.network_accepting: The PKP Preservation Network has agreed to receive deposits from your journal.
+    pn.network_unsupported_version: The journal must be running at least OJS %s to make deposits to the PKP Preservation Network.
 
     pn.min_accepted_version: 2.4.8.0
     pn.held_versions: ~
