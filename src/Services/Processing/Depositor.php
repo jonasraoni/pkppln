@@ -26,7 +26,7 @@ class Depositor
     private SwordClient $client;
 
     /**
-     * Maximum OJS version or null.
+     * Maximum supported application version or null.
      */
     private ?string $heldVersions;
 
@@ -44,7 +44,7 @@ class Depositor
      */
     public function processDeposit(Deposit $deposit): null|bool|string
     {
-        if ($this->heldVersions && version_compare($deposit->getJournalVersion(), $this->heldVersions, '>')) {
+        if ($this->heldVersions && version_compare($deposit->getVersion(), $this->heldVersions, '>')) {
             return 'hold';
         }
 

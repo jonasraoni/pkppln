@@ -85,7 +85,7 @@ services:
 
     App\Services\Ping:
         arguments:
-            $minOjsVersion: '%pn.min_accepted_version%'
+            $minVersion: '%pn.min_accepted_version%'
 
     App\Services\Processing\Depositor:
         arguments:

@@ -108,7 +108,7 @@ ENDXML;
         foreach ($data as &$item) {
             $item[] = [
                 ['B99FE131-48B5-440A-A552-4F1BF2BFDE82', 'getUuid'],
-                [null, 'getOjsVersion'],
+                [null, 'getVersion'],
                 [null, 'getNotified'],
                 ['Intl J Test', 'getTitle'],
                 ['0000-0000', 'getIssn'],
@@ -143,7 +143,7 @@ ENDXML;
         foreach ($data as &$item) {
             $item[] = [
                 ['B99FE131-48B5-440A-A552-4F1BF2BFDE82', 'getUuid'],
-                [null, 'getOjsVersion'],
+                [null, 'getVersion'],
                 [null, 'getNotified'],
                 [null, 'getTitle'],
                 [null, 'getIssn'],
