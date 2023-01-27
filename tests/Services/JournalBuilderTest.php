@@ -62,7 +62,7 @@ class JournalBuilderTest extends BaseControllerTestCase
 ENDXML;
         $xml = simplexml_load_string($xml);
         Namespaces::registerNamespaces($xml);
-        return ['B99FE131-48B5-440A-A552-4F1BF2BFDE82', $xml];
+        return [['B99FE131-48B5-440A-A552-4F1BF2BFDE82', $xml]];
     }
 
     public function testInstance(): void
