@@ -146,7 +146,7 @@ class SwordController extends AbstractController implements PaginatorAwareInterf
      */
     private function getXml(Request $request): SimpleXMLElement
     {
-        $content =  XmlParser::cleanXml($request->getContent());
+        $content =  XmlParser::cleanXml((string) $request->getContent());
         if (! $content || ! \is_string($content)) {
             throw new BadRequestHttpException('Expected request body. Found none.', null, Response::HTTP_BAD_REQUEST);
         }
